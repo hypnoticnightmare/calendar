@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Hover Overlay Edition</title>
+    <title>Aesthetic Calendar - Tooltip & Sparkle Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -132,9 +132,9 @@
         /* VISTA SETTIMANA: Rettangoli alti */
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
-        /* Modifiche visive se c'è un evento (Sfondo e Hover) */
+        /* Modifiche visive se c'è un evento */
         .cell.has-event {
-            background-color: var(--header-bg); /* Sfondo più marcato per distinguere i giorni occupati */
+            background-color: var(--header-bg); 
         }
         .cell:hover:not(.empty) { filter: brightness(0.92); }
         .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
@@ -147,54 +147,58 @@
             border: 2px solid var(--accent-main);
             flex-shrink: 0; 
             position: relative;
-            z-index: 15; /* Lo mantiene SEMPRE sopra l'overlay degli eventi */
+            z-index: 15;
         }
 
-        /* Il puntino indicatore in basso a destra */
-        .event-indicator {
+        /* --- NUOVO INDICATORE AESTHETIC (Scintilla/Sparkle) --- */
+        .aesthetic-indicator {
             position: absolute;
-            bottom: 8px; right: 8px;
-            width: 12px; height: 12px;
-            background-color: var(--accent-main);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            z-index: 5;
-        }
-
-        /* --- OVERLAY EVENTO (Compare solo al passaggio del mouse) --- */
-        .hover-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            z-index: 10;
-            opacity: 0;
+            bottom: 6px; right: 8px;
+            color: var(--accent-main);
+            font-size: 20px;
+            text-shadow: 0 0 8px var(--accent-main);
+            animation: floatSparkle 2.5s ease-in-out infinite;
             pointer-events: none;
-            transition: opacity 0.25s ease;
-            
-            /* Formattazione Testo */
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 35px 10px 10px 10px; /* Spazio sopra per non coprire del tutto il badge */
-            text-align: center;
-            font-family: 'Mali', cursive;
-            font-size: 13px; color: var(--text-color);
-            overflow-y: auto; word-break: break-word;
         }
 
-        [data-theme="dark"] .hover-overlay { background: rgba(40, 40, 40, 0.92); }
+        @keyframes floatSparkle {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-4px) scale(1.15); opacity: 1; }
+        }
 
-        /* Effetto di apparizione al passaggio del mouse */
-        .cell.has-event:hover .hover-overlay { opacity: 1; pointer-events: auto; }
+        /* --- NUVOLETTA TOOLTIP ESTERNA --- */
+        #custom-tooltip {
+            position: fixed;
+            display: none;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.96);
+            border: 3px solid var(--accent-main);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-family: 'Mali', cursive;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            pointer-events: none; /* Permette di cliccare attraverso per aprire l'evento */
+            z-index: 10000;
+            width: max-content;
+            max-width: 250px;
+            word-wrap: break-word;
+            
+            /* Animazione morbida di comparsa */
+            opacity: 0;
+            transform: translate(-50%, -90%) scale(0.95);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
 
-        .hover-overlay .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
-        .hover-overlay .title { white-space: pre-wrap; line-height: 1.3; }
+        [data-theme="dark"] #custom-tooltip {
+            background: rgba(40, 40, 40, 0.96);
+        }
 
-        /* Scrollbar overlay */
-        .hover-overlay::-webkit-scrollbar { width: 4px; }
-        .hover-overlay::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
-        .hover-overlay::-webkit-scrollbar-track { background: transparent; }
+        #custom-tooltip .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
+        #custom-tooltip .title { white-space: pre-wrap; line-height: 1.3; font-weight: 700; }
+        #custom-tooltip .notes-preview { font-size: 12px; opacity: 0.8; margin-top: 6px; white-space: pre-wrap; border-top: 1px dashed var(--accent-main); padding-top: 6px; }
 
         /* --- FINESTRA MODAL (POP-UP EVENTO) --- */
         .modal-overlay {
@@ -276,6 +280,8 @@
         </div>
     </div>
 
+    <div id="custom-tooltip"></div>
+
     <div id="event-modal" class="modal-overlay">
         <div class="modal-window">
             <h3 id="modal-date-title">Data</h3>
@@ -326,6 +332,7 @@
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
         const viewToggleBtn = document.getElementById('view-toggle-btn');
+        const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
         function openModal(year, month, day) {
@@ -338,6 +345,10 @@
             document.getElementById('modal-notes').value = ev.notes;
             
             document.getElementById('event-modal').style.display = 'flex';
+            
+            // Nasconde preventivamente il tooltip se è aperto
+            tooltip.style.opacity = '0';
+            setTimeout(() => tooltip.style.display = 'none', 200);
         }
 
         function closeModal() {
@@ -404,34 +415,52 @@
             if (!isEmpty) {
                 cell.onclick = () => openModal(year, month, day);
                 
-                // 1. Aggiunge il badge con la data (Rimane sempre visibile!)
                 const badge = document.createElement('div');
                 badge.className = 'date-badge';
                 badge.innerText = day;
                 cell.appendChild(badge);
 
-                // 2. Controlla se c'è un evento
                 const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const ev = calendarEvents[dateKey];
                 
                 if(ev && (ev.title || ev.time || ev.notes)) {
-                    // Aggiunge la classe che cambia il colore di sfondo della cella
                     cell.classList.add('has-event');
                     
-                    // Aggiunge il puntino in basso a destra
+                    // La scintilla magica ✦ al posto del pallino
                     const indicator = document.createElement('div');
-                    indicator.className = 'event-indicator';
+                    indicator.className = 'aesthetic-indicator';
+                    indicator.innerText = '✦';
                     cell.appendChild(indicator);
 
-                    // Crea l'Overlay invisibile che apparirà solo passando il mouse
-                    const overlay = document.createElement('div');
-                    overlay.className = 'hover-overlay';
-                    
-                    if(ev.time) overlay.innerHTML += `<div class="time">${ev.time}</div>`;
-                    if(ev.title) overlay.innerHTML += `<div class="title">${ev.title}</div>`;
-                    if(ev.notes && !ev.title) overlay.innerHTML += `<div class="title">📝 Note presenti</div>`;
-                    
-                    cell.appendChild(overlay);
+                    // Gestione del Tooltip Fluttuante
+                    cell.addEventListener('mouseenter', () => {
+                        let html = '';
+                        if(ev.time) html += `<div class="time">${ev.time}</div>`;
+                        if(ev.title) html += `<div class="title">${ev.title}</div>`;
+                        if(ev.notes) html += `<div class="notes-preview">📝 ${ev.notes}</div>`;
+                        else if(!ev.title && !ev.notes) html += `<div class="title">Evento Programmato</div>`;
+                        
+                        tooltip.innerHTML = html;
+                        tooltip.style.display = 'flex';
+                        
+                        const rect = cell.getBoundingClientRect();
+                        // Posiziona il tooltip al centro della cella, spostato verso l'alto
+                        tooltip.style.left = `${rect.left + (rect.width / 2)}px`;
+                        tooltip.style.top = `${rect.top - 5}px`;
+                        
+                        requestAnimationFrame(() => {
+                            tooltip.style.opacity = '1';
+                            tooltip.style.transform = 'translate(-50%, -100%) scale(1)';
+                        });
+                    });
+
+                    cell.addEventListener('mouseleave', () => {
+                        tooltip.style.opacity = '0';
+                        tooltip.style.transform = 'translate(-50%, -90%) scale(0.95)';
+                        setTimeout(() => {
+                            if(tooltip.style.opacity === '0') tooltip.style.display = 'none';
+                        }, 200);
+                    });
                 }
             }
             return cell;
