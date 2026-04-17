@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Square & Rectangular Views</title>
+    <title>Aesthetic Calendar - Locked Size Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -111,7 +111,7 @@
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; 
         }
 
-        /* --- CELLE E FORMATI --- */
+        /* --- CELLE E BLOCCO DIMENSIONI --- */
         .cell {
             background-color: var(--cell-bg);
             border-radius: 8px;
@@ -120,6 +120,10 @@
             position: relative;
             cursor: pointer;
             overflow: hidden;
+            
+            /* GABBIA D'ACCIAIO: Impedisce al testo di allargare o alzare la cella */
+            min-width: 0;
+            min-height: 0;
         }
 
         /* VISTA MESE: Quadrati perfetti, nessuna deformazione */
@@ -145,20 +149,22 @@
             flex-shrink: 0; /* Impedisce al badge di schiacciarsi */
         }
 
-        /* Anteprima Evento nella Cella (Mantenuta in griglia) */
+        /* Anteprima Evento nella Cella */
         .event-preview {
             margin: 0 6px 6px 6px; padding: 6px;
             background: rgba(255, 255, 255, 0.5);
             border-radius: 4px; font-family: 'Mali', cursive;
             font-size: 12px; color: var(--text-color);
             display: flex; flex-direction: column;
-            /* TRUCCO ANTI-DEFORMAZIONE: flex: 1, min-height: 0 e auto-scroll */
+            
+            /* TRUCCO ANTI-DEFORMAZIONE e SCORRIMENTO */
             flex: 1;
             min-height: 0; 
             overflow-y: auto; 
+            word-break: break-word; /* Impedisce a parole lunghe di sformare in larghezza */
         }
         
-        /* Scrollbar interna dell'anteprima (se il testo è lungo) */
+        /* Scrollbar interna dell'anteprima */
         .event-preview::-webkit-scrollbar { width: 4px; }
         .event-preview::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         .event-preview::-webkit-scrollbar-track { background: transparent; }
@@ -166,7 +172,6 @@
         [data-theme="dark"] .event-preview { background: rgba(0,0,0,0.3); }
         .event-preview .time { font-weight: 800; font-size: 11px; color: var(--accent-main); margin-bottom: 2px; }
         
-        /* Nella vista mese, accorcia il testo per non intasare, nella settimana lo fa scorrere */
         .month-view .event-preview .title { white-space: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
         .week-view .event-preview .title { white-space: pre-wrap; }
 
@@ -269,13 +274,11 @@
     </div>
 
     <script>
-        // --- SAFE STORAGE ---
         const safeStorage = {
             get: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
             set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) { console.warn("Memoria bloccata."); } }
         };
 
-        // --- TEMI E COLORI ---
         function setTheme(theme) {
             document.body.setAttribute('data-theme', theme);
             safeStorage.set('cal-square-theme', theme);
@@ -294,7 +297,6 @@
             dot.addEventListener('click', () => setColor(dot.getAttribute('data-color-target')));
         });
 
-        // --- DATABASE EVENTI (Formato JSON) ---
         let calendarEvents = JSON.parse(safeStorage.get('cal-square-events')) || {};
         let currentEditingDate = null;
         let baseDate = new Date();
@@ -305,7 +307,6 @@
         const viewToggleBtn = document.getElementById('view-toggle-btn');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        // --- GESTIONE MODAL ---
         function openModal(year, month, day) {
             currentEditingDate = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${day} ${mesi[month]} ${year}`;
@@ -351,7 +352,6 @@
             if (e.target === this) closeModal();
         });
 
-        // --- LOGICA CALENDARIO ---
         function toggleView() {
             currentView = currentView === 'month' ? 'week' : 'month';
             safeStorage.set('cal-square-view', currentView);
@@ -413,7 +413,7 @@
 
             if (currentView === 'month') {
                 viewToggleBtn.innerText = "Vista: Mese";
-                grid.className = "calendar-grid month-view"; // Imposta le celle quadrate
+                grid.className = "calendar-grid month-view";
                 title.innerText = `${mesi[month]} ${year}`;
 
                 const firstDay = new Date(year, month, 1).getDay();
@@ -429,7 +429,7 @@
 
             } else {
                 viewToggleBtn.innerText = "Vista: Settimana";
-                grid.className = "calendar-grid week-view"; // Imposta le celle rettangolari
+                grid.className = "calendar-grid week-view";
                 
                 const monday = getMonday(baseDate);
                 const sunday = new Date(monday);
