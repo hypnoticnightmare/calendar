@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Blocks & Timeline Edition</title>
+    <title>Aesthetic Calendar - Circular Badges Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -133,9 +133,13 @@
         .cell.empty { background-color: rgba(255,255,255,0.4); border-color: transparent; cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
+        /* --- NUMERI DEI GIORNI: ORA SONO TONDINI --- */
         .date-badge {
             background-color: var(--badge-bg); color: var(--badge-text);
-            border-radius: 6px; padding: 2px 8px; margin: 6px;
+            border-radius: 50%; /* Forma Circolare! */
+            width: 28px; height: 28px; /* Dimensioni fisse uguali per un cerchio perfetto */
+            display: flex; align-items: center; justify-content: center;
+            margin: 6px;
             align-self: flex-start; font-weight: 800; font-size: 14px;
             border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
@@ -167,7 +171,8 @@
         }
         .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
         .mini-cell {
-            aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; 
+            aspect-ratio: 1; border-radius: 50%; /* Anche qui i giorni sono tondini */
+            display: flex; align-items: center; justify-content: center; 
             font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s;
         }
         .mini-cell:hover { background: rgba(0,0,0,0.1); }
@@ -193,6 +198,12 @@
             text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;
         }
         
+        /* Correzione data sulla timeline per farla sembrare una "pillola" invece di un cerchio rotto */
+        .large-badge {
+            width: auto; height: auto; border-radius: 20px; padding: 4px 16px;
+            font-size: 18px; margin: 0; display: flex; align-items: center;
+        }
+        
         /* Area "Tutto il giorno" / Senza orario */
         .timeline-allday {
             padding: 15px 15px 15px 70px; border-bottom: 2px dashed var(--accent-main);
@@ -214,7 +225,7 @@
         .timeline-time {
             width: 60px; padding-right: 10px; padding-top: -8px; text-align: right;
             font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7;
-            transform: translateY(-8px); /* Allinea il testo alla linea */
+            transform: translateY(-8px);
         }
         .timeline-grid-line {
             flex-grow: 1; border-top: 1px dashed var(--accent-main); opacity: 0.2;
@@ -456,8 +467,6 @@
             return new Date(date.setDate(diff));
         }
 
-        // --- PARSER ORARIO INTELLIGENTE ---
-        // Capisce orari come "15:30" o "3:30 PM" e restituisce le ore e i minuti
         function parseTime(timeStr) {
             if(!timeStr) return null;
             const match = timeStr.match(/(\d{1,2})[.:](\d{2})/);
@@ -468,7 +477,6 @@
                 if(timeStr.toLowerCase().includes('am') && h === 12) h = 0;
                 return { h, m };
             }
-            // Se c'è solo un numero (es. "15" o "3 PM")
             const matchHour = timeStr.match(/(\d{1,2})/);
             if(matchHour) {
                 let h = parseInt(matchHour[1]);
@@ -525,7 +533,6 @@
                 if(ev && (ev.title || ev.time || ev.notes)) {
                     
                     if(currentView === 'month') {
-                        // Vista Mese: Cuoricino e Tooltip
                         cell.classList.add('has-event');
                         const indicator = document.createElement('div');
                         indicator.className = 'aesthetic-indicator';
@@ -554,7 +561,6 @@
                         });
                     } 
                     else if (currentView === 'week') {
-                        // Vista Settimana: Blocco Colorato Reale
                         const block = document.createElement('div');
                         block.className = 'week-event-block';
                         if(ev.time) block.innerHTML += `<div class="time">${ev.time}</div>`;
@@ -567,30 +573,32 @@
             return cell;
         }
 
-        // --- GENERATORE TIMELINE GIORNALIERA ---
         function createDayTimeline(y, m, d) {
             const wrapper = document.createElement('div');
             wrapper.className = 'day-timeline-wrapper';
-            wrapper.onclick = () => openModal(y, m, d);
+            wrapper.onclick = (e) => {
+                if(e.target === wrapper || e.target.classList.contains('timeline-hour-row') || e.target.classList.contains('timeline-grid-line')) {
+                     openModal(y, m, d);
+                }
+            };
 
             const header = document.createElement('div');
             header.className = 'timeline-header';
-            
             const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
             const currentDayName = dNames[new Date(y, m, d).getDay()];
             
-            header.innerHTML = `<span>${currentDayName}</span> <span>${d} ${mesi[m]} ${y}</span>`;
+            // Aggiungiamo la classe large-badge qui per far sembrare la data una "pillola"
+            header.innerHTML = `<span>${currentDayName}</span> <span class="date-badge large-badge" style="margin:0">${d} ${mesi[m]} ${y}</span>`;
             wrapper.appendChild(header);
 
             const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             const ev = calendarEvents[dateKey];
-            
             const parsedTime = parseTime(ev ? ev.time : null);
 
-            // Sezione All Day (Se c'è un evento senza orario comprensibile)
             if (ev && !parsedTime) {
                 const allday = document.createElement('div');
                 allday.className = 'timeline-allday';
+                allday.onclick = () => openModal(y, m, d);
                 allday.innerHTML = `<div class="allday-label">Eventi</div>
                                     <div class="timeline-event-block" style="position:relative; left:0; right:0; margin-bottom: 5px;">
                                         <div class="title">${ev.title || 'Senza Titolo'}</div>
@@ -599,15 +607,12 @@
                 wrapper.appendChild(allday);
             }
 
-            // Costruisci le 24 ore (12 AM - 11 PM)
             const timelineContainer = document.createElement('div');
             timelineContainer.style.position = 'relative';
             
             for (let i = 0; i < 24; i++) {
                 const row = document.createElement('div');
                 row.className = 'timeline-hour-row';
-                
-                // Formato AM/PM
                 let hourText = '';
                 if (i === 0) hourText = '12 AM';
                 else if (i < 12) hourText = `${i} AM`;
@@ -618,12 +623,14 @@
                 timelineContainer.appendChild(row);
             }
 
-            // Posiziona l'evento se c'è un orario
             if (ev && parsedTime) {
                 const eventBlock = document.createElement('div');
                 eventBlock.className = 'timeline-event-block';
+                eventBlock.onclick = (e) => {
+                    e.stopPropagation();
+                    openModal(y, m, d);
+                };
                 
-                // Calcolo posizione: 1 ora = 60px
                 const topPosition = (parsedTime.h * 60) + parsedTime.m;
                 eventBlock.style.top = `${topPosition}px`;
                 
@@ -649,7 +656,6 @@
                 for(let m=0; m<12; m++) grid.appendChild(createMiniMonth(year, m));
 
             } else if (currentView === 'day') {
-                // Nella vista giorno nascondiamo l'header standard per far risaltare la timeline
                 dynamicHeader.style.display = 'none';
                 mainDaysRow.style.display = 'none';
                 grid.className = "calendar-grid day-view";
