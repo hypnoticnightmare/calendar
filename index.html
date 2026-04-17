@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Custom Blueberry Palette</title>
+    <title>Aesthetic Calendar - 4 Views Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -28,51 +28,27 @@
 
         /* --- PALETTE COLORI (3 Colori Frutta/Cibo) --- */
         [data-color="strawberry"] { 
-            --accent-main: #C66F80; 
-            --badge-bg: #4A6644;    
-            --cell-bg: #FCEBF1;     
-            --header-bg: #FADCE5;   
+            --accent-main: #C66F80; --badge-bg: #4A6644; --cell-bg: #FCEBF1; --header-bg: #FADCE5;   
         }
         [data-color="matcha"] { 
-            --accent-main: #6B705C; 
-            --badge-bg: #9C6644;    
-            --cell-bg: #F4F1DE;     
-            --header-bg: #EAE2B7;   
+            --accent-main: #6B705C; --badge-bg: #9C6644; --cell-bg: #F4F1DE; --header-bg: #EAE2B7;   
         }
-        /* NUOVA PALETTE BLUEBERRY (Cream, Blueberry, Plum) */
         [data-color="blueberry"] { 
-            --accent-main: #3F3C79; /* Plum */
-            --badge-bg: #5A6ACF;    /* Blueberry */
-            --cell-bg: #FFF6EC;     /* Cream */
-            --header-bg: #EAEBF5;   /* Grigio Azzurrino morbido per l'header */
+            --accent-main: #3F3C79; --badge-bg: #5A6ACF; --cell-bg: #FFF6EC; --header-bg: #EAEBF5;   
         }
         [data-color="grape"] { 
-            --accent-main: #593C6B; 
-            --badge-bg: #D4A373;    
-            --cell-bg: #F8F3FA;     
-            --header-bg: #EBE0F0;   
+            --accent-main: #593C6B; --badge-bg: #D4A373; --cell-bg: #F8F3FA; --header-bg: #EBE0F0;   
         }
         [data-color="choco"] { 
-            --accent-main: #5C4033; 
-            --badge-bg: #D9A05B;    
-            --cell-bg: #FCF8F2;     
-            --header-bg: #F2E3D5;   
+            --accent-main: #5C4033; --badge-bg: #D9A05B; --cell-bg: #FCF8F2; --header-bg: #F2E3D5;   
         }
 
         /* --- Adattamento Modalità Scura --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
-        
-        /* Dark Mode Blueberry usando il colore "Ink" (#1B1B3A) */
-        [data-theme="dark"][data-color="blueberry"] { 
-            --accent-main: #5A6ACF; /* Blueberry come bordo luminoso */
-            --badge-bg: #3F3C79;    /* Plum per i badge */
-            --cell-bg: #1B1B3A;     /* Ink per lo sfondo celle */
-            --header-bg: #26264A;   /* Ink leggermente schiarito */
-        }
-        
+        [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A6ACF; --badge-bg: #3F3C79; --cell-bg: #1B1B3A; --header-bg: #26264A; }
         [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
-        [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #664030; --header-bg: #332A26; }
+        [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
         body, html {
             margin: 0; padding: clamp(5px, 2vw, 15px); 
@@ -104,10 +80,12 @@
             background-color: var(--badge-bg); color: var(--badge-text); 
             border: 2px solid var(--accent-main); border-radius: 12px; 
             padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; 
-            cursor: pointer; transition: all 0.2s ease;
+            cursor: pointer; transition: all 0.2s ease; outline: none;
         }
         .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
+        
+        select.action-btn { cursor: pointer; padding: 4px 8px; }
 
         /* --- CALENDARIO --- */
         .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
@@ -141,19 +119,12 @@
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; 
         }
 
-        /* --- CELLE E BLOCCO DIMENSIONI --- */
+        /* --- CELLE E VISTE BASE --- */
         .cell {
-            background-color: var(--cell-bg);
-            border-radius: 8px;
-            display: flex; flex-direction: column;
-            transition: all 0.2s ease;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            
-            /* GABBIA D'ACCIAIO: Dimensioni bloccate */
-            min-width: 0;
-            min-height: 0;
+            background-color: var(--cell-bg); border-radius: 8px;
+            display: flex; flex-direction: column; transition: all 0.2s ease;
+            position: relative; cursor: pointer; overflow: hidden;
+            min-width: 0; min-height: 0;
         }
 
         .month-view .cell { aspect-ratio: 1 / 1; }
@@ -168,21 +139,58 @@
             background-color: var(--badge-bg); color: var(--badge-text);
             border-radius: 6px; padding: 2px 8px; margin: 6px;
             align-self: flex-start; font-weight: 800; font-size: 14px;
-            border: 2px solid var(--accent-main);
-            flex-shrink: 0; 
-            position: relative;
-            z-index: 15;
+            border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- INDICATORE AESTHETIC (Cuoricino Fluttuante) --- */
+        /* --- VISTA ANNUALE --- */
+        .calendar-grid.year-view {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .mini-month {
+            background: var(--cell-bg); border: 2px solid var(--accent-main);
+            border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px;
+        }
+        .mini-month-title {
+            text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px;
+        }
+        .mini-days-row {
+            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; 
+            font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px;
+        }
+        .mini-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+        }
+        .mini-cell {
+            aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; 
+            font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s;
+        }
+        .mini-cell:hover { background: rgba(0,0,0,0.1); }
+        [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
+        .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
+        .mini-cell.is-today { border: 2px solid var(--accent-main); }
+
+        /* --- VISTA GIORNALIERA --- */
+        .calendar-grid.day-view { display: block; }
+        .day-card {
+            background: var(--cell-bg); border-radius: 12px; 
+            min-height: 300px; padding: 25px; display: flex; flex-direction: column; 
+            cursor: pointer; transition: filter 0.2s;
+        }
+        .day-card:hover { filter: brightness(0.95); }
+        .large-badge { font-size: 24px; padding: 6px 18px; margin-bottom: 20px; border-radius: 8px; }
+        .day-card-content { display: flex; flex-direction: column; gap: 15px; font-family: 'Mali', cursive; }
+        .day-time { font-size: 18px; font-weight: 800; color: var(--accent-main); }
+        .day-title { font-size: 28px; font-weight: 700; color: var(--text-color); line-height: 1.2; }
+        .day-notes { font-size: 18px; color: var(--text-color); background: rgba(255,255,255,0.5); padding: 15px; border-radius: 12px; }
+        [data-theme="dark"] .day-notes { background: rgba(0,0,0,0.2); }
+        .day-empty { font-size: 18px; color: var(--text-color); opacity: 0.6; text-align: center; margin-top: 40px; font-weight: 600; }
+
+        /* --- INDICATORE AESTHETIC (Cuoricino) --- */
         .aesthetic-indicator {
-            position: absolute;
-            bottom: 6px; right: 8px;
-            color: var(--badge-bg);
-            font-size: 18px;
-            text-shadow: 0 0 8px var(--badge-bg);
-            animation: floatHeart 2.5s ease-in-out infinite;
-            pointer-events: none;
+            position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg);
+            font-size: 18px; text-shadow: 0 0 8px var(--badge-bg);
+            animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none;
         }
 
         @keyframes floatHeart {
@@ -192,77 +200,46 @@
 
         /* --- NUVOLETTA TOOLTIP ESTERNA --- */
         #custom-tooltip {
-            position: fixed;
-            display: none;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.96);
-            border: 3px solid var(--accent-main);
-            color: var(--text-color);
-            padding: 12px 16px;
-            border-radius: 14px;
-            font-family: 'Mali', cursive;
-            font-size: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            pointer-events: none;
-            z-index: 10000;
-            width: max-content;
-            max-width: 250px;
-            word-wrap: break-word;
-            
-            opacity: 0;
-            transform: translate(-50%, -90%) scale(0.95);
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            backdrop-filter: blur(4px);
+            position: fixed; display: none; flex-direction: column;
+            background: rgba(255, 255, 255, 0.96); border: 3px solid var(--accent-main);
+            color: var(--text-color); padding: 12px 16px; border-radius: 14px;
+            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            pointer-events: none; z-index: 10000; width: max-content; max-width: 250px; word-wrap: break-word;
+            opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: opacity 0.2s ease, transform 0.2s ease; backdrop-filter: blur(4px);
         }
-
         [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
-
         #custom-tooltip .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
         #custom-tooltip .title { white-space: pre-wrap; line-height: 1.3; font-weight: 700; }
         #custom-tooltip .notes-preview { font-size: 12px; opacity: 0.8; margin-top: 6px; white-space: pre-wrap; border-top: 1px dashed var(--accent-main); padding-top: 6px; }
 
-        /* --- FINESTRA MODAL (POP-UP EVENTO) --- */
+        /* --- FINESTRA MODAL --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5); z-index: 9999;
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px);
         }
         .modal-window {
-            background: var(--cell-bg);
-            border: 4px solid var(--accent-main);
-            border-radius: 16px; padding: 20px;
-            width: 90%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; gap: 12px;
+            background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px;
+            width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 12px;
         }
-        .modal-window h3 {
-            margin: 0; color: var(--accent-main); font-size: 22px; 
-            text-transform: uppercase; font-weight: 800; text-align: center;
-        }
+        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
         .modal-window input, .modal-window textarea {
-            width: 100%; box-sizing: border-box;
-            background: var(--btn-bg); border: 2px solid var(--accent-main);
-            color: var(--text-color); border-radius: 8px;
-            padding: 10px; font-family: 'Mali', cursive; font-size: 16px;
-            outline: none;
+            width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main);
+            color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none;
         }
         .modal-window input:focus, .modal-window textarea:focus { filter: brightness(0.95); }
         .modal-window textarea { resize: vertical; min-height: 80px; }
-        
         .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
         .modal-actions .right-btns { display: flex; gap: 8px; }
-        
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .btn-delete:hover { background-color: #D32F2F; }
 
     </style>
 </head>
-<body data-theme="transparent" data-color="strawberry">
+<body data-theme="transparent" data-color="blueberry">
 
     <div class="controls-container">
         <div class="picker-group">
-            <div class="color-dot" style="background: #E0E0E0; border-color: #999;" data-theme-target="transparent" title="Sfondo Notion (Trasparente)"></div>
+            <div class="color-dot" style="background: #E0E0E0; border-color: #999;" data-theme-target="transparent" title="Sfondo Notion"></div>
             <div class="color-dot" style="background: #FFFFFF; border-color: #CCC;" data-theme-target="light" title="Chiaro"></div>
             <div class="color-dot" style="background: #FFFBE6; border-color: #D4CDA3;" data-theme-target="beige" title="Beige Notion"></div>
             <div class="color-dot" style="background: #191919; border-color: #555;" data-theme-target="dark" title="Scuro"></div>
@@ -278,8 +255,14 @@
         </div>
         
         <div class="picker-separator"></div>
+        
         <div class="picker-group">
-            <button class="action-btn outline" id="view-toggle-btn" onclick="toggleView()">Vista: Mese</button>
+            <select class="action-btn outline" id="view-select" onchange="changeView(this.value)">
+                <option value="year">Vista: Anno</option>
+                <option value="month">Vista: Mese</option>
+                <option value="week">Vista: Settimana</option>
+                <option value="day">Vista: Giorno</option>
+            </select>
             <button class="action-btn" onclick="goToToday()">Oggi</button>
         </div>
     </div>
@@ -292,7 +275,7 @@
         </div>
 
         <div class="calendar-frame">
-            <div class="days-row">
+            <div class="days-row" id="main-days-row">
                 <div class="day-name">Lun</div><div class="day-name">Mar</div>
                 <div class="day-name">Mer</div><div class="day-name">Gio</div>
                 <div class="day-name">Ven</div><div class="day-name">Sab</div>
@@ -338,7 +321,7 @@
             safeStorage.set('cal-square-color', color);
         }
         setTheme(safeStorage.get('cal-square-theme') || 'transparent');
-        setColor(safeStorage.get('cal-square-color') || 'strawberry');
+        setColor(safeStorage.get('cal-square-color') || 'blueberry');
 
         document.querySelectorAll('[data-theme-target]').forEach(dot => {
             dot.addEventListener('click', () => setTheme(dot.getAttribute('data-theme-target')));
@@ -351,10 +334,12 @@
         let currentEditingDate = null;
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-square-view') || 'month';
+        
+        document.getElementById('view-select').value = currentView;
 
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
-        const viewToggleBtn = document.getElementById('view-toggle-btn');
+        const mainDaysRow = document.getElementById('main-days-row');
         const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
@@ -406,8 +391,8 @@
             if (e.target === this) closeModal();
         });
 
-        function toggleView() {
-            currentView = currentView === 'month' ? 'week' : 'month';
+        function changeView(view) {
+            currentView = view;
             safeStorage.set('cal-square-view', currentView);
             renderCalendar();
         }
@@ -418,8 +403,10 @@
         }
 
         function navigate(direction) {
-            if (currentView === 'month') { baseDate.setMonth(baseDate.getMonth() + direction); } 
-            else { baseDate.setDate(baseDate.getDate() + (direction * 7)); }
+            if (currentView === 'year') { baseDate.setFullYear(baseDate.getFullYear() + direction); }
+            else if (currentView === 'month') { baseDate.setMonth(baseDate.getMonth() + direction); }
+            else if (currentView === 'week') { baseDate.setDate(baseDate.getDate() + (direction * 7)); }
+            else if (currentView === 'day') { baseDate.setDate(baseDate.getDate() + direction); }
             renderCalendar();
         }
 
@@ -430,6 +417,60 @@
             return new Date(date.setDate(diff));
         }
 
+        /* Generatore Mini Mese per Vista Annuale */
+        function createMiniMonth(y, m) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mini-month';
+
+            const mTitle = document.createElement('div');
+            mTitle.className = 'mini-month-title';
+            mTitle.innerText = mesi[m];
+            wrapper.appendChild(mTitle);
+
+            const mDays = document.createElement('div');
+            mDays.className = 'mini-days-row';
+            ['L','M','M','G','V','S','D'].forEach(d => {
+                const div = document.createElement('div');
+                div.innerText = d;
+                mDays.appendChild(div);
+            });
+            wrapper.appendChild(mDays);
+
+            const mGrid = document.createElement('div');
+            mGrid.className = 'mini-grid';
+
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const startPad = firstDay === 0 ? 6 : firstDay - 1;
+
+            for (let i = 0; i < startPad; i++) mGrid.appendChild(document.createElement('div'));
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'mini-cell';
+                cell.innerText = day;
+
+                const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                if (calendarEvents[dateKey]) cell.classList.add('has-event');
+                
+                const today = new Date();
+                if (today.getFullYear()===y && today.getMonth()===m && today.getDate()===day) {
+                    cell.classList.add('is-today');
+                }
+
+                cell.onclick = () => {
+                    baseDate = new Date(y, m, day);
+                    document.getElementById('view-select').value = 'day';
+                    changeView('day'); // Va diretto alla vista giornaliera se clicchi!
+                };
+
+                mGrid.appendChild(cell);
+            }
+            wrapper.appendChild(mGrid);
+            return wrapper;
+        }
+
+        /* Generatore Singola Cella (Mese / Settimana) */
         function createCell(year, month, day, isEmpty) {
             const cell = document.createElement('div');
             cell.className = `cell ${isEmpty ? 'empty' : ''}`;
@@ -485,13 +526,60 @@
             return cell;
         }
 
+        /* Generatore Card Giorno Singolo */
+        function createDayCard(y, m, d) {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+            card.onclick = () => openModal(y, m, d);
+
+            const badge = document.createElement('div');
+            badge.className = 'date-badge large-badge';
+            badge.innerText = `${d} ${mesi[m]} ${y}`;
+            card.appendChild(badge);
+
+            const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const ev = calendarEvents[dateKey];
+
+            const content = document.createElement('div');
+            content.className = 'day-card-content';
+
+            if(ev && (ev.title || ev.time || ev.notes)) {
+                if(ev.time) content.innerHTML += `<div class="day-time">🕒 ${ev.time}</div>`;
+                if(ev.title) content.innerHTML += `<div class="day-title">${ev.title}</div>`;
+                if(ev.notes) content.innerHTML += `<div class="day-notes">${ev.notes.replace(/\n/g, '<br>')}</div>`;
+            } else {
+                content.innerHTML += `<div class="day-empty">La giornata è libera. Clicca per aggiungere un evento o una nota. ♥</div>`;
+            }
+
+            card.appendChild(content);
+            return card;
+        }
+
         function renderCalendar() {
             grid.innerHTML = '';
             const year = baseDate.getFullYear();
             const month = baseDate.getMonth();
 
-            if (currentView === 'month') {
-                viewToggleBtn.innerText = "Vista: Mese";
+            if (currentView === 'year') {
+                mainDaysRow.style.display = 'none';
+                grid.className = "calendar-grid year-view";
+                title.innerText = `${year}`;
+                
+                for(let m=0; m<12; m++) {
+                    grid.appendChild(createMiniMonth(year, m));
+                }
+
+            } else if (currentView === 'day') {
+                mainDaysRow.style.display = 'none';
+                grid.className = "calendar-grid day-view";
+                
+                const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+                title.innerText = dNames[baseDate.getDay()];
+                
+                grid.appendChild(createDayCard(year, month, baseDate.getDate()));
+
+            } else if (currentView === 'month') {
+                mainDaysRow.style.display = 'grid';
                 grid.className = "calendar-grid month-view";
                 title.innerText = `${mesi[month]} ${year}`;
 
@@ -506,8 +594,8 @@
                 const endPad = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
                 for (let i = 0; i < endPad; i++) grid.appendChild(createCell(year, month, 0, true));
 
-            } else {
-                viewToggleBtn.innerText = "Vista: Settimana";
+            } else if (currentView === 'week') {
+                mainDaysRow.style.display = 'grid';
                 grid.className = "calendar-grid week-view";
                 
                 const monday = getMonday(baseDate);
