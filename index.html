@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Square & Modal Edition</title>
+    <title>Aesthetic Calendar - Square & Rectangular Views</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -111,17 +111,28 @@
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; 
         }
 
-        /* --- CELLE QUADRATE --- */
+        /* --- CELLE E FORMATI --- */
         .cell {
             background-color: var(--cell-bg);
             border-radius: 8px;
             display: flex; flex-direction: column;
             transition: filter 0.2s;
             position: relative;
-            aspect-ratio: 1 / 1; /* IL TRUCCO MAGICO: Forza la forma quadrata */
             cursor: pointer;
             overflow: hidden;
         }
+
+        /* VISTA MESE: Quadrati perfetti, nessuna deformazione */
+        .month-view .cell {
+            aspect-ratio: 1 / 1; 
+        }
+
+        /* VISTA SETTIMANA: Rettangoli alti per contenere più eventi */
+        .week-view .cell {
+            aspect-ratio: auto;
+            min-height: 400px; 
+        }
+
         .cell:hover:not(.empty) { filter: brightness(0.92); }
         .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
@@ -131,20 +142,33 @@
             border-radius: 6px; padding: 2px 8px; margin: 6px;
             align-self: flex-start; font-weight: 800; font-size: 14px;
             border: 2px solid var(--accent-main);
+            flex-shrink: 0; /* Impedisce al badge di schiacciarsi */
         }
 
-        /* Anteprima Evento nella Cella */
+        /* Anteprima Evento nella Cella (Mantenuta in griglia) */
         .event-preview {
-            margin: 0 6px 6px 6px; padding: 4px;
+            margin: 0 6px 6px 6px; padding: 6px;
             background: rgba(255, 255, 255, 0.5);
             border-radius: 4px; font-family: 'Mali', cursive;
             font-size: 12px; color: var(--text-color);
             display: flex; flex-direction: column;
-            overflow: hidden;
+            /* TRUCCO ANTI-DEFORMAZIONE: flex: 1, min-height: 0 e auto-scroll */
+            flex: 1;
+            min-height: 0; 
+            overflow-y: auto; 
         }
+        
+        /* Scrollbar interna dell'anteprima (se il testo è lungo) */
+        .event-preview::-webkit-scrollbar { width: 4px; }
+        .event-preview::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
+        .event-preview::-webkit-scrollbar-track { background: transparent; }
+
         [data-theme="dark"] .event-preview { background: rgba(0,0,0,0.3); }
-        .event-preview .time { font-weight: 800; font-size: 11px; color: var(--accent-main); }
-        .event-preview .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .event-preview .time { font-weight: 800; font-size: 11px; color: var(--accent-main); margin-bottom: 2px; }
+        
+        /* Nella vista mese, accorcia il testo per non intasare, nella settimana lo fa scorrere */
+        .month-view .event-preview .title { white-space: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .week-view .event-preview .title { white-space: pre-wrap; }
 
         /* --- FINESTRA MODAL (POP-UP EVENTO) --- */
         .modal-overlay {
@@ -221,7 +245,7 @@
                 <div class="day-name">Ven</div><div class="day-name">Sab</div>
                 <div class="day-name">Dom</div>
             </div>
-            <div class="calendar-grid" id="calendar-grid">
+            <div class="calendar-grid month-view" id="calendar-grid">
                 </div>
         </div>
     </div>
@@ -323,7 +347,6 @@
             }
         }
 
-        // Cliccare fuori dalla finestra per chiuderla
         document.getElementById('event-modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
@@ -365,17 +388,17 @@
                 badge.innerText = day;
                 cell.appendChild(badge);
 
-                // Controlla se c'è un evento salvato per questo giorno
                 const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const ev = calendarEvents[dateKey];
                 
-                if(ev && (ev.title || ev.time)) {
+                if(ev && (ev.title || ev.time || ev.notes)) {
                     const preview = document.createElement('div');
                     preview.className = 'event-preview';
                     
-                    if(ev.time) preview.innerHTML += `<span class="time">${ev.time}</span>`;
-                    if(ev.title) preview.innerHTML += `<span class="title">${ev.title}</span>`;
-                    else if(ev.notes) preview.innerHTML += `<span class="title">📝 Note...</span>`;
+                    if(ev.time) preview.innerHTML += `<div class="time">${ev.time}</div>`;
+                    if(ev.title) preview.innerHTML += `<div class="title">${ev.title}</div>`;
+                    if(ev.notes && !ev.title) preview.innerHTML += `<div class="title">📝 Vedi note</div>`;
+                    else if (ev.notes) preview.innerHTML += `<div class="title" style="opacity:0.7; font-size:10px;">📝...</div>`;
                     
                     cell.appendChild(preview);
                 }
@@ -390,6 +413,7 @@
 
             if (currentView === 'month') {
                 viewToggleBtn.innerText = "Vista: Mese";
+                grid.className = "calendar-grid month-view"; // Imposta le celle quadrate
                 title.innerText = `${mesi[month]} ${year}`;
 
                 const firstDay = new Date(year, month, 1).getDay();
@@ -405,6 +429,8 @@
 
             } else {
                 viewToggleBtn.innerText = "Vista: Settimana";
+                grid.className = "calendar-grid week-view"; // Imposta le celle rettangolari
+                
                 const monday = getMonday(baseDate);
                 const sunday = new Date(monday);
                 sunday.setDate(sunday.getDate() + 6);
