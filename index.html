@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar Widget</title>
+    <title>Aesthetic Calendar - Square & Modal Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -14,16 +14,15 @@
         }
 
         :root {
-            /* Sfondi base della pagina Notion */
             --page-bg: transparent; 
             --text-color: #4A3A35;
             
-            /* Tema Fragola (Predefinito - Ispirato all'immagine) */
-            --accent-main: #C62828;      /* Rosso dei bordi spessi */
-            --cell-bg: #FFF0F5;          /* Rosa chiarissimo sfondo celle */
-            --badge-bg: #FF8A80;         /* Rosa/Rosso quadratino data */
-            --badge-text: #FFFFFF;       /* Testo della data */
-            --header-bg: #FFCDD2;        /* Sfondo dei giorni della settimana */
+            /* Tema Fragola */
+            --accent-main: #C62828;      
+            --cell-bg: #FFF0F5;          
+            --badge-bg: #FF8A80;         
+            --badge-text: #FFFFFF;       
+            --header-bg: #FFCDD2;        
             --btn-bg: #FFF;
         }
 
@@ -33,29 +32,15 @@
         [data-theme="dark"] { --page-bg: #191919; --text-color: #F0F0F0; --btn-bg: #2C2C2C; }
         [data-theme="transparent"] { --page-bg: transparent; }
 
-        /* --- PALETTE COLORI (Estetica Aesthetic) --- */
-        [data-color="strawberry"] {
-            --accent-main: #C62828; --cell-bg: #FFF0F5; --badge-bg: #FF8A80; --header-bg: #FFCDD2;
-        }
-        [data-color="matcha"] {
-            --accent-main: #2E7D32; --cell-bg: #F1F8E9; --badge-bg: #81C784; --header-bg: #C8E6C9;
-        }
-        [data-color="blueberry"] {
-            --accent-main: #1565C0; --cell-bg: #E3F2FD; --badge-bg: #64B5F6; --header-bg: #BBDEFB;
-        }
-        [data-color="grape"] {
-            --accent-main: #6A1B9A; --cell-bg: #F3E5F5; --badge-bg: #BA68C8; --header-bg: #E1BEE7;
-        }
-        [data-color="choco"] {
-            --accent-main: #4E342E; --cell-bg: #EFEBE9; --badge-bg: #A1887F; --header-bg: #D7CCC8;
-        }
+        /* --- PALETTE COLORI --- */
+        [data-color="strawberry"] { --accent-main: #C62828; --cell-bg: #FFF0F5; --badge-bg: #FF8A80; --header-bg: #FFCDD2; }
+        [data-color="matcha"] { --accent-main: #2E7D32; --cell-bg: #F1F8E9; --badge-bg: #81C784; --header-bg: #C8E6C9; }
+        [data-color="blueberry"] { --accent-main: #1565C0; --cell-bg: #E3F2FD; --badge-bg: #64B5F6; --header-bg: #BBDEFB; }
+        [data-color="grape"] { --accent-main: #6A1B9A; --cell-bg: #F3E5F5; --badge-bg: #BA68C8; --header-bg: #E1BEE7; }
+        [data-color="choco"] { --accent-main: #4E342E; --cell-bg: #EFEBE9; --badge-bg: #A1887F; --header-bg: #D7CCC8; }
 
-        /* Adattamento Dark Mode per la griglia */
-        [data-theme="dark"] {
-            --cell-bg: #2A2A2A; 
-            --header-bg: #3A3A3A;
-            --accent-main: #111;
-        }
+        /* Dark Mode per la griglia */
+        [data-theme="dark"] { --cell-bg: #2A2A2A; --header-bg: #3A3A3A; --accent-main: #111; }
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #5C1313; --badge-bg: #9C3838; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #143A16; --badge-bg: #3A733E; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #0A3261; --badge-bg: #28639C; }
@@ -70,7 +55,7 @@
             transition: background-color 0.3s ease;
         }
 
-        /* --- CONTROLLI SUPERIORI --- */
+        /* --- CONTROLLI --- */
         .controls-container {
             display: flex; gap: 15px; margin-bottom: 20px;
             padding: 8px 20px; background-color: var(--btn-bg); 
@@ -78,16 +63,13 @@
             justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border: 2px solid var(--accent-main);
         }
-
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
-
         .color-dot {
             width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
             border: 2px solid var(--accent-main); transition: transform 0.2s;
         }
         .color-dot:hover { transform: scale(1.2); }
-
         .action-btn {
             background-color: var(--badge-bg); color: var(--badge-text); 
             border: 2px solid var(--accent-main); border-radius: 12px; 
@@ -97,13 +79,8 @@
         .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
 
-        /* --- CALENDARIO AESTHETIC --- */
-        .calendar-wrapper {
-            width: 100%; max-width: 900px;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-
-        /* Intestazione Mese */
+        /* --- CALENDARIO --- */
+        .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
         .month-header {
             display: flex; justify-content: space-between; align-items: center;
             background-color: var(--header-bg); padding: 10px 20px;
@@ -116,14 +93,11 @@
             padding: 4px 12px; font-weight: bold; font-family: 'Nunito';
         }
 
-        /* La Griglia spessa e arrotondata */
         .calendar-frame {
-            background-color: var(--accent-main); /* Il bordo spesso esterno e interno */
-            padding: 6px; 
-            border-radius: 16px;
+            background-color: var(--accent-main); 
+            padding: 6px; border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
-
         .days-row {
             display: grid; grid-template-columns: repeat(7, 1fr);
             gap: 4px; margin-bottom: 4px;
@@ -133,28 +107,25 @@
             text-align: center; font-weight: 800; font-size: 14px;
             padding: 8px 0; border-radius: 8px; text-transform: uppercase;
         }
-
         .calendar-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr);
-            gap: 4px; /* Crea le linee della griglia spesse */
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; 
         }
 
-        /* Le Singole Celle */
+        /* --- CELLE QUADRATE --- */
         .cell {
             background-color: var(--cell-bg);
             border-radius: 8px;
             display: flex; flex-direction: column;
-            transition: background-color 0.2s;
+            transition: filter 0.2s;
             position: relative;
+            aspect-ratio: 1 / 1; /* IL TRUCCO MAGICO: Forza la forma quadrata */
+            cursor: pointer;
+            overflow: hidden;
         }
-
-        .month-view .cell { min-height: 90px; }
-        .week-view .cell { min-height: 350px; } /* Più altezza per la settimana */
-
-        .cell.empty { background-color: rgba(255,255,255,0.4); }
+        .cell:hover:not(.empty) { filter: brightness(0.92); }
+        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
-        /* Quadratino della data in alto a sinistra */
         .date-badge {
             background-color: var(--badge-bg); color: var(--badge-text);
             border-radius: 6px; padding: 2px 8px; margin: 6px;
@@ -162,20 +133,53 @@
             border: 2px solid var(--accent-main);
         }
 
-        /* Area per inserire gli eventi */
-        .event-input {
-            flex-grow: 1; margin: 0 6px 6px 6px; outline: none;
-            font-family: 'Mali', cursive; /* Font in stile scrittura a mano */
-            font-size: 14px; color: var(--text-color);
-            overflow-y: auto; white-space: pre-wrap; word-wrap: break-word;
-            padding: 4px; border-radius: 4px;
+        /* Anteprima Evento nella Cella */
+        .event-preview {
+            margin: 0 6px 6px 6px; padding: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px; font-family: 'Mali', cursive;
+            font-size: 12px; color: var(--text-color);
+            display: flex; flex-direction: column;
+            overflow: hidden;
         }
-        .event-input:focus { background-color: rgba(255,255,255,0.3); }
+        [data-theme="dark"] .event-preview { background: rgba(0,0,0,0.3); }
+        .event-preview .time { font-weight: 800; font-size: 11px; color: var(--accent-main); }
+        .event-preview .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Scrollbar carina per le celle */
-        .event-input::-webkit-scrollbar { width: 6px; }
-        .event-input::-webkit-scrollbar-track { background: transparent; }
-        .event-input::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
+        /* --- FINESTRA MODAL (POP-UP EVENTO) --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 9999;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal-window {
+            background: var(--cell-bg);
+            border: 4px solid var(--accent-main);
+            border-radius: 16px; padding: 20px;
+            width: 90%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .modal-window h3 {
+            margin: 0; color: var(--accent-main); font-size: 22px; 
+            text-transform: uppercase; font-weight: 800; text-align: center;
+        }
+        .modal-window input, .modal-window textarea {
+            width: 100%; box-sizing: border-box;
+            background: var(--btn-bg); border: 2px solid var(--accent-main);
+            color: var(--text-color); border-radius: 8px;
+            padding: 10px; font-family: 'Mali', cursive; font-size: 16px;
+            outline: none;
+        }
+        .modal-window input:focus, .modal-window textarea:focus { filter: brightness(0.95); }
+        .modal-window textarea { resize: vertical; min-height: 80px; }
+        
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
+        .modal-actions .right-btns { display: flex; gap: 8px; }
+        
+        .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
+        .btn-delete:hover { background-color: #D32F2F; }
 
     </style>
 </head>
@@ -183,13 +187,12 @@
 
     <div class="controls-container">
         <div class="picker-group">
-            <div class="color-dot" style="background-color: #E0E0E0;" data-theme-target="transparent" title="Sfondo Notion (Trasparente)"></div>
+            <div class="color-dot" style="background-color: #E0E0E0;" data-theme-target="transparent" title="Sfondo Notion"></div>
             <div class="color-dot" style="background-color: #FFFFFF;" data-theme-target="light" title="Chiaro"></div>
             <div class="color-dot" style="background-color: #FFFBE6;" data-theme-target="beige" title="Beige Notion"></div>
             <div class="color-dot" style="background-color: #191919; border-color: #555;" data-theme-target="dark" title="Scuro"></div>
         </div>
         <div class="picker-separator"></div>
-        
         <div class="picker-group">
             <div class="color-dot" style="background-color: #C62828;" data-color-target="strawberry" title="Fragola"></div>
             <div class="color-dot" style="background-color: #2E7D32;" data-color-target="matcha" title="Matcha"></div>
@@ -198,7 +201,6 @@
             <div class="color-dot" style="background-color: #4E342E;" data-color-target="choco" title="Cioccolato"></div>
         </div>
         <div class="picker-separator"></div>
-        
         <div class="picker-group">
             <button class="action-btn outline" id="view-toggle-btn" onclick="toggleView()">Vista: Mese</button>
             <button class="action-btn" onclick="goToToday()">Oggi</button>
@@ -207,9 +209,9 @@
 
     <div class="calendar-wrapper">
         <div class="month-header">
-            <button class="nav-btn" onclick="navigate(-1)">◀ Precedente</button>
+            <button class="nav-btn" onclick="navigate(-1)">◀ Prec</button>
             <h2 id="calendar-title">Mese Anno</h2>
-            <button class="nav-btn" onclick="navigate(1)">Successivo ▶</button>
+            <button class="nav-btn" onclick="navigate(1)">Succ ▶</button>
         </div>
 
         <div class="calendar-frame">
@@ -219,8 +221,26 @@
                 <div class="day-name">Ven</div><div class="day-name">Sab</div>
                 <div class="day-name">Dom</div>
             </div>
-            <div class="calendar-grid month-view" id="calendar-grid">
+            <div class="calendar-grid" id="calendar-grid">
                 </div>
+        </div>
+    </div>
+
+    <div id="event-modal" class="modal-overlay">
+        <div class="modal-window">
+            <h3 id="modal-date-title">Data</h3>
+            
+            <input type="text" id="modal-title" placeholder="Nome dell'Evento (es. Compleanno)..." autocomplete="off">
+            <input type="text" id="modal-time" placeholder="Ora o Durata (es. 15:00 - 16:30)..." autocomplete="off">
+            <textarea id="modal-notes" placeholder="Note aggiuntive o dettagli..."></textarea>
+            
+            <div class="modal-actions">
+                <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
+                <div class="right-btns">
+                    <button class="action-btn outline" onclick="closeModal()">Annulla</button>
+                    <button class="action-btn" onclick="saveEvent()">Salva</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -231,18 +251,17 @@
             set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) { console.warn("Memoria bloccata."); } }
         };
 
-        // --- GESTIONE TEMI E COLORI ---
+        // --- TEMI E COLORI ---
         function setTheme(theme) {
             document.body.setAttribute('data-theme', theme);
-            safeStorage.set('cal-theme', theme);
+            safeStorage.set('cal-square-theme', theme);
         }
         function setColor(color) {
             document.body.setAttribute('data-color', color);
-            safeStorage.set('cal-color', color);
+            safeStorage.set('cal-square-color', color);
         }
-
-        setTheme(safeStorage.get('cal-theme') || 'transparent');
-        setColor(safeStorage.get('cal-color') || 'strawberry');
+        setTheme(safeStorage.get('cal-square-theme') || 'transparent');
+        setColor(safeStorage.get('cal-square-color') || 'strawberry');
 
         document.querySelectorAll('[data-theme-target]').forEach(dot => {
             dot.addEventListener('click', () => setTheme(dot.getAttribute('data-theme-target')));
@@ -251,19 +270,68 @@
             dot.addEventListener('click', () => setColor(dot.getAttribute('data-color-target')));
         });
 
-        // --- LOGICA CALENDARIO ---
-        let currentView = safeStorage.get('cal-view') || 'month'; // 'month' o 'week'
-        let baseDate = new Date(); // Data di riferimento attuale
+        // --- DATABASE EVENTI (Formato JSON) ---
+        let calendarEvents = JSON.parse(safeStorage.get('cal-square-events')) || {};
+        let currentEditingDate = null;
+        let baseDate = new Date();
+        let currentView = safeStorage.get('cal-square-view') || 'month';
 
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
         const viewToggleBtn = document.getElementById('view-toggle-btn');
-
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
+        // --- GESTIONE MODAL ---
+        function openModal(year, month, day) {
+            currentEditingDate = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            document.getElementById('modal-date-title').innerText = `${day} ${mesi[month]} ${year}`;
+            
+            const ev = calendarEvents[currentEditingDate] || { title: '', time: '', notes: '' };
+            document.getElementById('modal-title').value = ev.title;
+            document.getElementById('modal-time').value = ev.time;
+            document.getElementById('modal-notes').value = ev.notes;
+            
+            document.getElementById('event-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('event-modal').style.display = 'none';
+        }
+
+        function saveEvent() {
+            const title = document.getElementById('modal-title').value.trim();
+            const time = document.getElementById('modal-time').value.trim();
+            const notes = document.getElementById('modal-notes').value.trim();
+            
+            if(title || time || notes) {
+                calendarEvents[currentEditingDate] = { title, time, notes };
+            } else {
+                delete calendarEvents[currentEditingDate];
+            }
+            
+            safeStorage.set('cal-square-events', JSON.stringify(calendarEvents));
+            closeModal();
+            renderCalendar();
+        }
+
+        function deleteEvent() {
+            if(confirm("Sei sicuro di voler eliminare questo evento?")) {
+                delete calendarEvents[currentEditingDate];
+                safeStorage.set('cal-square-events', JSON.stringify(calendarEvents));
+                closeModal();
+                renderCalendar();
+            }
+        }
+
+        // Cliccare fuori dalla finestra per chiuderla
+        document.getElementById('event-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // --- LOGICA CALENDARIO ---
         function toggleView() {
             currentView = currentView === 'month' ? 'week' : 'month';
-            safeStorage.set('cal-view', currentView);
+            safeStorage.set('cal-square-view', currentView);
             renderCalendar();
         }
 
@@ -273,15 +341,11 @@
         }
 
         function navigate(direction) {
-            if (currentView === 'month') {
-                baseDate.setMonth(baseDate.getMonth() + direction);
-            } else {
-                baseDate.setDate(baseDate.getDate() + (direction * 7));
-            }
+            if (currentView === 'month') { baseDate.setMonth(baseDate.getMonth() + direction); } 
+            else { baseDate.setDate(baseDate.getDate() + (direction * 7)); }
             renderCalendar();
         }
 
-        // Calcola il lunedì della settimana in cui si trova la baseDate
         function getMonday(d) {
             let date = new Date(d);
             let day = date.getDay();
@@ -289,84 +353,62 @@
             return new Date(date.setDate(diff));
         }
 
-        function formatDateKey(year, month, day) {
-            return `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        }
-
         function createCell(year, month, day, isEmpty) {
             const cell = document.createElement('div');
             cell.className = `cell ${isEmpty ? 'empty' : ''}`;
             
             if (!isEmpty) {
-                const dateKey = formatDateKey(year, month, day);
+                cell.onclick = () => openModal(year, month, day);
                 
                 const badge = document.createElement('div');
                 badge.className = 'date-badge';
                 badge.innerText = day;
-                
-                const input = document.createElement('div');
-                input.className = 'event-input';
-                input.contentEditable = "true";
-                input.setAttribute('spellcheck', 'false');
-                
-                // Carica i dati salvati
-                input.innerHTML = safeStorage.get('calevent-' + dateKey) || '';
-                
-                // Salva automaticamente mentre scrivi
-                input.addEventListener('input', () => {
-                    safeStorage.set('calevent-' + dateKey, input.innerHTML);
-                });
-
                 cell.appendChild(badge);
-                cell.appendChild(input);
+
+                // Controlla se c'è un evento salvato per questo giorno
+                const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const ev = calendarEvents[dateKey];
+                
+                if(ev && (ev.title || ev.time)) {
+                    const preview = document.createElement('div');
+                    preview.className = 'event-preview';
+                    
+                    if(ev.time) preview.innerHTML += `<span class="time">${ev.time}</span>`;
+                    if(ev.title) preview.innerHTML += `<span class="title">${ev.title}</span>`;
+                    else if(ev.notes) preview.innerHTML += `<span class="title">📝 Note...</span>`;
+                    
+                    cell.appendChild(preview);
+                }
             }
             return cell;
         }
 
         function renderCalendar() {
             grid.innerHTML = '';
-            
             const year = baseDate.getFullYear();
             const month = baseDate.getMonth();
 
             if (currentView === 'month') {
                 viewToggleBtn.innerText = "Vista: Mese";
-                grid.className = "calendar-grid month-view";
                 title.innerText = `${mesi[month]} ${year}`;
 
                 const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
-                
-                // Aggiusta in modo che il lunedì sia 0, domenica 6
                 const startPad = firstDay === 0 ? 6 : firstDay - 1; 
 
-                // Celle vuote inizio mese
-                for (let i = 0; i < startPad; i++) {
-                    grid.appendChild(createCell(year, month, 0, true));
-                }
-
-                // Celle con i giorni
-                for (let day = 1; day <= daysInMonth; day++) {
-                    grid.appendChild(createCell(year, month, day, false));
-                }
-
-                // Celle vuote fine mese
+                for (let i = 0; i < startPad; i++) grid.appendChild(createCell(year, month, 0, true));
+                for (let day = 1; day <= daysInMonth; day++) grid.appendChild(createCell(year, month, day, false));
+                
                 const totalCells = startPad + daysInMonth;
                 const endPad = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-                for (let i = 0; i < endPad; i++) {
-                    grid.appendChild(createCell(year, month, 0, true));
-                }
+                for (let i = 0; i < endPad; i++) grid.appendChild(createCell(year, month, 0, true));
 
             } else {
-                // VISUALIZZAZIONE SETTIMANALE
                 viewToggleBtn.innerText = "Vista: Settimana";
-                grid.className = "calendar-grid week-view";
-                
                 const monday = getMonday(baseDate);
                 const sunday = new Date(monday);
                 sunday.setDate(sunday.getDate() + 6);
                 
-                // Mostra il periodo nel titolo (es. "4 - 10 Marzo 2026")
                 if(monday.getMonth() === sunday.getMonth()) {
                     title.innerText = `${monday.getDate()} - ${sunday.getDate()} ${mesi[monday.getMonth()]} ${monday.getFullYear()}`;
                 } else {
@@ -381,9 +423,7 @@
             }
         }
 
-        // Avvio
         renderCalendar();
-
     </script>
 </body>
 </html>
