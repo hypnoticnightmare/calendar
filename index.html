@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Locked Size Edition</title>
+    <title>Aesthetic Calendar - Hover Overlay Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -116,27 +116,26 @@
             background-color: var(--cell-bg);
             border-radius: 8px;
             display: flex; flex-direction: column;
-            transition: filter 0.2s;
+            transition: all 0.2s ease;
             position: relative;
             cursor: pointer;
             overflow: hidden;
             
-            /* GABBIA D'ACCIAIO: Impedisce al testo di allargare o alzare la cella */
+            /* GABBIA D'ACCIAIO: Dimensioni bloccate */
             min-width: 0;
             min-height: 0;
         }
 
-        /* VISTA MESE: Quadrati perfetti, nessuna deformazione */
-        .month-view .cell {
-            aspect-ratio: 1 / 1; 
-        }
+        /* VISTA MESE: Quadrati perfetti */
+        .month-view .cell { aspect-ratio: 1 / 1; }
 
-        /* VISTA SETTIMANA: Rettangoli alti per contenere più eventi */
-        .week-view .cell {
-            aspect-ratio: auto;
-            min-height: 400px; 
-        }
+        /* VISTA SETTIMANA: Rettangoli alti */
+        .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
+        /* Modifiche visive se c'è un evento (Sfondo e Hover) */
+        .cell.has-event {
+            background-color: var(--header-bg); /* Sfondo più marcato per distinguere i giorni occupati */
+        }
         .cell:hover:not(.empty) { filter: brightness(0.92); }
         .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
@@ -146,34 +145,56 @@
             border-radius: 6px; padding: 2px 8px; margin: 6px;
             align-self: flex-start; font-weight: 800; font-size: 14px;
             border: 2px solid var(--accent-main);
-            flex-shrink: 0; /* Impedisce al badge di schiacciarsi */
+            flex-shrink: 0; 
+            position: relative;
+            z-index: 15; /* Lo mantiene SEMPRE sopra l'overlay degli eventi */
         }
 
-        /* Anteprima Evento nella Cella */
-        .event-preview {
-            margin: 0 6px 6px 6px; padding: 6px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 4px; font-family: 'Mali', cursive;
-            font-size: 12px; color: var(--text-color);
-            display: flex; flex-direction: column;
+        /* Il puntino indicatore in basso a destra */
+        .event-indicator {
+            position: absolute;
+            bottom: 8px; right: 8px;
+            width: 12px; height: 12px;
+            background-color: var(--accent-main);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        /* --- OVERLAY EVENTO (Compare solo al passaggio del mouse) --- */
+        .hover-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
             
-            /* TRUCCO ANTI-DEFORMAZIONE e SCORRIMENTO */
-            flex: 1;
-            min-height: 0; 
-            overflow-y: auto; 
-            word-break: break-word; /* Impedisce a parole lunghe di sformare in larghezza */
+            /* Formattazione Testo */
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 35px 10px 10px 10px; /* Spazio sopra per non coprire del tutto il badge */
+            text-align: center;
+            font-family: 'Mali', cursive;
+            font-size: 13px; color: var(--text-color);
+            overflow-y: auto; word-break: break-word;
         }
-        
-        /* Scrollbar interna dell'anteprima */
-        .event-preview::-webkit-scrollbar { width: 4px; }
-        .event-preview::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
-        .event-preview::-webkit-scrollbar-track { background: transparent; }
 
-        [data-theme="dark"] .event-preview { background: rgba(0,0,0,0.3); }
-        .event-preview .time { font-weight: 800; font-size: 11px; color: var(--accent-main); margin-bottom: 2px; }
-        
-        .month-view .event-preview .title { white-space: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-        .week-view .event-preview .title { white-space: pre-wrap; }
+        [data-theme="dark"] .hover-overlay { background: rgba(40, 40, 40, 0.92); }
+
+        /* Effetto di apparizione al passaggio del mouse */
+        .cell.has-event:hover .hover-overlay { opacity: 1; pointer-events: auto; }
+
+        .hover-overlay .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
+        .hover-overlay .title { white-space: pre-wrap; line-height: 1.3; }
+
+        /* Scrollbar overlay */
+        .hover-overlay::-webkit-scrollbar { width: 4px; }
+        .hover-overlay::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
+        .hover-overlay::-webkit-scrollbar-track { background: transparent; }
 
         /* --- FINESTRA MODAL (POP-UP EVENTO) --- */
         .modal-overlay {
@@ -383,24 +404,34 @@
             if (!isEmpty) {
                 cell.onclick = () => openModal(year, month, day);
                 
+                // 1. Aggiunge il badge con la data (Rimane sempre visibile!)
                 const badge = document.createElement('div');
                 badge.className = 'date-badge';
                 badge.innerText = day;
                 cell.appendChild(badge);
 
+                // 2. Controlla se c'è un evento
                 const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const ev = calendarEvents[dateKey];
                 
                 if(ev && (ev.title || ev.time || ev.notes)) {
-                    const preview = document.createElement('div');
-                    preview.className = 'event-preview';
+                    // Aggiunge la classe che cambia il colore di sfondo della cella
+                    cell.classList.add('has-event');
                     
-                    if(ev.time) preview.innerHTML += `<div class="time">${ev.time}</div>`;
-                    if(ev.title) preview.innerHTML += `<div class="title">${ev.title}</div>`;
-                    if(ev.notes && !ev.title) preview.innerHTML += `<div class="title">📝 Vedi note</div>`;
-                    else if (ev.notes) preview.innerHTML += `<div class="title" style="opacity:0.7; font-size:10px;">📝...</div>`;
+                    // Aggiunge il puntino in basso a destra
+                    const indicator = document.createElement('div');
+                    indicator.className = 'event-indicator';
+                    cell.appendChild(indicator);
+
+                    // Crea l'Overlay invisibile che apparirà solo passando il mouse
+                    const overlay = document.createElement('div');
+                    overlay.className = 'hover-overlay';
                     
-                    cell.appendChild(preview);
+                    if(ev.time) overlay.innerHTML += `<div class="time">${ev.time}</div>`;
+                    if(ev.title) overlay.innerHTML += `<div class="title">${ev.title}</div>`;
+                    if(ev.notes && !ev.title) overlay.innerHTML += `<div class="title">📝 Note presenti</div>`;
+                    
+                    cell.appendChild(overlay);
                 }
             }
             return cell;
