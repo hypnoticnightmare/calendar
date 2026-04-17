@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Multi-Color Fruit Palettes</title>
+    <title>Aesthetic Calendar - Floating Heart Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -28,37 +28,37 @@
 
         /* --- PALETTE COLORI (3 Colori Frutta/Cibo) --- */
         [data-color="strawberry"] { 
-            --accent-main: #C66F80; /* Rosa Scuro */
-            --badge-bg: #4A6644;    /* Verde Foglia */
-            --cell-bg: #FCEBF1;     /* Rosa Panna */
-            --header-bg: #FADCE5;   /* Rosa per intestazioni */
+            --accent-main: #C66F80; 
+            --badge-bg: #4A6644;    
+            --cell-bg: #FCEBF1;     
+            --header-bg: #FADCE5;   
         }
         [data-color="matcha"] { 
-            --accent-main: #6B705C; /* Verde Matcha */
-            --badge-bg: #9C6644;    /* Marrone Legno/Azuki */
-            --cell-bg: #F4F1DE;     /* Crema/Latte */
-            --header-bg: #EAE2B7;   /* Beige Caldo */
+            --accent-main: #6B705C; 
+            --badge-bg: #9C6644;    
+            --cell-bg: #F4F1DE;     
+            --header-bg: #EAE2B7;   
         }
         [data-color="blueberry"] { 
-            --accent-main: #3D405B; /* Blu Scuro */
-            --badge-bg: #815ACB;    /* Viola Acceso */
-            --cell-bg: #F0F3FA;     /* Azzurro Ghiaccio */
-            --header-bg: #E2E6F0;   /* Grigio Azzurro */
+            --accent-main: #3D405B; 
+            --badge-bg: #815ACB;    
+            --cell-bg: #F0F3FA;     
+            --header-bg: #E2E6F0;   
         }
         [data-color="grape"] { 
-            --accent-main: #593C6B; /* Viola Uva */
-            --badge-bg: #D4A373;    /* Oro/Senape per tralci */
-            --cell-bg: #F8F3FA;     /* Lilla Chiarissimo */
-            --header-bg: #EBE0F0;   /* Lilla Pastello */
+            --accent-main: #593C6B; 
+            --badge-bg: #D4A373;    
+            --cell-bg: #F8F3FA;     
+            --header-bg: #EBE0F0;   
         }
         [data-color="choco"] { 
-            --accent-main: #5C4033; /* Cioccolato Fondente */
-            --badge-bg: #D9A05B;    /* Caramello */
-            --cell-bg: #FCF8F2;     /* Vaniglia */
-            --header-bg: #F2E3D5;   /* Biscotto */
+            --accent-main: #5C4033; 
+            --badge-bg: #D9A05B;    
+            --cell-bg: #FCF8F2;     
+            --header-bg: #F2E3D5;   
         }
 
-        /* --- Adattamento Modalità Scura (Colori in armonia) --- */
+        /* --- Adattamento Modalità Scura --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A5E85; --badge-bg: #9E7CE6; --cell-bg: #1A1C23; --header-bg: #252833; }
@@ -147,16 +147,10 @@
             min-height: 0;
         }
 
-        /* VISTA MESE: Quadrati perfetti */
         .month-view .cell { aspect-ratio: 1 / 1; }
-
-        /* VISTA SETTIMANA: Rettangoli alti */
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
-        /* Modifiche visive se c'è un evento */
-        .cell.has-event {
-            background-color: var(--header-bg); 
-        }
+        .cell.has-event { background-color: var(--header-bg); }
         .cell:hover:not(.empty) { filter: brightness(0.92); }
         .cell.empty { background-color: rgba(255,255,255,0.4); border-color: transparent; cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
@@ -171,18 +165,18 @@
             z-index: 15;
         }
 
-        /* --- INDICATORE AESTHETIC (Scintilla) --- */
+        /* --- INDICATORE AESTHETIC (Cuoricino Fluttuante) --- */
         .aesthetic-indicator {
             position: absolute;
             bottom: 6px; right: 8px;
-            color: var(--badge-bg); /* Usa il colore secondario per contrasto massimo */
-            font-size: 20px;
+            color: var(--badge-bg);
+            font-size: 18px;
             text-shadow: 0 0 8px var(--badge-bg);
-            animation: floatSparkle 2.5s ease-in-out infinite;
+            animation: floatHeart 2.5s ease-in-out infinite;
             pointer-events: none;
         }
 
-        @keyframes floatSparkle {
+        @keyframes floatHeart {
             0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
             50% { transform: translateY(-4px) scale(1.15); opacity: 1; }
         }
@@ -445,9 +439,10 @@
                 if(ev && (ev.title || ev.time || ev.notes)) {
                     cell.classList.add('has-event');
                     
+                    // IL CUORICINO INVECE DELLA SCINTILLA ♥
                     const indicator = document.createElement('div');
                     indicator.className = 'aesthetic-indicator';
-                    indicator.innerText = '✦';
+                    indicator.innerText = '♥';
                     cell.appendChild(indicator);
 
                     cell.addEventListener('mouseenter', () => {
