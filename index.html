@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Floating Heart Edition</title>
+    <title>Aesthetic Calendar - Custom Blueberry Palette</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -39,11 +39,12 @@
             --cell-bg: #F4F1DE;     
             --header-bg: #EAE2B7;   
         }
+        /* NUOVA PALETTE BLUEBERRY (Cream, Blueberry, Plum) */
         [data-color="blueberry"] { 
-            --accent-main: #3D405B; 
-            --badge-bg: #815ACB;    
-            --cell-bg: #F0F3FA;     
-            --header-bg: #E2E6F0;   
+            --accent-main: #3F3C79; /* Plum */
+            --badge-bg: #5A6ACF;    /* Blueberry */
+            --cell-bg: #FFF6EC;     /* Cream */
+            --header-bg: #EAEBF5;   /* Grigio Azzurrino morbido per l'header */
         }
         [data-color="grape"] { 
             --accent-main: #593C6B; 
@@ -61,7 +62,15 @@
         /* --- Adattamento Modalità Scura --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
-        [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A5E85; --badge-bg: #9E7CE6; --cell-bg: #1A1C23; --header-bg: #252833; }
+        
+        /* Dark Mode Blueberry usando il colore "Ink" (#1B1B3A) */
+        [data-theme="dark"][data-color="blueberry"] { 
+            --accent-main: #5A6ACF; /* Blueberry come bordo luminoso */
+            --badge-bg: #3F3C79;    /* Plum per i badge */
+            --cell-bg: #1B1B3A;     /* Ink per lo sfondo celle */
+            --header-bg: #26264A;   /* Ink leggermente schiarito */
+        }
+        
         [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
         [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
@@ -263,7 +272,7 @@
         <div class="picker-group">
             <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 0% 33%, #4A6644 33% 66%, #FCEBF1 66% 100%);" data-color-target="strawberry" title="Fragola"></div>
             <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 0% 33%, #9C6644 33% 66%, #F4F1DE 66% 100%);" data-color-target="matcha" title="Matcha"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #3D405B 0% 33%, #815ACB 33% 66%, #F0F3FA 66% 100%);" data-color-target="blueberry" title="Mirtillo"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 0% 33%, #5A6ACF 33% 66%, #FFF6EC 66% 100%);" data-color-target="blueberry" title="Mirtillo"></div>
             <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 0% 33%, #D4A373 33% 66%, #F8F3FA 66% 100%);" data-color-target="grape" title="Uva"></div>
             <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 0% 33%, #D9A05B 33% 66%, #FCF8F2 66% 100%);" data-color-target="choco" title="Cioccolato"></div>
         </div>
@@ -439,7 +448,6 @@
                 if(ev && (ev.title || ev.time || ev.notes)) {
                     cell.classList.add('has-event');
                     
-                    // IL CUORICINO INVECE DELLA SCINTILLA ♥
                     const indicator = document.createElement('div');
                     indicator.className = 'aesthetic-indicator';
                     indicator.innerText = '♥';
