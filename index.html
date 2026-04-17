@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Tooltip & Sparkle Edition</title>
+    <title>Aesthetic Calendar - Multi-Color Fruit Palettes</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -16,13 +16,7 @@
         :root {
             --page-bg: transparent; 
             --text-color: #4A3A35;
-            
-            /* Tema Fragola */
-            --accent-main: #C62828;      
-            --cell-bg: #FFF0F5;          
-            --badge-bg: #FF8A80;         
             --badge-text: #FFFFFF;       
-            --header-bg: #FFCDD2;        
             --btn-bg: #FFF;
         }
 
@@ -32,19 +26,44 @@
         [data-theme="dark"] { --page-bg: #191919; --text-color: #F0F0F0; --btn-bg: #2C2C2C; }
         [data-theme="transparent"] { --page-bg: transparent; }
 
-        /* --- PALETTE COLORI --- */
-        [data-color="strawberry"] { --accent-main: #C62828; --cell-bg: #FFF0F5; --badge-bg: #FF8A80; --header-bg: #FFCDD2; }
-        [data-color="matcha"] { --accent-main: #2E7D32; --cell-bg: #F1F8E9; --badge-bg: #81C784; --header-bg: #C8E6C9; }
-        [data-color="blueberry"] { --accent-main: #1565C0; --cell-bg: #E3F2FD; --badge-bg: #64B5F6; --header-bg: #BBDEFB; }
-        [data-color="grape"] { --accent-main: #6A1B9A; --cell-bg: #F3E5F5; --badge-bg: #BA68C8; --header-bg: #E1BEE7; }
-        [data-color="choco"] { --accent-main: #4E342E; --cell-bg: #EFEBE9; --badge-bg: #A1887F; --header-bg: #D7CCC8; }
+        /* --- PALETTE COLORI (3 Colori Frutta/Cibo) --- */
+        [data-color="strawberry"] { 
+            --accent-main: #C66F80; /* Rosa Scuro */
+            --badge-bg: #4A6644;    /* Verde Foglia */
+            --cell-bg: #FCEBF1;     /* Rosa Panna */
+            --header-bg: #FADCE5;   /* Rosa per intestazioni */
+        }
+        [data-color="matcha"] { 
+            --accent-main: #6B705C; /* Verde Matcha */
+            --badge-bg: #9C6644;    /* Marrone Legno/Azuki */
+            --cell-bg: #F4F1DE;     /* Crema/Latte */
+            --header-bg: #EAE2B7;   /* Beige Caldo */
+        }
+        [data-color="blueberry"] { 
+            --accent-main: #3D405B; /* Blu Scuro */
+            --badge-bg: #815ACB;    /* Viola Acceso */
+            --cell-bg: #F0F3FA;     /* Azzurro Ghiaccio */
+            --header-bg: #E2E6F0;   /* Grigio Azzurro */
+        }
+        [data-color="grape"] { 
+            --accent-main: #593C6B; /* Viola Uva */
+            --badge-bg: #D4A373;    /* Oro/Senape per tralci */
+            --cell-bg: #F8F3FA;     /* Lilla Chiarissimo */
+            --header-bg: #EBE0F0;   /* Lilla Pastello */
+        }
+        [data-color="choco"] { 
+            --accent-main: #5C4033; /* Cioccolato Fondente */
+            --badge-bg: #D9A05B;    /* Caramello */
+            --cell-bg: #FCF8F2;     /* Vaniglia */
+            --header-bg: #F2E3D5;   /* Biscotto */
+        }
 
-        /* Dark Mode per la griglia */
-        [data-theme="dark"] { --cell-bg: #2A2A2A; --header-bg: #3A3A3A; --accent-main: #111; }
-        [data-theme="dark"][data-color="strawberry"] { --accent-main: #5C1313; --badge-bg: #9C3838; }
-        [data-theme="dark"][data-color="matcha"] { --accent-main: #143A16; --badge-bg: #3A733E; }
-        [data-theme="dark"][data-color="blueberry"] { --accent-main: #0A3261; --badge-bg: #28639C; }
-        [data-theme="dark"][data-color="grape"] { --accent-main: #330B4D; --badge-bg: #672F80; }
+        /* --- Adattamento Modalità Scura (Colori in armonia) --- */
+        [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
+        [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
+        [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A5E85; --badge-bg: #9E7CE6; --cell-bg: #1A1C23; --header-bg: #252833; }
+        [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
+        [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
         body, html {
             margin: 0; padding: clamp(5px, 2vw, 15px); 
@@ -65,11 +84,13 @@
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
+        
         .color-dot {
-            width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
+            width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
             border: 2px solid var(--accent-main); transition: transform 0.2s;
         }
         .color-dot:hover { transform: scale(1.2); }
+        
         .action-btn {
             background-color: var(--badge-bg); color: var(--badge-text); 
             border: 2px solid var(--accent-main); border-radius: 12px; 
@@ -137,7 +158,7 @@
             background-color: var(--header-bg); 
         }
         .cell:hover:not(.empty) { filter: brightness(0.92); }
-        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
+        .cell.empty { background-color: rgba(255,255,255,0.4); border-color: transparent; cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
         .date-badge {
@@ -150,13 +171,13 @@
             z-index: 15;
         }
 
-        /* --- NUOVO INDICATORE AESTHETIC (Scintilla/Sparkle) --- */
+        /* --- INDICATORE AESTHETIC (Scintilla) --- */
         .aesthetic-indicator {
             position: absolute;
             bottom: 6px; right: 8px;
-            color: var(--accent-main);
+            color: var(--badge-bg); /* Usa il colore secondario per contrasto massimo */
             font-size: 20px;
-            text-shadow: 0 0 8px var(--accent-main);
+            text-shadow: 0 0 8px var(--badge-bg);
             animation: floatSparkle 2.5s ease-in-out infinite;
             pointer-events: none;
         }
@@ -179,22 +200,19 @@
             font-family: 'Mali', cursive;
             font-size: 14px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            pointer-events: none; /* Permette di cliccare attraverso per aprire l'evento */
+            pointer-events: none;
             z-index: 10000;
             width: max-content;
             max-width: 250px;
             word-wrap: break-word;
             
-            /* Animazione morbida di comparsa */
             opacity: 0;
             transform: translate(-50%, -90%) scale(0.95);
             transition: opacity 0.2s ease, transform 0.2s ease;
             backdrop-filter: blur(4px);
         }
 
-        [data-theme="dark"] #custom-tooltip {
-            background: rgba(40, 40, 40, 0.96);
-        }
+        [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
 
         #custom-tooltip .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
         #custom-tooltip .title { white-space: pre-wrap; line-height: 1.3; font-weight: 700; }
@@ -241,19 +259,21 @@
 
     <div class="controls-container">
         <div class="picker-group">
-            <div class="color-dot" style="background-color: #E0E0E0;" data-theme-target="transparent" title="Sfondo Notion"></div>
-            <div class="color-dot" style="background-color: #FFFFFF;" data-theme-target="light" title="Chiaro"></div>
-            <div class="color-dot" style="background-color: #FFFBE6;" data-theme-target="beige" title="Beige Notion"></div>
-            <div class="color-dot" style="background-color: #191919; border-color: #555;" data-theme-target="dark" title="Scuro"></div>
+            <div class="color-dot" style="background: #E0E0E0; border-color: #999;" data-theme-target="transparent" title="Sfondo Notion (Trasparente)"></div>
+            <div class="color-dot" style="background: #FFFFFF; border-color: #CCC;" data-theme-target="light" title="Chiaro"></div>
+            <div class="color-dot" style="background: #FFFBE6; border-color: #D4CDA3;" data-theme-target="beige" title="Beige Notion"></div>
+            <div class="color-dot" style="background: #191919; border-color: #555;" data-theme-target="dark" title="Scuro"></div>
         </div>
         <div class="picker-separator"></div>
+        
         <div class="picker-group">
-            <div class="color-dot" style="background-color: #C62828;" data-color-target="strawberry" title="Fragola"></div>
-            <div class="color-dot" style="background-color: #2E7D32;" data-color-target="matcha" title="Matcha"></div>
-            <div class="color-dot" style="background-color: #1565C0;" data-color-target="blueberry" title="Mirtillo"></div>
-            <div class="color-dot" style="background-color: #6A1B9A;" data-color-target="grape" title="Uva"></div>
-            <div class="color-dot" style="background-color: #4E342E;" data-color-target="choco" title="Cioccolato"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 0% 33%, #4A6644 33% 66%, #FCEBF1 66% 100%);" data-color-target="strawberry" title="Fragola"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 0% 33%, #9C6644 33% 66%, #F4F1DE 66% 100%);" data-color-target="matcha" title="Matcha"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #3D405B 0% 33%, #815ACB 33% 66%, #F0F3FA 66% 100%);" data-color-target="blueberry" title="Mirtillo"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 0% 33%, #D4A373 33% 66%, #F8F3FA 66% 100%);" data-color-target="grape" title="Uva"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 0% 33%, #D9A05B 33% 66%, #FCF8F2 66% 100%);" data-color-target="choco" title="Cioccolato"></div>
         </div>
+        
         <div class="picker-separator"></div>
         <div class="picker-group">
             <button class="action-btn outline" id="view-toggle-btn" onclick="toggleView()">Vista: Mese</button>
@@ -286,7 +306,7 @@
         <div class="modal-window">
             <h3 id="modal-date-title">Data</h3>
             
-            <input type="text" id="modal-title" placeholder="Nome dell'Evento (es. Compleanno)..." autocomplete="off">
+            <input type="text" id="modal-title" placeholder="Nome dell'Evento (es. Appuntamento)..." autocomplete="off">
             <input type="text" id="modal-time" placeholder="Ora o Durata (es. 15:00 - 16:30)..." autocomplete="off">
             <textarea id="modal-notes" placeholder="Note aggiuntive o dettagli..."></textarea>
             
@@ -346,7 +366,6 @@
             
             document.getElementById('event-modal').style.display = 'flex';
             
-            // Nasconde preventivamente il tooltip se è aperto
             tooltip.style.opacity = '0';
             setTimeout(() => tooltip.style.display = 'none', 200);
         }
@@ -426,13 +445,11 @@
                 if(ev && (ev.title || ev.time || ev.notes)) {
                     cell.classList.add('has-event');
                     
-                    // La scintilla magica ✦ al posto del pallino
                     const indicator = document.createElement('div');
                     indicator.className = 'aesthetic-indicator';
                     indicator.innerText = '✦';
                     cell.appendChild(indicator);
 
-                    // Gestione del Tooltip Fluttuante
                     cell.addEventListener('mouseenter', () => {
                         let html = '';
                         if(ev.time) html += `<div class="time">${ev.time}</div>`;
@@ -444,7 +461,6 @@
                         tooltip.style.display = 'flex';
                         
                         const rect = cell.getBoundingClientRect();
-                        // Posiziona il tooltip al centro della cella, spostato verso l'alto
                         tooltip.style.left = `${rect.left + (rect.width / 2)}px`;
                         tooltip.style.top = `${rect.top - 5}px`;
                         
