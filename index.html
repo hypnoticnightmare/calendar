@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Circular Badges Edition</title>
+    <title>Aesthetic Calendar - Daily Navigation Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body {
@@ -33,6 +33,7 @@
         [data-color="matcha"] { 
             --accent-main: #6B705C; --badge-bg: #9C6644; --cell-bg: #F4F1DE; --header-bg: #EAE2B7;   
         }
+        /* Palette Blueberry dai colori forniti: Plum, Blueberry, Cream */
         [data-color="blueberry"] { 
             --accent-main: #3F3C79; --badge-bg: #5A6ACF; --cell-bg: #FFF6EC; --header-bg: #EAEBF5;   
         }
@@ -118,14 +119,13 @@
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; 
         }
 
-        /* --- CELLE E VISTE BASE --- */
+        /* --- CELLE E VISTE --- */
         .cell {
             background-color: var(--cell-bg); border-radius: 8px;
             display: flex; flex-direction: column; transition: all 0.2s ease;
             position: relative; cursor: pointer; overflow: hidden;
             min-width: 0; min-height: 0;
         }
-
         .month-view .cell { aspect-ratio: 1 / 1; }
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
@@ -133,116 +133,53 @@
         .cell.empty { background-color: rgba(255,255,255,0.4); border-color: transparent; cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
-        /* --- NUMERI DEI GIORNI: ORA SONO TONDINI --- */
         .date-badge {
             background-color: var(--badge-bg); color: var(--badge-text);
-            border-radius: 50%; /* Forma Circolare! */
-            width: 28px; height: 28px; /* Dimensioni fisse uguali per un cerchio perfetto */
+            border-radius: 50%; width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
-            margin: 6px;
-            align-self: flex-start; font-weight: 800; font-size: 14px;
+            margin: 6px; align-self: flex-start; font-weight: 800; font-size: 14px;
             border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- STILI BLOCCHI EVENTO (VISTA SETTIMANA) --- */
+        /* --- EVENTI --- */
         .week-event-block {
-            background-color: var(--badge-bg);
-            color: var(--badge-text);
+            background-color: var(--badge-bg); color: var(--badge-text);
             margin: 0 6px 6px 6px; padding: 6px 8px;
             border-radius: 8px; font-family: 'Mali', cursive;
             font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             word-wrap: break-word; border: 1px solid var(--accent-main);
         }
-        .week-event-block .time { font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.9; }
-        .week-event-block .title { font-weight: 700; }
 
-        /* --- VISTA ANNUALE --- */
-        .calendar-grid.year-view {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
-        }
-        .mini-month {
-            background: var(--cell-bg); border: 2px solid var(--accent-main);
-            border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px;
-        }
-        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; }
-        .mini-days-row {
-            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; 
-            font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px;
-        }
-        .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .mini-cell {
-            aspect-ratio: 1; border-radius: 50%; /* Anche qui i giorni sono tondini */
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s;
-        }
-        .mini-cell:hover { background: rgba(0,0,0,0.1); }
-        [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
-        .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
-        .mini-cell.is-today { border: 2px solid var(--accent-main); }
-
-        /* --- VISTA GIORNALIERA (TIMELINE VERTICALE) --- */
-        .calendar-grid.day-view { display: block; }
+        /* --- VISTA GIORNALIERA --- */
         .day-timeline-wrapper {
             background: var(--cell-bg); border-radius: 12px; border: 2px solid var(--accent-main);
             height: 60vh; min-height: 400px; overflow-y: auto; position: relative;
-            padding-bottom: 40px; cursor: pointer;
+            padding-bottom: 40px; cursor: default;
         }
-        
-        .day-timeline-wrapper::-webkit-scrollbar { width: 8px; }
-        .day-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
-        
         .timeline-header {
             position: sticky; top: 0; background: var(--header-bg); z-index: 20;
-            padding: 15px; border-bottom: 2px solid var(--accent-main);
-            text-align: center; font-size: 20px; font-weight: 800; color: var(--accent-main);
-            text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; border-bottom: 2px solid var(--accent-main);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        
-        /* Correzione data sulla timeline per farla sembrare una "pillola" invece di un cerchio rotto */
         .large-badge {
             width: auto; height: auto; border-radius: 20px; padding: 4px 16px;
-            font-size: 18px; margin: 0; display: flex; align-items: center;
+            font-size: 16px; margin: 0; display: flex; align-items: center;
         }
-        
-        /* Area "Tutto il giorno" / Senza orario */
-        .timeline-allday {
-            padding: 15px 15px 15px 70px; border-bottom: 2px dashed var(--accent-main);
-            background: rgba(255,255,255,0.3); min-height: 20px; position: relative;
-        }
-        [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.1); }
-        .allday-label {
-            position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: bold;
-            color: var(--accent-main); opacity: 0.8; text-transform: uppercase; width: 50px; text-align: right;
-        }
-
-        /* Righe delle ore */
         .timeline-hour-row {
-            display: flex; height: 60px; /* 1 ora = 60px */
-            border-bottom: 1px solid rgba(0,0,0,0.05); position: relative;
+            display: flex; height: 60px; border-bottom: 1px solid rgba(0,0,0,0.05); position: relative;
         }
-        [data-theme="dark"] .timeline-hour-row { border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
         .timeline-time {
-            width: 60px; padding-right: 10px; padding-top: -8px; text-align: right;
-            font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7;
-            transform: translateY(-8px);
+            width: 60px; padding-right: 10px; text-align: right; font-size: 12px;
+            color: var(--accent-main); font-weight: 800; opacity: 0.7; transform: translateY(-8px);
         }
-        .timeline-grid-line {
-            flex-grow: 1; border-top: 1px dashed var(--accent-main); opacity: 0.2;
-        }
-
-        /* Il blocco dell'evento sulla timeline */
         .timeline-event-block {
-            position: absolute; left: 70px; right: 20px;
-            background: var(--badge-bg); color: var(--badge-text);
-            border-radius: 8px; padding: 8px 12px; font-family: 'Mali', cursive;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid var(--accent-main);
-            z-index: 10; min-height: 40px; overflow: hidden;
+            position: absolute; left: 70px; right: 20px; background: var(--badge-bg);
+            color: var(--badge-text); border-radius: 8px; padding: 8px 12px;
+            font-family: 'Mali', cursive; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 2px solid var(--accent-main); z-index: 10; cursor: pointer;
         }
-        .timeline-event-block .title { font-weight: 700; font-size: 14px; }
-        .timeline-event-block .notes { font-size: 12px; opacity: 0.9; margin-top: 4px; white-space: pre-wrap;}
 
-        /* --- INDICATORE AESTHETIC (Cuoricino) --- */
+        /* --- INDICATORE CUORE --- */
         .aesthetic-indicator {
             position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg);
             font-size: 18px; text-shadow: 0 0 8px var(--badge-bg);
@@ -253,40 +190,25 @@
             50% { transform: translateY(-4px) scale(1.15); opacity: 1; }
         }
 
-        /* --- NUVOLETTA TOOLTIP ESTERNA (Solo per vista Mese) --- */
+        /* --- TOOLTIP --- */
         #custom-tooltip {
             position: fixed; display: none; flex-direction: column;
             background: rgba(255, 255, 255, 0.96); border: 3px solid var(--accent-main);
             color: var(--text-color); padding: 12px 16px; border-radius: 14px;
             font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            pointer-events: none; z-index: 10000; width: max-content; max-width: 250px; word-wrap: break-word;
-            opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: opacity 0.2s ease, transform 0.2s ease; backdrop-filter: blur(4px);
+            pointer-events: none; z-index: 10000; width: max-content; max-width: 250px;
+            opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s;
         }
-        [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
-        #custom-tooltip .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 4px; }
-        #custom-tooltip .title { white-space: pre-wrap; line-height: 1.3; font-weight: 700; }
-        #custom-tooltip .notes-preview { font-size: 12px; opacity: 0.8; margin-top: 6px; white-space: pre-wrap; border-top: 1px dashed var(--accent-main); padding-top: 6px; }
 
-        /* --- FINESTRA MODAL --- */
+        /* --- MODAL --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;
         }
         .modal-window {
             background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px;
-            width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 12px;
+            width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px;
         }
-        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
-        .modal-window input, .modal-window textarea {
-            width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main);
-            color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none;
-        }
-        .modal-window input:focus, .modal-window textarea:focus { filter: brightness(0.95); }
-        .modal-window textarea { resize: vertical; min-height: 80px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
-        .modal-actions .right-btns { display: flex; gap: 8px; }
-        .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
-        .btn-delete:hover { background-color: #D32F2F; }
 
     </style>
 </head>
@@ -294,23 +216,20 @@
 
     <div class="controls-container">
         <div class="picker-group">
-            <div class="color-dot" style="background: #E0E0E0; border-color: #999;" data-theme-target="transparent" title="Sfondo Notion"></div>
-            <div class="color-dot" style="background: #FFFFFF; border-color: #CCC;" data-theme-target="light" title="Chiaro"></div>
-            <div class="color-dot" style="background: #FFFBE6; border-color: #D4CDA3;" data-theme-target="beige" title="Beige Notion"></div>
-            <div class="color-dot" style="background: #191919; border-color: #555;" data-theme-target="dark" title="Scuro"></div>
+            <div class="color-dot" style="background: #E0E0E0;" data-theme-target="transparent" title="Trasparente"></div>
+            <div class="color-dot" style="background: #FFFFFF;" data-theme-target="light" title="Chiaro"></div>
+            <div class="color-dot" style="background: #FFFBE6;" data-theme-target="beige" title="Beige Notion"></div>
+            <div class="color-dot" style="background: #191919;" data-theme-target="dark" title="Scuro"></div>
         </div>
         <div class="picker-separator"></div>
-        
         <div class="picker-group">
-            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 0% 33%, #4A6644 33% 66%, #FCEBF1 66% 100%);" data-color-target="strawberry" title="Fragola"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 0% 33%, #9C6644 33% 66%, #F4F1DE 66% 100%);" data-color-target="matcha" title="Matcha"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 0% 33%, #5A6ACF 33% 66%, #FFF6EC 66% 100%);" data-color-target="blueberry" title="Mirtillo"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 0% 33%, #D4A373 33% 66%, #F8F3FA 66% 100%);" data-color-target="grape" title="Uva"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 0% 33%, #D9A05B 33% 66%, #FCF8F2 66% 100%);" data-color-target="choco" title="Cioccolato"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 33%, #4A6644 66%, #FCEBF1 100%);" data-color-target="strawberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 33%, #9C6644 66%, #F4F1DE 100%);" data-color-target="matcha"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 33%, #5A6ACF 66%, #FFF6EC 100%);" data-color-target="blueberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 33%, #D4A373 66%, #F8F3FA 100%);" data-color-target="grape"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 33%, #D9A05B 66%, #FCF8F2 100%);" data-color-target="choco"></div>
         </div>
-        
         <div class="picker-separator"></div>
-        
         <div class="picker-group">
             <select class="action-btn outline" id="view-select" onchange="changeView(this.value)">
                 <option value="year">Vista: Anno</option>
@@ -331,13 +250,10 @@
 
         <div class="calendar-frame">
             <div class="days-row" id="main-days-row">
-                <div class="day-name">Lun</div><div class="day-name">Mar</div>
-                <div class="day-name">Mer</div><div class="day-name">Gio</div>
-                <div class="day-name">Ven</div><div class="day-name">Sab</div>
-                <div class="day-name">Dom</div>
+                <div class="day-name">Lun</div><div class="day-name">Mar</div><div class="day-name">Mer</div>
+                <div class="day-name">Gio</div><div class="day-name">Ven</div><div class="day-name">Sab</div><div class="day-name">Dom</div>
             </div>
-            <div class="calendar-grid month-view" id="calendar-grid">
-                </div>
+            <div class="calendar-grid month-view" id="calendar-grid"></div>
         </div>
     </div>
 
@@ -346,11 +262,9 @@
     <div id="event-modal" class="modal-overlay">
         <div class="modal-window">
             <h3 id="modal-date-title">Data</h3>
-            
-            <input type="text" id="modal-title" placeholder="Nome dell'Evento (es. Appuntamento)..." autocomplete="off">
-            <input type="text" id="modal-time" placeholder="Ora (es. 15:30 o 3:30 PM)..." autocomplete="off">
-            <textarea id="modal-notes" placeholder="Note aggiuntive o dettagli..."></textarea>
-            
+            <input type="text" id="modal-title" placeholder="Nome dell'Evento...">
+            <input type="text" id="modal-time" placeholder="Ora (es. 15:30)...">
+            <textarea id="modal-notes" placeholder="Note..."></textarea>
             <div class="modal-actions">
                 <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
                 <div class="right-btns">
@@ -363,209 +277,138 @@
 
     <script>
         const safeStorage = {
-            get: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
-            set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) { console.warn("Memoria bloccata."); } }
+            get: (key) => { try { return localStorage.getItem(key); } catch(e) { return null; } },
+            set: (key, val) => { try { localStorage.setItem(key, val); } catch(e) { } }
         };
 
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            safeStorage.set('cal-square-theme', theme);
-        }
-        function setColor(color) {
-            document.body.setAttribute('data-color', color);
-            safeStorage.set('cal-square-color', color);
-        }
-        setTheme(safeStorage.get('cal-square-theme') || 'transparent');
-        setColor(safeStorage.get('cal-square-color') || 'blueberry');
+        function setTheme(t) { document.body.setAttribute('data-theme', t); safeStorage.set('cal-theme', t); }
+        function setColor(c) { document.body.setAttribute('data-color', c); safeStorage.set('cal-color', c); }
+        setTheme(safeStorage.get('cal-theme') || 'transparent');
+        setColor(safeStorage.get('cal-color') || 'blueberry');
 
-        document.querySelectorAll('[data-theme-target]').forEach(dot => {
-            dot.addEventListener('click', () => setTheme(dot.getAttribute('data-theme-target')));
-        });
-        document.querySelectorAll('[data-color-target]').forEach(dot => {
-            dot.addEventListener('click', () => setColor(dot.getAttribute('data-color-target')));
-        });
+        document.querySelectorAll('[data-theme-target]').forEach(d => d.onclick = () => setTheme(d.dataset.themeTarget));
+        document.querySelectorAll('[data-color-target]').forEach(d => d.onclick = () => setColor(d.dataset.colorTarget));
 
-        let calendarEvents = JSON.parse(safeStorage.get('cal-square-events')) || {};
-        let currentEditingDate = null;
+        let calendarEvents = JSON.parse(safeStorage.get('cal-events')) || {};
         let baseDate = new Date();
-        let currentView = safeStorage.get('cal-square-view') || 'month';
-        
+        let currentView = safeStorage.get('cal-view') || 'month';
         document.getElementById('view-select').value = currentView;
 
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
         const mainDaysRow = document.getElementById('main-days-row');
         const dynamicHeader = document.getElementById('dynamic-header');
-        const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        function openModal(year, month, day) {
-            currentEditingDate = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            document.getElementById('modal-date-title').innerText = `${day} ${mesi[month]} ${year}`;
-            
+        function openModal(y, m, d) {
+            currentEditingDate = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
             const ev = calendarEvents[currentEditingDate] || { title: '', time: '', notes: '' };
             document.getElementById('modal-title').value = ev.title;
             document.getElementById('modal-time').value = ev.time;
             document.getElementById('modal-notes').value = ev.notes;
-            
             document.getElementById('event-modal').style.display = 'flex';
-            tooltip.style.opacity = '0';
-            setTimeout(() => tooltip.style.display = 'none', 200);
         }
 
         function closeModal() { document.getElementById('event-modal').style.display = 'none'; }
-
         function saveEvent() {
-            const title = document.getElementById('modal-title').value.trim();
-            const time = document.getElementById('modal-time').value.trim();
-            const notes = document.getElementById('modal-notes').value.trim();
-            
-            if(title || time || notes) {
-                calendarEvents[currentEditingDate] = { title, time, notes };
-            } else {
-                delete calendarEvents[currentEditingDate];
-            }
-            
-            safeStorage.set('cal-square-events', JSON.stringify(calendarEvents));
-            closeModal();
-            renderCalendar();
+            const t = document.getElementById('modal-title').value.trim();
+            const tm = document.getElementById('modal-time').value.trim();
+            const n = document.getElementById('modal-notes').value.trim();
+            if(t||tm||n) calendarEvents[currentEditingDate] = { title:t, time:tm, notes:n };
+            else delete calendarEvents[currentEditingDate];
+            safeStorage.set('cal-events', JSON.stringify(calendarEvents));
+            closeModal(); renderCalendar();
         }
-
         function deleteEvent() {
-            if(confirm("Sei sicuro di voler eliminare questo evento?")) {
-                delete calendarEvents[currentEditingDate];
-                safeStorage.set('cal-square-events', JSON.stringify(calendarEvents));
-                closeModal();
-                renderCalendar();
-            }
+            if(confirm("Eliminare?")) { delete calendarEvents[currentEditingDate]; safeStorage.set('cal-events', JSON.stringify(calendarEvents)); closeModal(); renderCalendar(); }
         }
 
-        document.getElementById('event-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        function changeView(view) {
-            currentView = view;
-            safeStorage.set('cal-square-view', currentView);
-            renderCalendar();
-        }
-
+        function changeView(v) { currentView = v; safeStorage.set('cal-view', v); renderCalendar(); }
         function goToToday() { baseDate = new Date(); renderCalendar(); }
-
-        function navigate(direction) {
-            if (currentView === 'year') { baseDate.setFullYear(baseDate.getFullYear() + direction); }
-            else if (currentView === 'month') { baseDate.setMonth(baseDate.getMonth() + direction); }
-            else if (currentView === 'week') { baseDate.setDate(baseDate.getDate() + (direction * 7)); }
-            else if (currentView === 'day') { baseDate.setDate(baseDate.getDate() + direction); }
+        function navigate(d) {
+            if (currentView === 'year') baseDate.setFullYear(baseDate.getFullYear() + d);
+            else if (currentView === 'month') baseDate.setMonth(baseDate.getMonth() + d);
+            else if (currentView === 'week') baseDate.setDate(baseDate.getDate() + (d * 7));
+            else if (currentView === 'day') baseDate.setDate(baseDate.getDate() + d);
             renderCalendar();
         }
 
-        function getMonday(d) {
-            let date = new Date(d);
-            let day = date.getDay();
-            let diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(date.setDate(diff));
-        }
-
-        function parseTime(timeStr) {
-            if(!timeStr) return null;
-            const match = timeStr.match(/(\d{1,2})[.:](\d{2})/);
-            if(match) {
-                let h = parseInt(match[1]);
-                let m = parseInt(match[2]);
-                if(timeStr.toLowerCase().includes('pm') && h < 12) h += 12;
-                if(timeStr.toLowerCase().includes('am') && h === 12) h = 0;
-                return { h, m };
-            }
-            const matchHour = timeStr.match(/(\d{1,2})/);
-            if(matchHour) {
-                let h = parseInt(matchHour[1]);
-                if(timeStr.toLowerCase().includes('pm') && h < 12) h += 12;
-                if(timeStr.toLowerCase().includes('am') && h === 12) h = 0;
-                return { h, m: 0 };
+        function parseTime(ts) {
+            if(!ts) return null;
+            const m = ts.match(/(\d{1,2})[.:](\d{2})/);
+            if(m) {
+                let h = parseInt(m[1]); let min = parseInt(m[2]);
+                if(ts.toLowerCase().includes('pm') && h < 12) h += 12;
+                if(ts.toLowerCase().includes('am') && h === 12) h = 0;
+                return { h, m: min };
             }
             return null;
         }
 
-        function createMiniMonth(y, m) {
+        function createDayTimeline(y, m, d) {
             const wrapper = document.createElement('div');
-            wrapper.className = 'mini-month';
-            wrapper.innerHTML = `<div class="mini-month-title">${mesi[m]}</div>
-                                 <div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
-            const mGrid = document.createElement('div');
-            mGrid.className = 'mini-grid';
-            const firstDay = new Date(y, m, 1).getDay();
-            const startPad = firstDay === 0 ? 6 : firstDay - 1;
-            for (let i = 0; i < startPad; i++) mGrid.appendChild(document.createElement('div'));
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'mini-cell';
-                cell.innerText = day;
-                const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                if (calendarEvents[dateKey]) cell.classList.add('has-event');
-                cell.onclick = () => {
-                    baseDate = new Date(y, m, day);
-                    document.getElementById('view-select').value = 'day';
-                    changeView('day');
-                };
-                mGrid.appendChild(cell);
+            wrapper.className = 'day-timeline-wrapper';
+            const header = document.createElement('div');
+            header.className = 'timeline-header';
+            const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const cdn = dNames[new Date(y, m, d).getDay()];
+            
+            // AGGIUNTI BOTTONI DI NAVIGAZIONE NELLA TIMELINE GIORNALIERA
+            header.innerHTML = `
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:12px; opacity:0.8;">${cdn}</span>
+                    <span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span>
+                </div>
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
+            `;
+            header.onclick = () => openModal(y, m, d);
+            wrapper.appendChild(header);
+
+            const timelineContainer = document.createElement('div');
+            timelineContainer.style.position = 'relative';
+            timelineContainer.onclick = (e) => { if(e.target === timelineContainer) openModal(y, m, d); };
+
+            for (let i = 0; i < 24; i++) {
+                const row = document.createElement('div');
+                row.className = 'timeline-hour-row';
+                let ht = i === 0 ? '12 AM' : i < 12 ? i+' AM' : i === 12 ? '12 PM' : (i-12)+' PM';
+                row.innerHTML = `<div class="timeline-time">${ht}</div><div style="flex:1; border-top:1px dashed var(--accent-main); opacity:0.2;"></div>`;
+                timelineContainer.appendChild(row);
             }
-            wrapper.appendChild(mGrid);
+
+            const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const ev = calendarEvents[dk];
+            if (ev) {
+                const pt = parseTime(ev.time);
+                const eb = document.createElement('div');
+                eb.className = 'timeline-event-block';
+                eb.onclick = (e) => { e.stopPropagation(); openModal(y,m,d); };
+                if (pt) { eb.style.top = (pt.h * 60 + pt.m) + 'px'; }
+                else { eb.style.position = 'relative'; eb.style.margin = '10px 20px 10px 70px'; eb.style.left = '0'; }
+                eb.innerHTML = `<div class="title">${ev.title || 'Evento'}</div>${ev.notes ? `<div style="font-size:12px; opacity:0.9;">${ev.notes}</div>`:''}`;
+                timelineContainer.appendChild(eb);
+            }
+            wrapper.appendChild(timelineContainer);
             return wrapper;
         }
 
-        function createCell(year, month, day, isEmpty) {
+        function createCell(y, m, d, empty) {
             const cell = document.createElement('div');
-            cell.className = `cell ${isEmpty ? 'empty' : ''}`;
-            
-            if (!isEmpty) {
-                cell.onclick = () => openModal(year, month, day);
-                
-                const badge = document.createElement('div');
-                badge.className = 'date-badge';
-                badge.innerText = day;
-                cell.appendChild(badge);
-
-                const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const ev = calendarEvents[dateKey];
-                
+            cell.className = `cell ${empty ? 'empty' : ''}`;
+            if (!empty) {
+                cell.onclick = () => openModal(y,m,d);
+                const b = document.createElement('div'); b.className = 'date-badge'; b.innerText = d; cell.appendChild(b);
+                const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const ev = calendarEvents[dk];
                 if(ev && (ev.title || ev.time || ev.notes)) {
-                    
                     if(currentView === 'month') {
                         cell.classList.add('has-event');
-                        const indicator = document.createElement('div');
-                        indicator.className = 'aesthetic-indicator';
-                        indicator.innerText = '♥';
-                        cell.appendChild(indicator);
-
-                        cell.addEventListener('mouseenter', () => {
-                            let html = '';
-                            if(ev.time) html += `<div class="time">${ev.time}</div>`;
-                            if(ev.title) html += `<div class="title">${ev.title}</div>`;
-                            if(ev.notes) html += `<div class="notes-preview">📝 ${ev.notes}</div>`;
-                            tooltip.innerHTML = html;
-                            tooltip.style.display = 'flex';
-                            const rect = cell.getBoundingClientRect();
-                            tooltip.style.left = `${rect.left + (rect.width / 2)}px`;
-                            tooltip.style.top = `${rect.top - 5}px`;
-                            requestAnimationFrame(() => {
-                                tooltip.style.opacity = '1';
-                                tooltip.style.transform = 'translate(-50%, -100%) scale(1)';
-                            });
-                        });
-                        cell.addEventListener('mouseleave', () => {
-                            tooltip.style.opacity = '0';
-                            tooltip.style.transform = 'translate(-50%, -90%) scale(0.95)';
-                            setTimeout(() => { if(tooltip.style.opacity === '0') tooltip.style.display = 'none'; }, 200);
-                        });
-                    } 
-                    else if (currentView === 'week') {
-                        const block = document.createElement('div');
-                        block.className = 'week-event-block';
-                        if(ev.time) block.innerHTML += `<div class="time">${ev.time}</div>`;
-                        if(ev.title) block.innerHTML += `<div class="title">${ev.title}</div>`;
-                        else if(ev.notes) block.innerHTML += `<div class="title">📝 Note</div>`;
+                        const ind = document.createElement('div'); ind.className = 'aesthetic-indicator'; ind.innerText = '♥'; cell.appendChild(ind);
+                    } else if(currentView === 'week') {
+                        const block = document.createElement('div'); block.className = 'week-event-block';
+                        block.innerHTML = `<div class="title">${ev.title || 'Evento'}</div>`;
                         cell.appendChild(block);
                     }
                 }
@@ -573,134 +416,29 @@
             return cell;
         }
 
-        function createDayTimeline(y, m, d) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'day-timeline-wrapper';
-            wrapper.onclick = (e) => {
-                if(e.target === wrapper || e.target.classList.contains('timeline-hour-row') || e.target.classList.contains('timeline-grid-line')) {
-                     openModal(y, m, d);
-                }
-            };
-
-            const header = document.createElement('div');
-            header.className = 'timeline-header';
-            const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const currentDayName = dNames[new Date(y, m, d).getDay()];
-            
-            // Aggiungiamo la classe large-badge qui per far sembrare la data una "pillola"
-            header.innerHTML = `<span>${currentDayName}</span> <span class="date-badge large-badge" style="margin:0">${d} ${mesi[m]} ${y}</span>`;
-            wrapper.appendChild(header);
-
-            const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            const ev = calendarEvents[dateKey];
-            const parsedTime = parseTime(ev ? ev.time : null);
-
-            if (ev && !parsedTime) {
-                const allday = document.createElement('div');
-                allday.className = 'timeline-allday';
-                allday.onclick = () => openModal(y, m, d);
-                allday.innerHTML = `<div class="allday-label">Eventi</div>
-                                    <div class="timeline-event-block" style="position:relative; left:0; right:0; margin-bottom: 5px;">
-                                        <div class="title">${ev.title || 'Senza Titolo'}</div>
-                                        ${ev.notes ? `<div class="notes">${ev.notes}</div>` : ''}
-                                    </div>`;
-                wrapper.appendChild(allday);
-            }
-
-            const timelineContainer = document.createElement('div');
-            timelineContainer.style.position = 'relative';
-            
-            for (let i = 0; i < 24; i++) {
-                const row = document.createElement('div');
-                row.className = 'timeline-hour-row';
-                let hourText = '';
-                if (i === 0) hourText = '12 AM';
-                else if (i < 12) hourText = `${i} AM`;
-                else if (i === 12) hourText = '12 PM';
-                else hourText = `${i - 12} PM`;
-
-                row.innerHTML = `<div class="timeline-time">${hourText}</div><div class="timeline-grid-line"></div>`;
-                timelineContainer.appendChild(row);
-            }
-
-            if (ev && parsedTime) {
-                const eventBlock = document.createElement('div');
-                eventBlock.className = 'timeline-event-block';
-                eventBlock.onclick = (e) => {
-                    e.stopPropagation();
-                    openModal(y, m, d);
-                };
-                
-                const topPosition = (parsedTime.h * 60) + parsedTime.m;
-                eventBlock.style.top = `${topPosition}px`;
-                
-                eventBlock.innerHTML = `<div class="title">${ev.title || 'Evento'}</div>
-                                        ${ev.notes ? `<div class="notes">${ev.notes}</div>` : ''}`;
-                timelineContainer.appendChild(eventBlock);
-            }
-
-            wrapper.appendChild(timelineContainer);
-            return wrapper;
-        }
-
         function renderCalendar() {
             grid.innerHTML = '';
-            const year = baseDate.getFullYear();
-            const month = baseDate.getMonth();
-
-            if (currentView === 'year') {
-                dynamicHeader.style.display = 'flex';
-                mainDaysRow.style.display = 'none';
-                grid.className = "calendar-grid year-view";
-                title.innerText = `${year}`;
-                for(let m=0; m<12; m++) grid.appendChild(createMiniMonth(year, m));
-
-            } else if (currentView === 'day') {
-                dynamicHeader.style.display = 'none';
-                mainDaysRow.style.display = 'none';
+            const y = baseDate.getFullYear(); const m = baseDate.getMonth();
+            if (currentView === 'day') {
+                dynamicHeader.style.display = 'none'; mainDaysRow.style.display = 'none';
                 grid.className = "calendar-grid day-view";
-                grid.appendChild(createDayTimeline(year, month, baseDate.getDate()));
-
-            } else if (currentView === 'month') {
-                dynamicHeader.style.display = 'flex';
-                mainDaysRow.style.display = 'grid';
-                grid.className = "calendar-grid month-view";
-                title.innerText = `${mesi[month]} ${year}`;
-
-                const firstDay = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                const startPad = firstDay === 0 ? 6 : firstDay - 1; 
-
-                for (let i = 0; i < startPad; i++) grid.appendChild(createCell(year, month, 0, true));
-                for (let day = 1; day <= daysInMonth; day++) grid.appendChild(createCell(year, month, day, false));
-                
-                const totalCells = startPad + daysInMonth;
-                const endPad = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-                for (let i = 0; i < endPad; i++) grid.appendChild(createCell(year, month, 0, true));
-
-            } else if (currentView === 'week') {
-                dynamicHeader.style.display = 'flex';
-                mainDaysRow.style.display = 'grid';
-                grid.className = "calendar-grid week-view";
-                
-                const monday = getMonday(baseDate);
-                const sunday = new Date(monday);
-                sunday.setDate(sunday.getDate() + 6);
-                
-                if(monday.getMonth() === sunday.getMonth()) {
-                    title.innerText = `${monday.getDate()} - ${sunday.getDate()} ${mesi[monday.getMonth()]} ${monday.getFullYear()}`;
-                } else {
-                    title.innerText = `${monday.getDate()} ${mesi[monday.getMonth()].substring(0,3)} - ${sunday.getDate()} ${mesi[sunday.getMonth()].substring(0,3)} ${sunday.getFullYear()}`;
-                }
-
-                for (let i = 0; i < 7; i++) {
-                    let currentDay = new Date(monday);
-                    currentDay.setDate(currentDay.getDate() + i);
-                    grid.appendChild(createCell(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), false));
+                grid.appendChild(createDayTimeline(y, m, baseDate.getDate()));
+            } else {
+                dynamicHeader.style.display = 'flex'; mainDaysRow.style.display = 'grid';
+                if(currentView === 'month') {
+                    grid.className = "calendar-grid month-view"; title.innerText = `${mesi[m]} ${y}`;
+                    const first = new Date(y, m, 1).getDay(); const days = new Date(y, m+1, 0).getDate();
+                    const pad = first === 0 ? 6 : first - 1;
+                    for (let i=0; i<pad; i++) grid.appendChild(createCell(y,m,0,true));
+                    for (let d=1; d<=days; d++) grid.appendChild(createCell(y,m,d,false));
+                } else if(currentView === 'week') {
+                    grid.className = "calendar-grid week-view";
+                    let d = new Date(baseDate); let day = d.getDay(); let diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                    let mon = new Date(d.setDate(diff)); title.innerText = `Settimana ${mon.getDate()} ${mesi[mon.getMonth()]}`;
+                    for (let i=0; i<7; i++) { let curr = new Date(mon); curr.setDate(mon.getDate()+i); grid.appendChild(createCell(curr.getFullYear(), curr.getMonth(), curr.getDate(), false)); }
                 }
             }
         }
-
         renderCalendar();
     </script>
 </body>
