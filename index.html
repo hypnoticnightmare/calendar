@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Multi-Event & Drag Drop Edition</title>
+    <title>Aesthetic Calendar - Drag & Drop Fixed</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body { forced-color-adjust: none !important; color-adjust: exact !important; }
@@ -30,7 +30,6 @@
         [data-color="grape"] { --accent-main: #593C6B; --badge-bg: #D4A373; --cell-bg: #F8F3FA; --header-bg: #EBE0F0; }
         [data-color="choco"] { --accent-main: #5C4033; --badge-bg: #D9A05B; --cell-bg: #FCF8F2; --header-bg: #F2E3D5; }
 
-        /* --- Adattamento Modalità Scura --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A6ACF; --badge-bg: #3F3C79; --cell-bg: #1B1B3A; --header-bg: #26264A; }
@@ -39,19 +38,16 @@
 
         body, html {
             margin: 0; padding: clamp(5px, 2vw, 15px); 
-            background-color: var(--page-bg);
-            font-family: 'Nunito', sans-serif; 
-            color: var(--text-color);
-            display: flex; flex-direction: column; align-items: center; 
+            background-color: var(--page-bg); font-family: 'Nunito', sans-serif; 
+            color: var(--text-color); display: flex; flex-direction: column; align-items: center; 
             transition: background-color 0.3s ease;
         }
 
         /* --- CONTROLLI --- */
         .controls-container {
-            display: flex; gap: 15px; margin-bottom: 20px;
-            padding: 8px 20px; background-color: var(--btn-bg); 
-            border-radius: 20px; align-items: center; flex-wrap: wrap; 
-            justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; 
+            background-color: var(--btn-bg); border-radius: 20px; align-items: center; 
+            flex-wrap: wrap; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border: 2px solid var(--accent-main);
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
@@ -64,9 +60,8 @@
         .color-dot:hover { transform: scale(1.2); }
         
         .action-btn {
-            background-color: var(--badge-bg); color: var(--badge-text); 
-            border: 2px solid var(--accent-main); border-radius: 12px; 
-            padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; 
+            background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); 
+            border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; 
             cursor: pointer; transition: all 0.2s ease; outline: none;
         }
         .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
@@ -76,75 +71,61 @@
         /* --- CALENDARIO --- */
         .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
         .month-header {
-            display: flex; justify-content: space-between; align-items: center;
-            background-color: var(--header-bg); padding: 10px 20px;
-            border-radius: 16px; border: 3px solid var(--accent-main);
+            display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); 
+            padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main);
         }
         .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; text-align: center; flex: 1;}
         .nav-btn {
-            background: var(--btn-bg); border: 2px solid var(--accent-main);
-            color: var(--accent-main); border-radius: 8px; cursor: pointer;
-            padding: 4px 12px; font-weight: bold; font-family: 'Nunito';
+            background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); 
+            border-radius: 8px; cursor: pointer; padding: 4px 12px; font-weight: bold; font-family: 'Nunito';
         }
 
         .calendar-frame {
-            background-color: var(--accent-main); 
-            padding: 6px; border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background-color: var(--accent-main); padding: 6px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
-        .days-row {
-            display: grid; grid-template-columns: repeat(7, 1fr);
-            gap: 4px; margin-bottom: 4px;
-        }
+        .days-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
         .day-name {
-            background-color: var(--header-bg); color: var(--accent-main);
-            text-align: center; font-weight: 800; font-size: 14px;
-            padding: 8px 0; border-radius: 8px; text-transform: uppercase;
+            background-color: var(--header-bg); color: var(--accent-main); text-align: center; font-weight: 800; 
+            font-size: 14px; padding: 8px 0; border-radius: 8px; text-transform: uppercase;
         }
         .calendar-grid { display: grid; gap: 4px; }
         .calendar-grid.month-view, .calendar-grid.week-view { grid-template-columns: repeat(7, 1fr); }
         .calendar-grid.year-view { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
 
-        /* --- CELLE --- */
+        /* --- CELLE E DROP ZONE --- */
         .cell {
-            background-color: var(--cell-bg); border-radius: 8px;
-            display: flex; flex-direction: column; transition: all 0.2s ease;
-            position: relative; cursor: pointer; overflow: hidden;
-            min-width: 0; min-height: 0;
+            background-color: var(--cell-bg); border-radius: 8px; display: flex; flex-direction: column; 
+            transition: all 0.2s ease; position: relative; cursor: pointer; overflow: hidden; min-width: 0; min-height: 0;
         }
         .month-view .cell { aspect-ratio: 1 / 1; }
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
         .cell:hover:not(.empty) { filter: brightness(0.92); }
-        .cell.drag-over { background-color: var(--header-bg); border: 2px dashed var(--accent-main); }
+        
+        /* Effetto Drag & Drop */
+        .drag-over { filter: brightness(0.85); border: 2px dashed var(--accent-main); }
+        
         .cell.empty { background-color: rgba(255,255,255,0.4); border-color: transparent; cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
         .date-badge {
-            background-color: var(--badge-bg); color: var(--badge-text);
-            border-radius: 50%; width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 6px; align-self: flex-start; font-weight: 800; font-size: 14px;
-            border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
+            background-color: var(--badge-bg); color: var(--badge-text); border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center; margin: 6px; align-self: flex-start; 
+            font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- BLOCCHI EVENTO & DRAG & DROP --- */
+        /* --- EVENTI & DRAG ITEMS --- */
         .events-container {
-            display: flex; flex-direction: column; gap: 4px;
-            overflow-y: auto; flex: 1; padding-bottom: 6px;
+            display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding-bottom: 6px;
         }
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .event-block {
-            background-color: var(--badge-bg); color: var(--badge-text);
-            margin: 0 6px; padding: 6px 20px 6px 8px; /* Padding destro per i 3 puntini */
-            border-radius: 8px; font-family: 'Mali', cursive;
-            font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            word-wrap: break-word; border: 1px solid var(--accent-main);
-            position: relative; cursor: grab;
-            transition: transform 0.1s;
+            background-color: var(--badge-bg); color: var(--badge-text); margin: 0 6px; padding: 6px 20px 6px 8px;
+            border-radius: 8px; font-family: 'Mali', cursive; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            word-wrap: break-word; border: 1px solid var(--accent-main); position: relative; cursor: grab; transition: transform 0.1s;
         }
         .event-block:active { cursor: grabbing; transform: scale(0.98); }
         .event-block .time { font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.9; }
@@ -152,43 +133,36 @@
 
         /* 3 Puntini Modifica */
         .edit-dots {
-            position: absolute; top: 4px; right: 4px;
-            font-size: 14px; font-weight: bold; line-height: 1;
-            cursor: pointer; opacity: 0.6; padding: 0 4px;
-            border-radius: 4px; transition: all 0.2s;
+            position: absolute; top: 4px; right: 4px; font-size: 14px; font-weight: bold; line-height: 1;
+            cursor: pointer; opacity: 0.6; padding: 0 4px; border-radius: 4px; transition: all 0.2s;
         }
         .edit-dots:hover { opacity: 1; background: rgba(0,0,0,0.2); }
 
         .aesthetic-indicator {
-            position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg);
-            font-size: 18px; text-shadow: 0 0 8px var(--badge-bg);
-            animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none;
+            position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg); font-size: 18px; 
+            text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none;
         }
         @keyframes floatHeart { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; } 50% { transform: translateY(-4px) scale(1.15); opacity: 1; } }
 
-        /* --- VISTA GIORNALIERA (TIMELINE VERTICALE) --- */
+        /* --- TIMELINE GIORNALIERA --- */
         .day-timeline-wrapper {
             background: var(--cell-bg); border-radius: 12px; border: 2px solid var(--accent-main);
-            height: 60vh; min-height: 400px; overflow-y: auto; position: relative;
-            padding-bottom: 40px; cursor: text;
+            height: 60vh; min-height: 400px; overflow-y: auto; position: relative; padding-bottom: 40px; cursor: default;
         }
         .day-timeline-wrapper::-webkit-scrollbar { width: 8px; }
         .day-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .timeline-header {
-            position: sticky; top: 0; background: var(--header-bg); z-index: 20;
-            padding: 10px 15px; border-bottom: 2px solid var(--accent-main);
-            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--header-bg); z-index: 20; padding: 10px 15px; 
+            border-bottom: 2px solid var(--accent-main); display: flex; justify-content: space-between; align-items: center;
         }
         .large-badge {
-            width: auto; height: auto; border-radius: 20px; padding: 4px 16px;
-            font-size: 16px; margin: 0; display: flex; align-items: center; cursor: default;
+            width: auto; height: auto; border-radius: 20px; padding: 4px 16px; font-size: 16px; margin: 0; display: flex; align-items: center;
         }
         
         .timeline-allday {
             padding: 15px 15px 15px 70px; border-bottom: 2px solid var(--accent-main);
-            background: rgba(255,255,255,0.3); min-height: 20px; position: relative;
-            display: flex; flex-direction: column; gap: 4px;
+            background: rgba(255,255,255,0.3); min-height: 20px; position: relative; display: flex; flex-direction: column; gap: 4px;
         }
         [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.1); }
         .allday-label {
@@ -196,9 +170,7 @@
             color: var(--accent-main); opacity: 0.8; text-transform: uppercase; width: 50px; text-align: right;
         }
 
-        .timeline-hour-row {
-            display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.08); position: relative;
-        }
+        .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.08); position: relative; }
         [data-theme="dark"] .timeline-hour-row { border-bottom: 1px dashed rgba(255,255,255,0.08); }
         .timeline-time {
             width: 60px; padding-right: 10px; text-align: right; font-size: 12px;
@@ -206,54 +178,54 @@
         }
         
         .timeline-event-block {
-            position: absolute; left: 70px; background: var(--badge-bg);
-            color: var(--badge-text); border-radius: 8px; padding: 8px 24px 8px 12px;
-            font-family: 'Mali', cursive; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border: 2px solid var(--accent-main); z-index: 10; cursor: grab;
-            /* Permette overlap restringendo leggermente la larghezza */
-            width: calc(100% - 110px); 
+            position: absolute; left: 70px; background: var(--badge-bg); color: var(--badge-text);
+            border-radius: 8px; padding: 8px 24px 8px 12px; font-family: 'Mali', cursive; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid var(--accent-main); z-index: 10; cursor: grab; width: calc(100% - 110px); 
         }
         .timeline-event-block:active { cursor: grabbing; }
 
-        /* --- TOOLTIP ESTERNO (Per mese, mostra TUTTI gli eventi) --- */
+        /* --- TOOLTIP ESTERNO (Mese) --- */
         #custom-tooltip {
-            position: fixed; display: none; flex-direction: column; gap: 8px;
-            background: rgba(255, 255, 255, 0.96); border: 3px solid var(--accent-main);
-            color: var(--text-color); padding: 12px 16px; border-radius: 14px;
-            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            pointer-events: none; z-index: 10000; width: max-content; max-width: 280px;
-            opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s;
+            position: fixed; display: none; flex-direction: column; gap: 8px; background: rgba(255, 255, 255, 0.96); 
+            border: 3px solid var(--accent-main); color: var(--text-color); padding: 12px 16px; border-radius: 14px;
+            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); pointer-events: none; z-index: 10000; 
+            width: max-content; max-width: 280px; opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s;
         }
         [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
         .tooltip-item { border-bottom: 1px dashed var(--accent-main); padding-bottom: 8px; }
         .tooltip-item:last-child { border-bottom: none; padding-bottom: 0; }
         .tooltip-item .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 2px; }
         .tooltip-item .title { white-space: pre-wrap; line-height: 1.2; font-weight: 700; }
-        .tooltip-item .notes-preview { font-size: 11px; opacity: 0.8; margin-top: 4px; white-space: pre-wrap; }
 
-        /* --- MODAL FINESTRA EVENTI --- */
+        /* --- MODAL (POPUP) --- */
         .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center;
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); 
+            z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px);
         }
         .modal-window {
             background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px;
             width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
+        
         .modal-window input, .modal-window textarea {
             width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main);
             color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none;
         }
         .modal-window input:focus, .modal-window textarea:focus { filter: brightness(0.95); }
         .modal-window textarea { resize: vertical; min-height: 80px; }
+        
         .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
         .modal-actions .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .btn-delete:hover { background-color: #D32F2F; }
-        
-        /* Nasconde il bottone elimina se stiamo creando un nuovo evento */
         .hide-delete .btn-delete { display: none; }
+
+        /* --- LISTA EVENTI NEL MODAL --- */
+        .list-event-item {
+            display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); 
+            border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px;
+        }
 
     </style>
 </head>
@@ -307,14 +279,23 @@
     <div id="event-modal" class="modal-overlay">
         <div class="modal-window" id="modal-window">
             <h3 id="modal-date-title">Data</h3>
-            <input type="text" id="modal-title" placeholder="Nome dell'Evento (es. Riunione)..." autocomplete="off">
-            <input type="text" id="modal-time" placeholder="Ora (es. 15:30 o 3:30 PM)..." autocomplete="off">
-            <textarea id="modal-notes" placeholder="Note..."></textarea>
-            <div class="modal-actions">
-                <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
-                <div class="right-btns">
-                    <button class="action-btn outline" onclick="closeModal()">Annulla</button>
-                    <button class="action-btn" onclick="saveEvent()">Salva</button>
+            
+            <div id="modal-list-view" style="display: none; flex-direction: column; gap: 5px;">
+                <div id="modal-events-list" style="display: flex; flex-direction: column; max-height: 200px; overflow-y: auto;"></div>
+                <button class="action-btn outline" onclick="showEventForm(null)" style="width: 100%; margin-top: 10px;">+ Nuovo Evento</button>
+                <button class="action-btn outline" onclick="closeModal()" style="width: 100%; border: none;">Chiudi</button>
+            </div>
+
+            <div id="modal-form-view" style="display: none; flex-direction: column; gap: 12px;">
+                <input type="text" id="modal-title" placeholder="Nome dell'Evento..." autocomplete="off">
+                <input type="text" id="modal-time" placeholder="Ora (es. 15:30 o 3:30 PM)..." autocomplete="off">
+                <textarea id="modal-notes" placeholder="Note aggiuntive..."></textarea>
+                <div class="modal-actions">
+                    <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
+                    <div class="right-btns">
+                        <button class="action-btn outline" onclick="backToListOrClose()">Annulla</button>
+                        <button class="action-btn" onclick="saveEvent()">Salva</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -334,21 +315,17 @@
         document.querySelectorAll('[data-theme-target]').forEach(d => d.onclick = () => setTheme(d.dataset.themeTarget));
         document.querySelectorAll('[data-color-target]').forEach(d => d.onclick = () => setColor(d.dataset.colorTarget));
 
-        // --- MIGRAZIONE E STRUTTURA DATI A EVENTI MULTIPLI ---
+        // --- SISTEMA DATI EVENTI MULTIPLI ---
         let rawEvents = JSON.parse(safeStorage.get('cal-events-multi')) || {};
-        // Se l'utente ha la vecchia versione con un solo oggetto, converte in array
         let calendarEvents = {};
         for(let key in rawEvents) {
-            if(Array.isArray(rawEvents[key])) {
-                calendarEvents[key] = rawEvents[key];
-            } else {
-                calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 9), ...rawEvents[key] } ];
-            }
+            if(Array.isArray(rawEvents[key])) calendarEvents[key] = rawEvents[key];
+            else calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 9), ...rawEvents[key] } ];
         }
 
-        let currentEditingDate = null;
-        let currentEditingId = null; // Se null = crea nuovo
-        let draggedEvent = null; // Variabile globale per il Drag & Drop
+        let currentEditingDateKey = null;
+        let currentEditingId = null; 
+        let draggedEvent = null; 
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -356,38 +333,73 @@
 
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
-        const mainDaysRow = document.getElementById('main-days-row');
-        const dynamicHeader = document.getElementById('dynamic-header');
         const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        // --- MODAL EVENTI ---
+        // --- GESTIONE MODAL ---
         function openModal(y, m, d, eventId = null) {
-            currentEditingDate = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            currentEditingId = eventId;
+            currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
             
+            document.getElementById('event-modal').style.display = 'flex';
+            tooltip.style.opacity = '0'; setTimeout(() => tooltip.style.display = 'none', 200);
+
+            if (eventId) {
+                showEventForm(eventId);
+            } else {
+                const dayEvents = calendarEvents[currentEditingDateKey] || [];
+                if (dayEvents.length > 0) showEventList();
+                else showEventForm(null);
+            }
+        }
+
+        function showEventList() {
+            document.getElementById('modal-list-view').style.display = 'flex';
+            document.getElementById('modal-form-view').style.display = 'none';
+            
+            const listContainer = document.getElementById('modal-events-list');
+            listContainer.innerHTML = '';
+            
+            const dayEvents = calendarEvents[currentEditingDateKey] || [];
+            dayEvents.forEach(ev => {
+                const item = document.createElement('div');
+                item.className = 'list-event-item';
+                item.innerHTML = `
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:var(--accent-main); font-size:15px;">${ev.title || 'Evento'}</div>
+                        ${ev.time ? `<div style="font-size:12px; opacity:0.8;">🕒 ${ev.time}</div>` : ''}
+                    </div>
+                    <button class="action-btn outline" style="padding: 4px 8px;" onclick="showEventForm('${ev.id}')">✎ Modif.</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function showEventForm(eventId) {
+            document.getElementById('modal-list-view').style.display = 'none';
+            document.getElementById('modal-form-view').style.display = 'flex';
+            
+            currentEditingId = eventId;
             const modalWin = document.getElementById('modal-window');
             
             if (eventId) {
-                // Modifica evento esistente
                 modalWin.classList.remove('hide-delete');
-                const dayEvents = calendarEvents[currentEditingDate];
-                const ev = dayEvents.find(e => e.id === eventId);
+                const ev = calendarEvents[currentEditingDateKey].find(e => e.id === eventId);
                 document.getElementById('modal-title').value = ev.title || '';
                 document.getElementById('modal-time').value = ev.time || '';
                 document.getElementById('modal-notes').value = ev.notes || '';
             } else {
-                // Nuovo evento
                 modalWin.classList.add('hide-delete');
                 document.getElementById('modal-title').value = '';
                 document.getElementById('modal-time').value = '';
                 document.getElementById('modal-notes').value = '';
             }
-            
-            document.getElementById('event-modal').style.display = 'flex';
-            tooltip.style.opacity = '0';
-            setTimeout(() => tooltip.style.display = 'none', 200);
+        }
+
+        function backToListOrClose() {
+            const dayEvents = calendarEvents[currentEditingDateKey] || [];
+            if (dayEvents.length > 0) showEventList();
+            else closeModal();
         }
 
         function closeModal() { document.getElementById('event-modal').style.display = 'none'; }
@@ -397,35 +409,27 @@
             const tm = document.getElementById('modal-time').value.trim();
             const n = document.getElementById('modal-notes').value.trim();
             
-            if(!calendarEvents[currentEditingDate]) calendarEvents[currentEditingDate] = [];
+            if(!calendarEvents[currentEditingDateKey]) calendarEvents[currentEditingDateKey] = [];
             
             if(t || tm || n) {
                 if (currentEditingId) {
-                    // Aggiorna
-                    let ev = calendarEvents[currentEditingDate].find(e => e.id === currentEditingId);
+                    let ev = calendarEvents[currentEditingDateKey].find(e => e.id === currentEditingId);
                     if(ev) { ev.title = t; ev.time = tm; ev.notes = n; }
                 } else {
-                    // Crea nuovo
-                    calendarEvents[currentEditingDate].push({
-                        id: Date.now() + Math.random().toString(36).substr(2, 9),
-                        title: t, time: tm, notes: n
-                    });
+                    calendarEvents[currentEditingDateKey].push({ id: Date.now().toString(36), title: t, time: tm, notes: n });
                 }
             }
-            
-            // Pulisce array vuoti
-            if(calendarEvents[currentEditingDate].length === 0) delete calendarEvents[currentEditingDate];
+            if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
             
             safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
             closeModal(); renderCalendar();
         }
         
         function deleteEvent() {
-            if(currentEditingId && confirm("Vuoi davvero eliminare questo evento?")) { 
-                let dayEvents = calendarEvents[currentEditingDate];
-                calendarEvents[currentEditingDate] = dayEvents.filter(e => e.id !== currentEditingId);
-                if(calendarEvents[currentEditingDate].length === 0) delete calendarEvents[currentEditingDate];
-                
+            if(currentEditingId && confirm("Sicuro di voler eliminare questo evento?")) { 
+                let dayEvents = calendarEvents[currentEditingDateKey];
+                calendarEvents[currentEditingDateKey] = dayEvents.filter(e => e.id !== currentEditingId);
+                if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
                 safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents)); 
                 closeModal(); renderCalendar(); 
             }
@@ -433,31 +437,26 @@
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- DRAG AND DROP LOGIC ---
+        // --- DRAG & DROP MAGICO ---
         function handleDragStart(e, dateKey, eventId) {
             draggedEvent = { dateKey, eventId };
             e.dataTransfer.effectAllowed = 'move';
-            // Necessario per Firefox
             e.dataTransfer.setData('text/plain', eventId);
+            setTimeout(() => e.target.style.opacity = '0.5', 0);
         }
-
+        function handleDragEnd(e) {
+            e.target.style.opacity = '1';
+            draggedEvent = null;
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        }
         function handleDragOver(e) {
-            e.preventDefault(); // Permette il drop
-            e.currentTarget.classList.add('drag-over');
+            e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over');
         }
-
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
-
+        function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         function handleDrop(e, targetDateKey) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+            if(!draggedEvent || draggedEvent.dateKey === targetDateKey) return;
             
-            if(!draggedEvent) return;
-            if(draggedEvent.dateKey === targetDateKey) return; // Non facciamo nulla se droppato nello stesso giorno
-
-            // Rimuovi dal vecchio giorno
             let sourceArray = calendarEvents[draggedEvent.dateKey];
             let evIndex = sourceArray.findIndex(ev => ev.id === draggedEvent.eventId);
             if (evIndex === -1) return;
@@ -465,13 +464,11 @@
             let evToMove = sourceArray.splice(evIndex, 1)[0];
             if(sourceArray.length === 0) delete calendarEvents[draggedEvent.dateKey];
 
-            // Aggiungi al nuovo giorno
             if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
             calendarEvents[targetDateKey].push(evToMove);
 
             safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
-            draggedEvent = null;
-            renderCalendar();
+            draggedEvent = null; renderCalendar();
         }
 
         // --- NAVIGAZIONE ---
@@ -484,8 +481,11 @@
             else if (currentView === 'day') baseDate.setDate(baseDate.getDate() + d);
             renderCalendar();
         }
+        function getMonday(d) {
+            let date = new Date(d); let day = date.getDay(); let diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(date.setDate(diff));
+        }
 
-        // --- MOTORE CALENDARIO ---
         function parseTime(ts) {
             if(!ts) return null;
             const m = ts.match(/(\d{1,2})[.:](\d{2})/);
@@ -505,122 +505,40 @@
             return null;
         }
 
-        function createDayTimeline(y, m, d) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'day-timeline-wrapper';
+        // --- GENERATORI CELLE ---
+        function createMiniMonth(y, m) {
+            const wrapper = document.createElement('div'); wrapper.className = 'mini-month';
+            wrapper.innerHTML = `<div class="mini-month-title">${mesi[m]}</div><div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
+            const mGrid = document.createElement('div'); mGrid.className = 'mini-grid';
             
-            const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const startPad = new Date(y, m, 1).getDay() === 0 ? 6 : new Date(y, m, 1).getDay() - 1;
+            for (let i = 0; i < startPad; i++) mGrid.appendChild(document.createElement('div'));
             
-            // Permette Drag & Drop anche sulla Timeline
-            wrapper.ondragover = handleDragOver;
-            wrapper.ondragleave = handleDragLeave;
-            wrapper.ondrop = (e) => handleDrop(e, dk);
-
-            const header = document.createElement('div');
-            header.className = 'timeline-header';
-            const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const cdn = dNames[new Date(y, m, d).getDay()];
-            
-            header.innerHTML = `
-                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
-                <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:12px; opacity:0.8;">${cdn}</span>
-                    <span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span>
-                </div>
-                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
-            `;
-            header.onclick = () => openModal(y, m, d);
-            wrapper.appendChild(header);
-
-            let dayEvents = calendarEvents[dk] || [];
-            
-            // All Day Area per eventi senza orario
-            const allDayEvents = dayEvents.filter(ev => !parseTime(ev.time));
-            if (allDayEvents.length > 0) {
-                const allday = document.createElement('div');
-                allday.className = 'timeline-allday';
-                allday.onclick = () => openModal(y, m, d);
-                allday.innerHTML = `<div class="allday-label">Eventi</div>`;
+            for (let day = 1; day <= new Date(y, m + 1, 0).getDate(); day++) {
+                const cell = document.createElement('div'); cell.className = 'mini-cell'; cell.innerText = day;
+                const dk = `${y}-${String(m+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                if (calendarEvents[dk] && calendarEvents[dk].length > 0) cell.classList.add('has-event');
                 
-                allDayEvents.forEach(ev => {
-                    const block = document.createElement('div');
-                    block.className = 'event-block';
-                    block.style.position = 'relative'; block.style.marginBottom = '5px';
-                    block.draggable = true;
-                    block.ondragstart = (e) => handleDragStart(e, dk, ev.id);
-                    block.innerHTML = `
-                        <div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
-                        <div class="title">${ev.title || 'Senza Titolo'}</div>
-                        ${ev.notes ? `<div style="font-size:11px; opacity:0.9; margin-top:2px;">${ev.notes}</div>`:''}
-                    `;
-                    allday.appendChild(block);
-                });
-                wrapper.appendChild(allday);
+                const today = new Date();
+                if(today.getFullYear() === y && today.getMonth() === m && today.getDate() === day) cell.classList.add('is-today');
+                cell.onclick = () => { baseDate = new Date(y, m, day); document.getElementById('view-select').value = 'day'; changeView('day'); };
+                mGrid.appendChild(cell);
             }
-
-            const timelineContainer = document.createElement('div');
-            timelineContainer.style.position = 'relative';
-            timelineContainer.onclick = (e) => { if(e.target === timelineContainer || e.target.classList.contains('timeline-hour-row')) openModal(y, m, d); };
-
-            for (let i = 0; i < 24; i++) {
-                const row = document.createElement('div');
-                row.className = 'timeline-hour-row';
-                let ht = i === 0 ? '12 AM' : i < 12 ? i+' AM' : i === 12 ? '12 PM' : (i-12)+' PM';
-                row.innerHTML = `<div class="timeline-time">${ht}</div>`;
-                timelineContainer.appendChild(row);
-            }
-
-            // Posiziona eventi con orario
-            const timedEvents = dayEvents.filter(ev => parseTime(ev.time));
-            timedEvents.forEach((ev, index) => {
-                const pt = parseTime(ev.time);
-                const eb = document.createElement('div');
-                eb.className = 'timeline-event-block';
-                eb.draggable = true;
-                eb.ondragstart = (e) => handleDragStart(e, dk, ev.id);
-                
-                // Se ci sono sovrapposizioni, sfalsa leggermente
-                const overlapOffset = (index % 3) * 10; 
-                
-                eb.style.top = (pt.h * 60 + pt.m) + 'px';
-                eb.style.left = `${70 + overlapOffset}px`;
-                eb.style.zIndex = 10 + index;
-                
-                eb.innerHTML = `
-                    <div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
-                    <div style="font-weight:700; font-size:14px; padding-right:15px;">${ev.title || 'Evento'}</div>
-                    ${ev.notes ? `<div style="font-size:12px; opacity:0.9;">${ev.notes}</div>`:''}
-                `;
-                timelineContainer.appendChild(eb);
-            });
-            
-            wrapper.appendChild(timelineContainer);
-            return wrapper;
+            wrapper.appendChild(mGrid); return wrapper;
         }
 
         function createCell(y, m, d, empty) {
-            const cell = document.createElement('div');
-            cell.className = `cell ${empty ? 'empty' : ''}`;
-            
+            const cell = document.createElement('div'); cell.className = `cell ${empty ? 'empty' : ''}`;
             if (!empty) {
                 const dateKey = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 
-                // Setup Drag and Drop
-                cell.ondragover = handleDragOver;
-                cell.ondragleave = handleDragLeave;
-                cell.ondrop = (e) => handleDrop(e, dateKey);
+                // DRAG & DROP ZONES
+                cell.ondragover = handleDragOver; cell.ondragleave = handleDragLeave; cell.ondrop = (e) => handleDrop(e, dateKey);
                 
-                // Cliccare sulla cella vuota crea un NUOVO evento
-                cell.onclick = (e) => {
-                    if(e.target === cell || e.target.classList.contains('events-container')) {
-                        openModal(y,m,d);
-                    }
-                };
-                
+                cell.onclick = (e) => { if(e.target === cell || e.target.classList.contains('events-container')) openModal(y,m,d); };
                 const b = document.createElement('div'); b.className = 'date-badge'; b.innerText = d; cell.appendChild(b);
                 
                 let dayEvents = calendarEvents[dateKey] || [];
-                
                 if(dayEvents.length > 0) {
                     if(currentView === 'month') {
                         cell.classList.add('has-event');
@@ -631,15 +549,11 @@
                             dayEvents.forEach(ev => {
                                 html += `<div class="tooltip-item">`;
                                 if(ev.time) html += `<div class="time">${ev.time}</div>`;
-                                if(ev.title) html += `<div class="title">${ev.title}</div>`;
-                                else html += `<div class="title">Evento Programmato</div>`;
-                                if(ev.notes) html += `<div class="notes-preview">📝 ${ev.notes}</div>`;
+                                html += `<div class="title">${ev.title || 'Evento'}</div>`;
                                 html += `</div>`;
                             });
-                            
                             tooltip.innerHTML = html; tooltip.style.display = 'flex';
-                            const rect = cell.getBoundingClientRect();
-                            tooltip.style.left = `${rect.left + (rect.width / 2)}px`; tooltip.style.top = `${rect.top - 5}px`;
+                            const rect = cell.getBoundingClientRect(); tooltip.style.left = `${rect.left + (rect.width / 2)}px`; tooltip.style.top = `${rect.top - 5}px`;
                             requestAnimationFrame(() => { tooltip.style.opacity = '1'; tooltip.style.transform = 'translate(-50%, -100%) scale(1)'; });
                         };
                         cell.onmouseleave = () => {
@@ -647,21 +561,16 @@
                             setTimeout(() => { if(tooltip.style.opacity === '0') tooltip.style.display = 'none'; }, 200);
                         };
                     } else if(currentView === 'week') {
-                        const evContainer = document.createElement('div');
-                        evContainer.className = 'events-container';
-                        
+                        const evContainer = document.createElement('div'); evContainer.className = 'events-container';
                         dayEvents.forEach(ev => {
-                            const block = document.createElement('div'); 
-                            block.className = 'event-block';
-                            block.draggable = true;
-                            block.ondragstart = (e) => handleDragStart(e, dateKey, ev.id);
+                            const block = document.createElement('div'); block.className = 'event-block';
+                            block.draggable = true; block.ondragstart = (e) => handleDragStart(e, dateKey, ev.id); block.ondragend = handleDragEnd;
                             
-                            let bHtml = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>`;
-                            if(ev.time) bHtml += `<div class="time">${ev.time}</div>`;
-                            if(ev.title) bHtml += `<div class="title">${ev.title}</div>`;
-                            else if(ev.notes) bHtml += `<div class="title">📝 Note</div>`;
-                            
-                            block.innerHTML = bHtml;
+                            block.innerHTML = `
+                                <div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
+                                ${ev.time ? `<div class="time">${ev.time}</div>` : ''}
+                                <div class="title">${ev.title || 'Evento'}</div>
+                            `;
                             evContainer.appendChild(block);
                         });
                         cell.appendChild(evContainer);
@@ -671,86 +580,95 @@
             return cell;
         }
 
-        function createMiniMonth(y, m) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'mini-month';
-            wrapper.innerHTML = `<div class="mini-month-title">${mesi[m]}</div>
-                                 <div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
-            const mGrid = document.createElement('div');
-            mGrid.className = 'mini-grid';
+        function createDayTimeline(y, m, d) {
+            const wrapper = document.createElement('div'); wrapper.className = 'day-timeline-wrapper';
+            const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             
-            const firstDay = new Date(y, m, 1).getDay();
-            const startPad = firstDay === 0 ? 6 : firstDay - 1;
-            for (let i = 0; i < startPad; i++) mGrid.appendChild(document.createElement('div'));
-            
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'mini-cell';
-                cell.innerText = day;
-                const dateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                if (calendarEvents[dateKey] && calendarEvents[dateKey].length > 0) cell.classList.add('has-event');
-                
-                const today = new Date();
-                if(today.getFullYear() === y && today.getMonth() === m && today.getDate() === day) {
-                    cell.classList.add('is-today');
-                }
+            wrapper.ondragover = handleDragOver; wrapper.ondragleave = handleDragLeave; wrapper.ondrop = (e) => handleDrop(e, dk);
 
-                cell.onclick = () => {
-                    baseDate = new Date(y, m, day);
-                    document.getElementById('view-select').value = 'day';
-                    changeView('day');
-                };
-                mGrid.appendChild(cell);
+            const header = document.createElement('div'); header.className = 'timeline-header';
+            const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            header.innerHTML = `
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:12px; opacity:0.8;">${dNames[new Date(y, m, d).getDay()]}</span>
+                    <span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span>
+                </div>
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
+            `;
+            header.onclick = () => openModal(y, m, d); wrapper.appendChild(header);
+
+            let dayEvents = calendarEvents[dk] || [];
+            
+            const allDayEvents = dayEvents.filter(ev => !parseTime(ev.time));
+            if (allDayEvents.length > 0) {
+                const allday = document.createElement('div'); allday.className = 'timeline-allday';
+                allday.onclick = (e) => { if(e.target===allday) openModal(y, m, d); };
+                allday.innerHTML = `<div class="allday-label">Eventi</div>`;
+                allDayEvents.forEach(ev => {
+                    const block = document.createElement('div'); block.className = 'event-block';
+                    block.style.position = 'relative'; block.style.marginBottom = '5px';
+                    block.draggable = true; block.ondragstart = (e) => handleDragStart(e, dk, ev.id); block.ondragend = handleDragEnd;
+                    block.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div><div class="title">${ev.title || 'Evento'}</div>`;
+                    allday.appendChild(block);
+                });
+                wrapper.appendChild(allday);
             }
-            wrapper.appendChild(mGrid);
-            return wrapper;
+
+            const timelineContainer = document.createElement('div'); timelineContainer.style.position = 'relative';
+            timelineContainer.onclick = (e) => { if(e.target === timelineContainer || e.target.classList.contains('timeline-hour-row')) openModal(y, m, d); };
+
+            for (let i = 0; i < 24; i++) {
+                const row = document.createElement('div'); row.className = 'timeline-hour-row';
+                let ht = i === 0 ? '12 AM' : i < 12 ? i+' AM' : i === 12 ? '12 PM' : (i-12)+' PM';
+                row.innerHTML = `<div class="timeline-time">${ht}</div>`; timelineContainer.appendChild(row);
+            }
+
+            const timedEvents = dayEvents.filter(ev => parseTime(ev.time));
+            timedEvents.forEach((ev, index) => {
+                const pt = parseTime(ev.time);
+                const eb = document.createElement('div'); eb.className = 'timeline-event-block';
+                eb.draggable = true; eb.ondragstart = (e) => handleDragStart(e, dk, ev.id); eb.ondragend = handleDragEnd;
+                
+                const overlapOffset = (index % 3) * 10; 
+                eb.style.top = (pt.h * 60 + pt.m) + 'px'; eb.style.left = `${70 + overlapOffset}px`; eb.style.zIndex = 10 + index;
+                
+                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
+                                <div style="font-weight:700; font-size:14px; padding-right:15px;">${ev.title || 'Evento'}</div>`;
+                timelineContainer.appendChild(eb);
+            });
+            wrapper.appendChild(timelineContainer); return wrapper;
         }
 
         function renderCalendar() {
             grid.innerHTML = '';
             const y = baseDate.getFullYear(); const m = baseDate.getMonth();
+            const mdRow = document.getElementById('main-days-row'); const dHead = document.getElementById('dynamic-header');
             
             if (currentView === 'year') {
-                dynamicHeader.style.display = 'flex'; mainDaysRow.style.display = 'none';
-                grid.className = "calendar-grid year-view"; title.innerText = `${y}`;
+                dHead.style.display = 'flex'; mdRow.style.display = 'none'; grid.className = "calendar-grid year-view"; title.innerText = `${y}`;
                 for(let i=0; i<12; i++) grid.appendChild(createMiniMonth(y, i));
-            } 
-            else if (currentView === 'day') {
-                dynamicHeader.style.display = 'none'; mainDaysRow.style.display = 'none';
-                grid.className = "calendar-grid day-view";
+            } else if (currentView === 'day') {
+                dHead.style.display = 'none'; mdRow.style.display = 'none'; grid.className = "calendar-grid day-view";
                 grid.appendChild(createDayTimeline(y, m, baseDate.getDate()));
-            } 
-            else {
-                dynamicHeader.style.display = 'flex'; mainDaysRow.style.display = 'grid';
+            } else {
+                dHead.style.display = 'flex'; mdRow.style.display = 'grid';
                 if(currentView === 'month') {
                     grid.className = "calendar-grid month-view"; title.innerText = `${mesi[m]} ${y}`;
-                    const first = new Date(y, m, 1).getDay(); const days = new Date(y, m+1, 0).getDate();
-                    const pad = first === 0 ? 6 : first - 1;
+                    const pad = new Date(y, m, 1).getDay() === 0 ? 6 : new Date(y, m, 1).getDay() - 1;
+                    const days = new Date(y, m+1, 0).getDate();
                     for (let i=0; i<pad; i++) grid.appendChild(createCell(y,m,0,true));
                     for (let d=1; d<=days; d++) grid.appendChild(createCell(y,m,d,false));
-                    const totalCells = pad + days;
-                    const endPad = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+                    const endPad = (pad + days) % 7 === 0 ? 0 : 7 - ((pad + days) % 7);
                     for (let i=0; i<endPad; i++) grid.appendChild(createCell(y,m,0,true));
                 } else if(currentView === 'week') {
                     grid.className = "calendar-grid week-view";
-                    let d = new Date(baseDate); let day = d.getDay(); let diff = d.getDate() - day + (day === 0 ? -6 : 1);
-                    let mon = new Date(d.setDate(diff)); 
-                    let sun = new Date(mon); sun.setDate(sun.getDate() + 6);
-                    if(mon.getMonth() === sun.getMonth()) {
-                        title.innerText = `${mon.getDate()} - ${sun.getDate()} ${mesi[mon.getMonth()]} ${mon.getFullYear()}`;
-                    } else {
-                        title.innerText = `${mon.getDate()} ${mesi[mon.getMonth()].substring(0,3)} - ${sun.getDate()} ${mesi[sun.getMonth()].substring(0,3)} ${sun.getFullYear()}`;
-                    }
-                    for (let i=0; i<7; i++) { 
-                        let curr = new Date(mon); curr.setDate(mon.getDate()+i); 
-                        grid.appendChild(createCell(curr.getFullYear(), curr.getMonth(), curr.getDate(), false)); 
-                    }
+                    let mon = getMonday(baseDate); let sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+                    title.innerText = mon.getMonth() === sun.getMonth() ? `${mon.getDate()} - ${sun.getDate()} ${mesi[mon.getMonth()]} ${mon.getFullYear()}` : `${mon.getDate()} ${mesi[mon.getMonth()].substring(0,3)} - ${sun.getDate()} ${mesi[sun.getMonth()].substring(0,3)} ${sun.getFullYear()}`;
+                    for (let i=0; i<7; i++) { let curr = new Date(mon); curr.setDate(mon.getDate()+i); grid.appendChild(createCell(curr.getFullYear(), curr.getMonth(), curr.getDate(), false)); }
                 }
             }
         }
-        
         renderCalendar();
     </script>
 </body>
