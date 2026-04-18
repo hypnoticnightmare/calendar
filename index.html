@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Ultimate Drag & Drop</title>
+    <title>Aesthetic Calendar - Notion Safe Drag & Drop</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body { forced-color-adjust: none !important; color-adjust: exact !important; }
 
-        :root {
-            --page-bg: transparent; --text-color: #4A3A35; --badge-text: #FFFFFF; --btn-bg: #FFF;
-        }
+        :root { --page-bg: transparent; --text-color: #4A3A35; --badge-text: #FFFFFF; --btn-bg: #FFF; }
 
         /* --- SFONDI NOTION --- */
         [data-theme="light"] { --page-bg: #FFFFFF; --text-color: #4A3A35; --btn-bg: #FFFFFF; }
@@ -27,7 +25,6 @@
         [data-color="grape"] { --accent-main: #593C6B; --badge-bg: #D4A373; --cell-bg: #F8F3FA; --header-bg: #EBE0F0; }
         [data-color="choco"] { --accent-main: #5C4033; --badge-bg: #D9A05B; --cell-bg: #FCF8F2; --header-bg: #F2E3D5; }
 
-        /* Modalità Scura */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A6ACF; --badge-bg: #3F3C79; --cell-bg: #1B1B3A; --header-bg: #26264A; }
@@ -50,20 +47,14 @@
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
         .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; }
         .color-dot:hover { transform: scale(1.2); }
-        .action-btn {
-            background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); 
-            border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none;
-        }
+        .action-btn { background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none; }
         .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
         select.action-btn { cursor: pointer; padding: 4px 8px; }
 
         /* --- CALENDARIO BASE --- */
         .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
-        .month-header {
-            display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); 
-            padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main);
-        }
+        .month-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main); }
         .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; flex: 1; text-align: center;}
         .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 12px; font-weight: bold; font-family: 'Nunito'; }
 
@@ -76,7 +67,7 @@
         .calendar-grid.year-view { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
 
-        /* --- CELLE (MESE/SETTIMANA) --- */
+        /* --- CELLE E DROP ZONE --- */
         .cell {
             background-color: var(--cell-bg); border-radius: 8px; display: flex; flex-direction: column; 
             position: relative; cursor: pointer; overflow: hidden; min-width: 0; min-height: 0; transition: border 0.1s; border: 2px solid transparent;
@@ -85,7 +76,7 @@
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
 
         .cell:hover:not(.empty) { filter: brightness(0.95); }
-        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; }
+        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; border: 2px solid transparent; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
         .date-badge {
@@ -94,17 +85,15 @@
             font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; z-index: 15;
         }
 
-        /* --- SISTEMA DRAG & DROP MAGICO --- */
-        /* 1. Quando si trascina, gli eventi diventano trasparenti e ignorano il mouse */
+        /* --- DRAG & DROP FIX PER NOTION --- */
         body.is-dragging .event-block,
-        body.is-dragging .timeline-event-block {
-            opacity: 0.3 !important; pointer-events: none !important;
-        }
-        /* 2. Visual delle zone valide in cui rilasciare */
+        body.is-dragging .timeline-event-block { opacity: 0.4 !important; pointer-events: none !important; }
+        
         .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
         .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.1) !important; border-bottom: 2px dashed var(--accent-main) !important; }
         [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.1) !important; }
 
+        /* --- BLOCCHI EVENTI --- */
         .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding-bottom: 6px; }
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
@@ -150,7 +139,6 @@
 
         .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.08); position: relative; transition: background 0.1s; border: 2px solid transparent; border-bottom-width: 1px; }
         [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.08); }
-        
         .timeline-time { width: 60px; padding-right: 10px; text-align: right; font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7; transform: translateY(-8px); pointer-events: none;}
         
         .timeline-event-block {
@@ -165,10 +153,11 @@
         .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; }
         .mini-days-row { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px; }
         .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); }
+        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; }
         .mini-cell:hover { background: rgba(0,0,0,0.1); }
         [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
         .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
+        .mini-cell.is-today { border: 2px solid var(--accent-main); }
 
         /* --- TOOLTIP (Mese) --- */
         #custom-tooltip {
@@ -192,7 +181,6 @@
         .modal-actions .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .hide-delete .btn-delete { display: none; }
-
         .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
     </style>
@@ -292,6 +280,9 @@
 
         let currentEditingDateKey = null;
         let currentEditingId = null; 
+        
+        // Memoria per il Drag & Drop (sicura contro i blocchi Iframe)
+        let draggedEventInfo = null;
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -411,17 +402,28 @@
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- NUOVO DRAG & DROP INFALLIBILE ---
+        // --- SISTEMA DRAG E DROP ROBUSTO ---
         function handleDragStart(e, dateKey, eventId) {
             e.stopPropagation();
-            document.body.classList.add('is-dragging');
+            draggedEventInfo = { dateKey, eventId };
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', JSON.stringify({dateKey, eventId}));
+            e.dataTransfer.setData('text/plain', 'dummy_data_for_firefox'); // Necessario per standard HTML5
+            
+            setTimeout(() => {
+                e.target.classList.add('dragging-visual');
+                document.body.classList.add('is-dragging');
+            }, 0);
         }
 
         function handleDragEnd(e) {
+            e.target.classList.remove('dragging-visual');
             document.body.classList.remove('is-dragging');
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            draggedEventInfo = null;
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault(); e.stopPropagation();
         }
 
         function handleDragOver(e) {
@@ -434,39 +436,36 @@
             e.currentTarget.classList.remove('drag-over');
         }
 
-        // Funzione universale di Drop (Mese/Settimana/Giorno)
         function executeDrop(e, targetDateKey, newTime = null) {
             e.preventDefault(); e.stopPropagation();
             document.body.classList.remove('is-dragging');
             e.currentTarget.classList.remove('drag-over');
             
-            try {
-                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-                if (!data || !data.dateKey || !data.eventId) return;
-                
-                // Se non cambia nulla, esci
-                if (data.dateKey === targetDateKey && newTime === null) return;
-                
-                let sourceArray = calendarEvents[data.dateKey];
-                let evIndex = sourceArray.findIndex(ev => ev.id === data.eventId);
-                if (evIndex === -1) return;
-                
-                // Rimuovi evento
-                let evToMove = sourceArray.splice(evIndex, 1)[0];
-                if(sourceArray.length === 0) delete calendarEvents[data.dateKey];
+            if (!draggedEventInfo) return;
+            const { dateKey: sourceDateKey, eventId } = draggedEventInfo;
+            
+            if (sourceDateKey === targetDateKey && newTime === null) return;
+            
+            let sourceArray = calendarEvents[sourceDateKey];
+            if(!sourceArray) return;
+            
+            let evIndex = sourceArray.findIndex(ev => ev.id === eventId);
+            if (evIndex === -1) return;
+            
+            let evToMove = sourceArray.splice(evIndex, 1)[0];
+            if(sourceArray.length === 0) delete calendarEvents[sourceDateKey];
 
-                // Aggiorna l'orario se siamo nella vista Giorno (Timeline)
-                if (newTime !== null) {
-                    evToMove.time = newTime === 'ALLDAY' ? '' : `${String(newTime).padStart(2, '0')}:00`;
-                }
+            // Se stiamo spostando in una zona con orario (nella Timeline)
+            if (newTime !== null) {
+                evToMove.time = newTime === 'ALLDAY' ? '' : `${String(newTime).padStart(2, '0')}:00`;
+            }
 
-                // Inserisci nella nuova data
-                if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
-                calendarEvents[targetDateKey].push(evToMove);
+            if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
+            calendarEvents[targetDateKey].push(evToMove);
 
-                safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
-                renderCalendar();
-            } catch(err) { console.log("Drop error:", err); }
+            safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
+            draggedEventInfo = null;
+            renderCalendar();
         }
 
         // --- NAVIGAZIONE ---
@@ -484,7 +483,7 @@
             return new Date(date.setDate(diff));
         }
 
-        // --- VISTE CALENDARIO ---
+        // --- GENERATORI CELLE ---
         function createMiniMonth(y, m) {
             const wrapper = document.createElement('div'); wrapper.className = 'mini-month';
             wrapper.innerHTML = `<div class="mini-month-title">${mesi[m]}</div><div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
@@ -508,8 +507,8 @@
             if (!empty) {
                 const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 
-                // Aggancio Drag Drop (Data senza cambio orario)
-                cell.ondragover = handleDragOver; cell.ondragleave = handleDragLeave;
+                // Aggancio Drag Drop
+                cell.ondragenter = handleDragEnter; cell.ondragover = handleDragOver; cell.ondragleave = handleDragLeave;
                 cell.ondrop = (e) => executeDrop(e, dk, null);
                 
                 cell.onclick = (e) => { if(e.target === cell || e.target.classList.contains('events-container')) openModal(y,m,d); };
@@ -547,6 +546,8 @@
             const wrapper = document.createElement('div'); wrapper.className = 'day-timeline-wrapper';
             const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
             
+            wrapper.ondragenter = handleDragEnter; wrapper.ondragover = handleDragOver; wrapper.ondragleave = handleDragLeave; wrapper.ondrop = (e) => executeDrop(e, dk, null);
+
             const header = document.createElement('div'); header.className = 'timeline-header';
             const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
             header.innerHTML = `<button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button><div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:12px; opacity:0.8;">${dNames[new Date(y, m, d).getDay()]}</span><span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span></div><button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>`;
@@ -554,11 +555,9 @@
 
             let dayEvents = calendarEvents[dk] || [];
             
-            // --- AREA TUTTO IL GIORNO (DROP ZONE 'ALLDAY') ---
             const allday = document.createElement('div'); allday.className = 'timeline-allday';
             allday.onclick = (e) => { if(e.target===allday) openModal(y, m, d); };
-            allday.ondragover = handleDragOver; allday.ondragleave = handleDragLeave;
-            allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY'); // Azzera l'orario
+            allday.ondragenter = handleDragEnter; allday.ondragover = handleDragOver; allday.ondragleave = handleDragLeave; allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY');
             allday.innerHTML = `<div class="allday-label">Eventi</div>`;
             
             dayEvents.filter(ev => !parseTime(ev.time)).forEach(ev => {
@@ -570,16 +569,14 @@
             wrapper.appendChild(allday);
 
             const timelineContainer = document.createElement('div'); timelineContainer.style.position = 'relative';
-            timelineContainer.onclick = (e) => { if(e.target === timelineContainer) openModal(y, m, d); };
+            timelineContainer.onclick = (e) => { if(e.target === timelineContainer || e.target.classList.contains('timeline-hour-row')) openModal(y, m, d); };
 
-            // --- RIGHE DELLE ORE (DROP ZONES SPECIFICHE) ---
             for (let i = 0; i < 24; i++) {
                 const row = document.createElement('div'); row.className = 'timeline-hour-row';
                 row.onclick = () => { document.getElementById('modal-time').value = `${i}:00`; openModal(y, m, d); };
                 
-                // Aggancio Drag & Drop specifico per l'ora!
-                row.ondragover = handleDragOver; row.ondragleave = handleDragLeave;
-                row.ondrop = (e) => executeDrop(e, dk, i); // Passa l'ora esatta alla funzione drop!
+                row.ondragenter = handleDragEnter; row.ondragover = handleDragOver; row.ondragleave = handleDragLeave;
+                row.ondrop = (e) => executeDrop(e, dk, i);
                 
                 let ht = i === 0 ? '12 AM' : i < 12 ? i+' AM' : i === 12 ? '12 PM' : (i-12)+' PM';
                 row.innerHTML = `<div class="timeline-time">${ht}</div>`; timelineContainer.appendChild(row);
@@ -590,12 +587,11 @@
                 const eb = document.createElement('div'); eb.className = 'timeline-event-block';
                 eb.draggable = true; eb.ondragstart = (e) => handleDragStart(e, dk, ev.id); eb.ondragend = handleDragEnd;
                 
-                const overlapOffset = (index % 4) * 15; // Sfalsa di 15px in caso di overlap
+                const overlapOffset = (index % 4) * 15; 
                 eb.style.top = (pt.h * 60 + pt.m) + 'px'; eb.style.left = `${70 + overlapOffset}px`; eb.style.zIndex = 10 + index;
                 eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div><div style="font-weight:700; font-size:14px; padding-right:15px;">${ev.title || 'Evento'}</div>`;
                 timelineContainer.appendChild(eb);
             });
-            
             wrapper.appendChild(timelineContainer); return wrapper;
         }
 
@@ -607,12 +603,10 @@
             if (currentView === 'year') {
                 dHead.style.display = 'flex'; mdRow.style.display = 'none'; grid.className = "calendar-grid year-view"; title.innerText = `${y}`;
                 for(let i=0; i<12; i++) grid.appendChild(createMiniMonth(y, i));
-            } 
-            else if (currentView === 'day') {
+            } else if (currentView === 'day') {
                 dHead.style.display = 'none'; mdRow.style.display = 'none'; grid.className = "calendar-grid day-view";
                 grid.appendChild(createDayTimeline(y, m, baseDate.getDate()));
-            } 
-            else {
+            } else {
                 dHead.style.display = 'flex'; mdRow.style.display = 'grid';
                 if(currentView === 'month') {
                     grid.className = "calendar-grid month-view"; title.innerText = `${mesi[m]} ${y}`;
