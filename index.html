@@ -23,7 +23,7 @@
         [data-theme="dark"] { --page-bg: #191919; --text-color: #F0F0F0; --btn-bg: #2C2C2C; }
         [data-theme="transparent"] { --page-bg: transparent; }
 
-        /* --- PALETTE COLORI --- */
+        /* --- PALETTE 3 COLORI --- */
         [data-color="strawberry"] { --accent-main: #C66F80; --badge-bg: #4A6644; --cell-bg: #FCEBF1; --header-bg: #FADCE5; }
         [data-color="matcha"] { --accent-main: #6B705C; --badge-bg: #9C6644; --cell-bg: #F4F1DE; --header-bg: #EAE2B7; }
         [data-color="blueberry"] { --accent-main: #3F3C79; --badge-bg: #5A6ACF; --cell-bg: #FFF6EC; --header-bg: #EAEBF5; }
@@ -36,163 +36,203 @@
         [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
         [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
-        body, html {
+        body {
             margin: 0; padding: clamp(5px, 2vw, 15px); background-color: var(--page-bg); 
             font-family: 'Nunito', sans-serif; color: var(--text-color); 
-            display: flex; flex-direction: column; align-items: center; transition: background-color 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; 
+            transition: background-color 0.3s ease; min-height: 100vh;
         }
 
-        /* --- CONTROLLI --- */
+        /* --- CONTROLLI SUPERIORI --- */
         .controls-container {
-            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; background-color: var(--btn-bg); 
-            border-radius: 20px; align-items: center; flex-wrap: wrap; justify-content: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid var(--accent-main);
+            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; 
+            background-color: var(--btn-bg); border-radius: 20px; align-items: center; 
+            flex-wrap: wrap; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid var(--accent-main); width: 100%; max-width: 900px;
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
-        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; }
+        .color-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; flex-shrink: 0;}
         .color-dot:hover { transform: scale(1.2); }
-        .action-btn { background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none; }
-        .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .action-btn {
+            background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); 
+            border-radius: 12px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-weight: 700; 
+            cursor: pointer; outline: none; transition: transform 0.1s;
+        }
+        .action-btn:active { transform: scale(0.95); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
-        select.action-btn { cursor: pointer; padding: 4px 8px; }
+        select.action-btn { cursor: pointer; padding: 6px 10px; }
 
-        /* --- CALENDARIO BASE --- */
-        .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
-        .month-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main); }
-        .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; flex: 1; text-align: center;}
-        .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 12px; font-weight: bold; font-family: 'Nunito'; }
-
-        .calendar-frame { background-color: var(--accent-main); padding: 6px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .days-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
-        .day-name { background-color: var(--header-bg); color: var(--accent-main); text-align: center; font-weight: 800; font-size: 14px; padding: 8px 0; border-radius: 8px; text-transform: uppercase; }
+        /* --- STRUTTURA CALENDARIO --- */
+        .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; flex: 1;}
         
-        .calendar-grid { display: grid; gap: 4px; }
-        .calendar-grid.month-view, .calendar-grid.week-view { grid-template-columns: repeat(7, 1fr); }
-        .calendar-grid.year-view { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .month-header {
+            display: flex; justify-content: space-between; align-items: center; 
+            background-color: var(--header-bg); padding: 12px 20px; 
+            border-radius: 16px; border: 3px solid var(--accent-main);
+        }
+        .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; text-align: center; flex: 1;}
+        .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 16px; font-weight: bold; font-family: 'Nunito'; }
+
+        .calendar-frame {
+            background-color: var(--accent-main); padding: 8px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); width: 100%;
+        }
+
+        .days-row {
+            display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px;
+        }
+        .day-name {
+            background-color: var(--header-bg); color: var(--accent-main); text-align: center; 
+            font-weight: 800; font-size: 14px; padding: 10px 0; border-radius: 8px; text-transform: uppercase;
+        }
+
+        /* --- LE 4 VISTE (GRIGLIE) --- */
+        .calendar-grid { width: 100%; gap: 6px; }
+        
+        .calendar-grid.month-view, .calendar-grid.week-view { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        .calendar-grid.year-view { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
 
-        /* --- CELLE E DROP ZONE --- */
+        /* --- CELLE MESE E SETTIMANA --- */
         .cell {
-            background-color: var(--cell-bg); border-radius: 8px; display: flex; flex-direction: column; 
-            position: relative; cursor: pointer; overflow: hidden; min-width: 0; min-height: 0; transition: border 0.1s; border: 2px solid transparent;
+            background-color: var(--cell-bg); border-radius: 10px; display: flex; flex-direction: column; 
+            position: relative; cursor: pointer; overflow: hidden; border: 2px solid transparent; transition: filter 0.2s;
+            min-width: 0; 
         }
         .month-view .cell { aspect-ratio: 1 / 1; }
-        .week-view .cell { aspect-ratio: auto; min-height: 400px; }
+        .week-view .cell { min-height: 400px; }
 
         .cell:hover:not(.empty) { filter: brightness(0.95); }
-        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; border: 2px solid transparent; }
+        .cell.empty { background-color: rgba(255,255,255,0.3); cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
         .date-badge {
-            background-color: var(--badge-bg); color: var(--badge-text); border-radius: 50%; width: 28px; height: 28px;
+            background-color: var(--badge-bg); color: var(--badge-text); border-radius: 50%; width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center; margin: 6px; align-self: flex-start; 
-            font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; z-index: 15;
+            font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- DRAG & DROP FIX PER NOTION --- */
-        body.is-dragging .event-block,
-        body.is-dragging .timeline-event-block { opacity: 0.4 !important; pointer-events: none !important; }
-        
-        .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
-        .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.1) !important; border-bottom: 2px dashed var(--accent-main) !important; }
-        [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.1) !important; }
-
-        /* --- BLOCCHI EVENTI --- */
-        .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding-bottom: 6px; }
+        /* --- BLOCCHI EVENTI (VISTA SETTIMANA E MESE) --- */
+        .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding: 0 4px 6px 4px; }
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .event-block {
-            background-color: var(--badge-bg); color: var(--badge-text); margin: 0 6px; padding: 6px 20px 6px 8px;
-            border-radius: 8px; font-family: 'Mali', cursive; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border: 1px solid var(--accent-main); position: relative; cursor: grab; transition: transform 0.1s;
+            background-color: var(--badge-bg); color: var(--badge-text); padding: 6px 20px 6px 8px;
+            border-radius: 6px; font-family: 'Mali', cursive; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border: 1px solid var(--accent-main); position: relative; cursor: grab; word-break: break-word; margin: 0 2px;
         }
-        .event-block:active { cursor: grabbing; transform: scale(0.98); }
+        .event-block:active { cursor: grabbing; }
         .event-block .time { font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.9; }
         .event-block .title { font-weight: 700; line-height: 1.2; }
-
+        
         .edit-dots {
             position: absolute; top: 4px; right: 4px; font-size: 14px; font-weight: bold; line-height: 1;
-            cursor: pointer; opacity: 0.6; padding: 0 4px; border-radius: 4px;
+            cursor: pointer; opacity: 0.7; padding: 2px 4px; border-radius: 4px; transition: background 0.2s;
         }
-        .edit-dots:hover { opacity: 1; background: rgba(0,0,0,0.2); }
+        .edit-dots:hover { background: rgba(0,0,0,0.2); opacity: 1; }
 
-        .aesthetic-indicator { position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg); font-size: 18px; text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none; }
-        @keyframes floatHeart { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; } 50% { transform: translateY(-4px) scale(1.15); opacity: 1; } }
+        .aesthetic-indicator {
+            position: absolute; bottom: 8px; right: 10px; color: var(--badge-bg); font-size: 20px; 
+            text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2s ease-in-out infinite; pointer-events: none;
+        }
+        @keyframes floatHeart { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
-        /* --- TIMELINE GIORNALIERA --- */
+        /* --- VISTA GIORNALIERA (TIMELINE) --- */
         .day-timeline-wrapper {
-            background: var(--cell-bg); border-radius: 12px; border: 2px solid var(--accent-main);
-            height: 60vh; min-height: 400px; overflow-y: auto; position: relative; padding-bottom: 40px; cursor: default;
+            background: var(--cell-bg); border-radius: 10px; border: 2px solid var(--accent-main);
+            height: 65vh; min-height: 450px; overflow-y: auto; overflow-x: hidden; position: relative; padding-bottom: 50px;
         }
         .day-timeline-wrapper::-webkit-scrollbar { width: 8px; }
         .day-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .timeline-header {
-            position: sticky; top: 0; background: var(--header-bg); z-index: 20; padding: 10px 15px; 
+            position: sticky; top: 0; background: var(--header-bg); z-index: 20; padding: 12px 20px; 
             border-bottom: 2px solid var(--accent-main); display: flex; justify-content: space-between; align-items: center;
         }
         
-        .timeline-allday {
-            padding: 15px 15px 15px 70px; border-bottom: 2px dashed var(--accent-main); background: rgba(255,255,255,0.3); 
-            min-height: 20px; position: relative; display: flex; flex-direction: column; gap: 4px; border-left: 2px solid transparent; border-right: 2px solid transparent;
+        .large-badge { 
+            width: auto; height: auto; border-radius: 20px; padding: 6px 20px; font-size: 16px; 
+            display: flex; align-items: center; justify-content: center; background: var(--badge-bg); 
+            color: var(--badge-text); border: 2px solid var(--accent-main); font-weight: 800; margin: 0;
+            white-space: nowrap; 
         }
-        [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.1); }
-        .allday-label { position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: bold; color: var(--accent-main); opacity: 0.8; text-transform: uppercase; width: 50px; text-align: right; }
+        
+        .timeline-allday {
+            padding: 15px 15px 15px 70px; border-bottom: 2px solid var(--accent-main); background: rgba(255,255,255,0.4); 
+            min-height: 40px; position: relative; display: flex; flex-direction: column; gap: 4px; border: 2px solid transparent;
+        }
+        [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.2); }
+        .allday-label { position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: 800; color: var(--accent-main); text-transform: uppercase; width: 50px; text-align: right; }
 
-        .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.08); position: relative; transition: background 0.1s; border-left: 2px solid transparent; border-right: 2px solid transparent;}
-        [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.08); }
+        .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.1); position: relative; border-left: 2px solid transparent; border-right: 2px solid transparent;}
+        [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.1); }
         .timeline-time { width: 60px; padding-right: 10px; text-align: right; font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7; transform: translateY(-8px); pointer-events: none;}
         
-        /* Eventi Timeline */
+        /* EVENTI SOVRAPPOSTI (OPACITÀ E EFFETTI) */
         .timeline-event-block {
-            position: absolute; left: 70px; border-radius: 8px; padding: 8px 24px 8px 12px; font-family: 'Mali', cursive; 
-            box-shadow: 0 3px 12px rgba(0,0,0,0.3); border: 2px solid var(--accent-main); cursor: grab; 
+            position: absolute; left: 70px; background: var(--badge-bg); color: var(--badge-text);
+            border-radius: 8px; padding: 6px 24px 6px 12px; font-family: 'Mali', cursive; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 1px solid var(--accent-main); z-index: 10; cursor: grab; 
             overflow: hidden; min-height: 25px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, z-index 0s;
+            opacity: 0.95; 
+            transition: opacity 0.2s ease, z-index 0s, transform 0.2s ease;
         }
         .timeline-event-block:hover {
+            opacity: 1 !important; 
             transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             z-index: 50 !important; 
         }
-        .timeline-event-block:active { cursor: grabbing; transform: scale(0.98); }
+        .timeline-event-block:active { cursor: grabbing; opacity: 0.9 !important; transform: scale(0.98); }
 
         /* --- VISTA ANNUALE --- */
-        .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
-        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; }
-        .mini-days-row { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px; }
-        .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; }
+        .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; margin-bottom: 4px;}
+        .mini-days-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 4px; }
+        .mini-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; }
         .mini-cell:hover { background: rgba(0,0,0,0.1); }
         [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
         .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
         .mini-cell.is-today { border: 2px solid var(--accent-main); }
 
-        /* --- TOOLTIP (Mese) --- */
-        #custom-tooltip {
-            position: fixed; display: none; flex-direction: column; gap: 8px; background: rgba(255, 255, 255, 0.96); 
-            border: 3px solid var(--accent-main); color: var(--text-color); padding: 12px 16px; border-radius: 14px;
-            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); pointer-events: none; z-index: 10000; width: max-content; max-width: 280px; opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s; backdrop-filter: blur(4px);
-        }
-        [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
-        .tooltip-item { border-bottom: 1px dashed var(--accent-main); padding-bottom: 8px; }
-        .tooltip-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .tooltip-item .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 2px; }
-        .tooltip-item .title { white-space: pre-wrap; line-height: 1.2; font-weight: 700; }
+        /* --- DRAG & DROP FIX --- */
+        .is-dragging-body * { user-select: none; }
+        .event-block.dragging, .timeline-event-block.dragging { opacity: 0.5; }
+        .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
+        .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.05) !important; border: 2px dashed var(--accent-main) !important; }
+        [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.05) !important; }
 
-        /* --- MODAL (POPUP EVENTI) --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-window { background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
+        /* --- TOOLTIP & MODAL --- */
+        #custom-tooltip {
+            position: fixed; display: none; flex-direction: column; gap: 8px; background: rgba(255, 255, 255, 0.98); 
+            border: 3px solid var(--accent-main); color: var(--text-color); padding: 12px; border-radius: 12px;
+            font-family: 'Mali', cursive; font-size: 13px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); pointer-events: none; 
+            z-index: 10000; width: 220px; word-wrap: break-word;
+        }
+        [data-theme="dark"] #custom-tooltip { background: rgba(30, 30, 30, 0.98); }
+        .tooltip-item { border-bottom: 1px dashed var(--accent-main); padding-bottom: 6px; }
+        .tooltip-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .tooltip-item .time { font-weight: 800; font-size: 11px; color: var(--accent-main); }
+        .tooltip-item .title { font-weight: 700; line-height: 1.2; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-window { background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 25px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 20px; text-transform: uppercase; font-weight: 800; text-align: center; }
         .modal-window input, .modal-window textarea { width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none; }
         .modal-window textarea { resize: vertical; min-height: 80px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 5px; }
         .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .hide-delete .btn-delete { display: none; }
         .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
+
+        /* Stile Custom Selettori Orario a Tendina */
+        .time-select-container { display: flex; gap: 10px; width: 100%; flex-wrap: wrap; }
+        .time-select-group { display: flex; gap: 4px; flex: 1; min-width: 140px; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); border-radius: 8px; padding: 4px 8px; }
+        .time-select-label { font-size: 12px; font-weight: bold; color: var(--accent-main); }
+        .time-select-group select { flex: 1; border: none; background: transparent; outline: none; font-family: 'Mali', cursive; font-size: 14px; color: var(--text-color); cursor: pointer; }
 
         /* --- FOOTER INVISIBILE IN NOTION --- */
         .site-footer {
@@ -334,7 +374,8 @@
 
         let currentEditingDateKey = null;
         let currentEditingId = null; 
-        let draggedEventInfo = null; 
+        
+        let draggedEventInfo = null;
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -345,7 +386,7 @@
         const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        function parseTimeStr(ts) {
+        function parseTime(ts) {
             if(!ts) return null;
             const m = ts.match(/(\d{1,2})[.:](\d{2})/);
             if(m) {
@@ -371,7 +412,7 @@
             return '';
         }
 
-        // --- GESTIONE MODAL E TENDINE ---
+        // --- GESTIONE MODAL ---
         function openModal(y, m, d, eventId = null, defaultH = '') {
             currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
@@ -419,8 +460,8 @@
                 
                 let startVal = ev.timeStart || '';
                 let endVal = ev.timeEnd || '';
-                if (!startVal && ev.time) { // Fallback vecchi eventi
-                    let pt = parseTimeStr(ev.time);
+                if (!startVal && ev.time) { 
+                    let pt = parseTime(ev.time);
                     if(pt) startVal = `${String(pt.h).padStart(2,'0')}:${String(pt.m).padStart(2,'0')}`;
                 }
 
@@ -499,7 +540,7 @@
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- SISTEMA DRAG E DROP ROBUSTO ---
+        // --- SISTEMA DRAG E DROP ---
         function handleDragStart(e, dateKey, eventId) {
             e.stopPropagation();
             draggedEventInfo = { dateKey, eventId };
@@ -549,8 +590,8 @@
                 if (newTime === 'ALLDAY') {
                     evToMove.timeStart = ''; evToMove.timeEnd = ''; evToMove.time = '';
                 } else {
-                    let oldStart = parseTimeStr(evToMove.timeStart || evToMove.time);
-                    let oldEnd = parseTimeStr(evToMove.timeEnd);
+                    let oldStart = parseTime(evToMove.timeStart || evToMove.time);
+                    let oldEnd = parseTime(evToMove.timeEnd);
                     let durationMins = 60; // Altezza base
                     if (oldStart && oldEnd) {
                         durationMins = (oldEnd.h * 60 + oldEnd.m) - (oldStart.h * 60 + oldStart.m);
@@ -627,6 +668,7 @@
                     if(currentView === 'month') {
                         cell.classList.add('has-event');
                         const ind = document.createElement('div'); ind.className = 'aesthetic-indicator'; ind.innerText = '♥'; cell.appendChild(ind);
+                        
                         cell.onmouseenter = () => {
                             let html = ''; dayEvents.forEach(ev => { 
                                 const dispTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
@@ -661,13 +703,11 @@
 
             const header = document.createElement('div'); header.className = 'timeline-header';
             const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            
-            // LA DATA È STATA SPOSTATA SOTTO AL GIORNO COME RICHIESTO
             header.innerHTML = `
                 <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
-                <div style="display:flex; flex-direction:column; align-items:center; gap: 2px;">
-                    <span style="font-size:13px; opacity:0.8; font-weight:700; text-transform:uppercase;">${dNames[new Date(y, m, d).getDay()]}</span>
-                    <span style="font-size:22px; font-weight:800; color: var(--accent-main);">${d} ${mesi[m]} ${y}</span>
+                <div style="display:flex; flex-direction:column; align-items:center; gap: 4px;">
+                    <span style="font-size:12px; opacity:0.8;">${dNames[new Date(y, m, d).getDay()]}</span>
+                    <span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span>
                 </div>
                 <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
             `;
@@ -680,7 +720,7 @@
             allday.ondragenter = handleDragEnter; allday.ondragover = handleDragOver; allday.ondragleave = handleDragLeave; allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY');
             allday.innerHTML = `<div class="allday-label">Eventi</div>`;
             
-            dayEvents.filter(ev => !parseTimeStr(ev.timeStart || ev.time)).forEach(ev => {
+            dayEvents.filter(ev => !parseTime(ev.timeStart || ev.time)).forEach(ev => {
                 const block = document.createElement('div'); block.className = 'event-block'; block.style.position = 'relative'; block.style.marginBottom = '5px';
                 block.draggable = true; block.ondragstart = (e) => handleDragStart(e, dk, ev.id); block.ondragend = handleDragEnd;
                 block.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div><div class="title">${ev.title || 'Senza Titolo'}</div>`;
@@ -694,7 +734,7 @@
             for (let i = 0; i < 24; i++) {
                 const row = document.createElement('div'); row.className = 'timeline-hour-row';
                 
-                row.onclick = () => { openModal(y, m, d, null, i); };
+                row.onclick = () => { openModal(y, m, d, null, String(i).padStart(2, '0')); };
                 
                 row.ondragenter = handleDragEnter; row.ondragover = handleDragOver; row.ondragleave = handleDragLeave;
                 row.ondrop = (e) => executeDrop(e, dk, i);
@@ -703,23 +743,22 @@
                 row.innerHTML = `<div class="timeline-time">${ht}</div>`; timelineContainer.appendChild(row);
             }
 
-            // MOTORE PER EVENTI SOVRAPPOSTI (COLORI ALTERNATI E OPACITÀ)
-            dayEvents.filter(ev => parseTimeStr(ev.timeStart || ev.time)).forEach((ev, index) => {
-                const startPt = parseTimeStr(ev.timeStart || ev.time);
-                const endPt = parseTimeStr(ev.timeEnd);
+            dayEvents.filter(ev => parseTime(ev.timeStart || ev.time)).forEach((ev, index) => {
+                const startPt = parseTime(ev.timeStart || ev.time);
+                const endPt = parseTime(ev.timeEnd);
                 
-                let durationMins = 60; 
+                let durationMins = 60; // Altezza base di 1 ora
                 if (startPt && endPt) {
                     durationMins = (endPt.h * 60 + endPt.m) - (startPt.h * 60 + startPt.m);
-                    if (durationMins < 0) durationMins += 24 * 60; // FIX MEZZANOTTE
+                    if (durationMins < 0) durationMins += 24 * 60; 
                     if (durationMins < 20) durationMins = 20; 
                 }
 
                 const eb = document.createElement('div'); eb.className = 'timeline-event-block';
                 eb.draggable = true; eb.ondragstart = (e) => handleDragStart(e, dk, ev.id); eb.ondragend = handleDragEnd;
                 
-                // EFFETTO A CASCATA (OFFSET MAGGIORATO)
-                const overlapOffset = (index % 4) * 40; 
+                // EFFETTO A CASCATA (OFFSET MAGGIORATO PER LEGGIBILITÀ)
+                const overlapOffset = (index % 4) * 120; 
                 
                 eb.style.top = (startPt.h * 60 + startPt.m) + 'px'; 
                 eb.style.height = `${durationMins}px`;
@@ -727,21 +766,19 @@
                 eb.style.width = `calc(100% - ${90 + overlapOffset}px)`;
                 eb.style.zIndex = 10 + index;
                 
-                // ALTERNANZA COLORI
                 let bgColor = 'var(--badge-bg)';
                 let textColor = 'var(--badge-text)';
                 if (index % 2 !== 0) {
-                    bgColor = 'var(--accent-main)'; // Il rosa scuro
-                    textColor = '#FFFFFF';
+                    bgColor = 'var(--header-bg)';
+                    textColor = 'var(--accent-main)';
                 }
 
                 eb.style.backgroundColor = bgColor;
                 eb.style.color = textColor;
-                eb.style.opacity = '0.95'; // Opacità ridotta per non confondere i colori
                 
                 const dispTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
-                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')" style="color: ${textColor};">⋮</div>
-                                <div style="font-weight:800; font-size:11px; opacity:0.9; margin-bottom:2px;">${dispTime}</div>
+                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')" style="color: ${textColor}">⋮</div>
+                                <div style="font-weight:800; font-size:10px; opacity:0.9; margin-bottom:2px;">${dispTime}</div>
                                 <div style="font-weight:700; font-size:13px; padding-right:15px; line-height:1.2;">${ev.title || 'Evento'}</div>`;
                 timelineContainer.appendChild(eb);
             });
