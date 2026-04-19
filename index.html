@@ -42,12 +42,12 @@
             transition: background-color 0.3s ease; min-height: 100vh;
         }
 
-        /* --- CONTROLLI SUPERIORI --- */
+        /* --- CONTROLLI --- */
         .controls-container {
-            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; 
-            background-color: var(--btn-bg); border-radius: 20px; align-items: center; 
-            flex-wrap: wrap; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: 2px solid var(--accent-main); width: 100%; max-width: 900px;
+            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; background-color: var(--btn-bg); 
+            border-radius: 20px; align-items: center; flex-wrap: wrap; justify-content: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid var(--accent-main);
+            width: 100%; max-width: 900px;
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
@@ -85,9 +85,8 @@
             font-weight: 800; font-size: 14px; padding: 10px 0; border-radius: 8px; text-transform: uppercase;
         }
 
-        /* --- LE 4 VISTE (GRIGLIE) --- */
+        /* --- VISTE GRIGLIA --- */
         .calendar-grid { width: 100%; gap: 6px; }
-        
         .calendar-grid.month-view, .calendar-grid.week-view { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
         .calendar-grid.year-view { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
@@ -95,8 +94,7 @@
         /* --- CELLE MESE E SETTIMANA --- */
         .cell {
             background-color: var(--cell-bg); border-radius: 10px; display: flex; flex-direction: column; 
-            position: relative; cursor: pointer; overflow: hidden; border: 2px solid transparent; transition: filter 0.2s;
-            min-width: 0; 
+            position: relative; cursor: pointer; overflow: hidden; border: 2px solid transparent; transition: filter 0.2s; min-width: 0; 
         }
         .month-view .cell { aspect-ratio: 1 / 1; }
         .week-view .cell { min-height: 400px; }
@@ -111,7 +109,7 @@
             font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- BLOCCHI EVENTI (VISTA SETTIMANA E MESE) --- */
+        /* --- BLOCCHI EVENTI (VISTA SETTIMANA) --- */
         .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding: 0 4px 6px 4px; }
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
@@ -150,12 +148,12 @@
             border-bottom: 2px solid var(--accent-main); display: flex; justify-content: space-between; align-items: center;
         }
         
-        /* FIX SCRITTA SOVRAPPOSTA (White-space nowrap per non andare a capo) */
+        /* FIX SCRITTA DATA */
         .large-badge { 
             width: auto; height: auto; border-radius: 20px; padding: 6px 20px; font-size: 16px; 
             display: flex; align-items: center; justify-content: center; background: var(--badge-bg); 
             color: var(--badge-text); border: 2px solid var(--accent-main); font-weight: 800; margin: 0;
-            white-space: nowrap; 
+            white-space: nowrap; /* Impedisce al testo di spezzarsi su due righe */
         }
         
         .timeline-allday {
@@ -169,20 +167,19 @@
         [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.1); }
         .timeline-time { width: 60px; padding-right: 10px; text-align: right; font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7; transform: translateY(-8px); pointer-events: none;}
         
-        /* FIX EVENTI SOVRAPPOSTI (OPACITÀ E EFFETTI) */
+        /* FIX EVENTI SOVRAPPOSTI */
         .timeline-event-block {
-            position: absolute; left: 70px; background: var(--badge-bg); color: var(--badge-text);
-            border-radius: 8px; padding: 6px 24px 6px 12px; font-family: 'Mali', cursive; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 1px solid var(--accent-main); z-index: 10; cursor: grab; 
+            position: absolute; left: 70px; border-radius: 8px; padding: 6px 24px 6px 12px; font-family: 'Mali', cursive; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid var(--accent-main); cursor: grab; 
             overflow: hidden; min-height: 25px;
-            opacity: 0.85; /* Rende visibili gli eventi sovrapposti */
-            transition: opacity 0.2s ease, z-index 0s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, z-index 0s;
         }
         .timeline-event-block:hover {
-            opacity: 1 !important; /* Torna pieno al passaggio del mouse */
-            z-index: 50 !important; /* Salta in primo piano sopra gli altri */
+            transform: scale(1.02); /* Leggero ingrandimento */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            z-index: 99 !important; /* Mette in primo piano assoluto */
         }
-        .timeline-event-block:active { cursor: grabbing; opacity: 0.9 !important; }
+        .timeline-event-block:active { cursor: grabbing; transform: scale(0.98); }
 
         /* --- VISTA ANNUALE --- */
         .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
@@ -197,7 +194,7 @@
 
         /* --- DRAG & DROP FIX --- */
         .is-dragging-body * { user-select: none; }
-        .event-block.dragging, .timeline-event-block.dragging { opacity: 0.4 !important; }
+        .event-block.dragging, .timeline-event-block.dragging { opacity: 0.5; }
         .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
         .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.05) !important; border: 2px dashed var(--accent-main) !important; }
         [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.05) !important; }
@@ -220,13 +217,13 @@
         .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 20px; text-transform: uppercase; font-weight: 800; text-align: center; }
         .modal-window input, .modal-window textarea { width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none; }
         .modal-window textarea { resize: vertical; min-height: 80px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 5px; }
         .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .hide-delete .btn-delete { display: none; }
         .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
-        /* Stile Custom Selettori Orario a Tendina (Start e End) */
+        /* --- STILE TENDINE ORARIO --- */
         .time-select-container { display: flex; gap: 10px; width: 100%; flex-wrap: wrap; }
         .time-select-group { display: flex; gap: 4px; flex: 1; min-width: 140px; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); border-radius: 8px; padding: 4px 8px; }
         .time-select-label { font-size: 12px; font-weight: bold; color: var(--accent-main); }
@@ -237,6 +234,7 @@
             margin-top: 30px; padding: 20px; font-family: 'Mali', cursive; font-size: 14px; 
             color: var(--text-color); opacity: 0.6; text-align: center; font-weight: 600; width: 100%;
         }
+
     </style>
 </head>
 <body data-theme="transparent" data-color="blueberry">
@@ -250,11 +248,11 @@
         </div>
         <div class="picker-separator"></div>
         <div class="picker-group">
-            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 33%, #4A6644 66%, #FCEBF1 100%);" data-color-target="strawberry" title="Strawberry"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 33%, #9C6644 66%, #F4F1DE 100%);" data-color-target="matcha" title="Matcha"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 33%, #5A6ACF 66%, #FFF6EC 100%);" data-color-target="blueberry" title="Blueberry"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 33%, #D4A373 66%, #F8F3FA 100%);" data-color-target="grape" title="Grape"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 33%, #D9A05B 66%, #FCF8F2 100%);" data-color-target="choco" title="Choco"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 33%, #4A6644 66%, #FCEBF1 100%);" data-color-target="strawberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 33%, #9C6644 66%, #F4F1DE 100%);" data-color-target="matcha"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 33%, #5A6ACF 66%, #FFF6EC 100%);" data-color-target="blueberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 33%, #D4A373 66%, #F8F3FA 100%);" data-color-target="grape"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 33%, #D9A05B 66%, #FCF8F2 100%);" data-color-target="choco"></div>
         </div>
         <div class="picker-separator"></div>
         <div class="picker-group">
@@ -344,7 +342,6 @@
     </div>
 
     <script>
-        // Nascondi footer se il sito è aperto dentro Notion (iframe)
         if (window.self !== window.top) {
             const footer = document.getElementById('site-footer');
             if(footer) footer.style.display = 'none';
@@ -356,25 +353,25 @@
         };
 
         function setTheme(t) { document.body.setAttribute('data-theme', t); safeStorage.set('cal-theme', t); }
-        function setColor(c) { document.body.setAttribute('data-color', c); safeStorage.set('cal-color', c); }
-        setTheme(safeStorage.get('cal-theme') || 'transparent');
-        setColor(safeStorage.get('cal-color') || 'blueberry');
+        function setColor(c) { document.body.setAttribute('data-color', c); safeStorage.set('cal-color', c); renderCalendar(); }
+        
+        let currentTheme = safeStorage.get('cal-theme') || 'transparent';
+        let currentColor = safeStorage.get('cal-color') || 'blueberry';
+        setTheme(currentTheme); setColor(currentColor);
 
         document.querySelectorAll('[data-theme-target]').forEach(d => d.onclick = () => setTheme(d.dataset.themeTarget));
         document.querySelectorAll('[data-color-target]').forEach(d => d.onclick = () => setColor(d.dataset.colorTarget));
 
-        let rawEvents = JSON.parse(safeStorage.get('cal-events-multi')) || {};
+        let rawEvents = JSON.parse(safeStorage.get('cal-events-v3')) || {};
         let calendarEvents = {};
         for(let key in rawEvents) {
             if(Array.isArray(rawEvents[key])) calendarEvents[key] = rawEvents[key];
-            else calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 9), ...rawEvents[key] } ];
+            else calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 5), ...rawEvents[key] } ];
         }
 
         let currentEditingDateKey = null;
         let currentEditingId = null; 
-        
-        // Memoria per il Drag & Drop (sicura contro i blocchi Iframe)
-        let draggedEventInfo = null;
+        let draggedEventInfo = null; 
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -412,18 +409,18 @@
         }
 
         // --- GESTIONE MODAL ---
-        function openModal(y, m, d, eventId = null, defaultH = '') {
+        function openModal(y, m, d, eventId = null, defaultTimeStart = '') {
             currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
             document.getElementById('event-modal').style.display = 'flex';
-            tooltip.style.opacity = '0'; setTimeout(() => tooltip.style.display = 'none', 200);
+            tooltip.style.display = 'none'; 
 
             if (eventId) {
                 showEventForm(eventId);
             } else {
                 const dayEvents = calendarEvents[currentEditingDateKey] || [];
                 if (dayEvents.length > 0) showEventList();
-                else showEventForm(null, defaultH);
+                else showEventForm(null, defaultTimeStart);
             }
         }
 
@@ -434,19 +431,19 @@
             listContainer.innerHTML = '';
             const dayEvents = calendarEvents[currentEditingDateKey] || [];
             dayEvents.forEach(ev => {
-                const dispTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
+                const displayTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
                 const item = document.createElement('div'); item.className = 'list-event-item';
                 item.innerHTML = `
                     <div style="flex:1;">
                         <div style="font-weight:700; color:var(--accent-main); font-size:15px;">${ev.title || 'Evento'}</div>
-                        ${dispTime ? `<div style="font-size:12px; opacity:0.8;">🕒 ${dispTime}</div>` : ''}
+                        ${displayTime ? `<div style="font-size:12px; opacity:0.8;">🕒 ${displayTime}</div>` : ''}
                     </div>
-                    <button class="action-btn outline" style="padding: 4px 8px;" onclick="showEventForm('${ev.id}')">✎ Modifica</button>`;
+                    <button class="action-btn outline" style="padding: 4px 8px; font-size: 11px;" onclick="showEventForm('${ev.id}')">✎ Modifica</button>`;
                 listContainer.appendChild(item);
             });
         }
 
-        function showEventForm(eventId, defaultH = '') {
+        function showEventForm(eventId, defaultTimeStart = '') {
             document.getElementById('modal-list-view').style.display = 'none';
             document.getElementById('modal-form-view').style.display = 'flex';
             currentEditingId = eventId;
@@ -459,9 +456,9 @@
                 
                 let startVal = ev.timeStart || '';
                 let endVal = ev.timeEnd || '';
-                if (!startVal && ev.time) { 
+                if (!startVal && ev.time) {
                     let pt = parseTimeStr(ev.time);
-                    if(pt) startVal = `${String(pt.h).padStart(2,'0')}:${String(pt.m).padStart(2,'0')}`;
+                    if(pt) startVal = `${String(pt.h).padStart(2, '0')}:${String(pt.m).padStart(2, '0')}`;
                 }
 
                 if (startVal) {
@@ -486,8 +483,16 @@
             } else {
                 modalWin.classList.add('hide-delete');
                 document.getElementById('modal-title').value = '';
-                document.getElementById('modal-start-hour').value = defaultH ? String(defaultH).padStart(2,'0') : '';
-                document.getElementById('modal-start-minute').value = defaultH ? '00' : '';
+                
+                if (defaultTimeStart) {
+                    let [h, m_val] = defaultTimeStart.split(':');
+                    document.getElementById('modal-start-hour').value = h;
+                    document.getElementById('modal-start-minute').value = m_val;
+                } else {
+                    document.getElementById('modal-start-hour').value = '';
+                    document.getElementById('modal-start-minute').value = '';
+                }
+                
                 document.getElementById('modal-end-hour').value = '';
                 document.getElementById('modal-end-minute').value = '';
                 document.getElementById('modal-notes').value = '';
@@ -524,7 +529,7 @@
                 }
             }
             if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
-            safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
+            safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents));
             closeModal(); renderCalendar();
         }
         
@@ -533,27 +538,27 @@
                 let dayEvents = calendarEvents[currentEditingDateKey];
                 calendarEvents[currentEditingDateKey] = dayEvents.filter(e => e.id !== currentEditingId);
                 if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
-                safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents)); 
+                safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents)); 
                 closeModal(); renderCalendar(); 
             }
         }
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- SISTEMA DRAG E DROP ROBUSTO ---
+        // --- DRAG & DROP LOGICA ---
         function handleDragStart(e, dateKey, eventId) {
             e.stopPropagation();
             draggedEventInfo = { dateKey, eventId };
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', 'drag_placeholder'); 
             setTimeout(() => {
-                e.target.classList.add('dragging-visual');
+                e.target.classList.add('dragging');
                 document.body.classList.add('is-dragging-body');
             }, 0);
         }
 
         function handleDragEnd(e) {
-            e.target.classList.remove('dragging-visual');
+            e.target.classList.remove('dragging');
             document.body.classList.remove('is-dragging-body');
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
             draggedEventInfo = null;
@@ -595,7 +600,7 @@
                     let durationMins = 60; // Altezza base
                     if (oldStart && oldEnd) {
                         durationMins = (oldEnd.h * 60 + oldEnd.m) - (oldStart.h * 60 + oldStart.m);
-                        if (durationMins < 0) durationMins += 24 * 60; // Correzione mezzanotte
+                        if (durationMins < 0) durationMins += 24 * 60; 
                     }
                     
                     const newStartH = newTime;
@@ -612,7 +617,7 @@
             if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
             calendarEvents[targetDateKey].push(evToMove);
 
-            safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
+            safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents));
             draggedEventInfo = null;
             renderCalendar();
         }
@@ -668,7 +673,6 @@
                     if(currentView === 'month') {
                         cell.classList.add('has-event');
                         const ind = document.createElement('div'); ind.className = 'aesthetic-indicator'; ind.innerText = '♥'; cell.appendChild(ind);
-                        
                         cell.onmouseenter = () => {
                             let html = ''; dayEvents.forEach(ev => { 
                                 const dispTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
@@ -678,7 +682,7 @@
                             const rect = cell.getBoundingClientRect(); tooltip.style.left = `${rect.left + (rect.width / 2)}px`; tooltip.style.top = `${rect.top - 5}px`;
                             requestAnimationFrame(() => { tooltip.style.opacity = '1'; tooltip.style.transform = 'translate(-50%, -100%) scale(1)'; });
                         };
-                        cell.onmouseleave = () => { tooltip.style.opacity = '0'; tooltip.style.transform = 'translate(-50%, -90%) scale(0.95)'; setTimeout(() => { if(tooltip.style.opacity === '0') tooltip.style.display = 'none'; }, 200); };
+                        cell.onmouseleave = () => { tooltip.style.display = 'none'; tooltip.style.opacity = '0'; };
                     } else if(currentView === 'week') {
                         const evContainer = document.createElement('div'); evContainer.className = 'events-container';
                         dayEvents.forEach(ev => {
@@ -734,7 +738,7 @@
             for (let i = 0; i < 24; i++) {
                 const row = document.createElement('div'); row.className = 'timeline-hour-row';
                 
-                row.onclick = () => { openModal(y, m, d, null, i); };
+                row.onclick = () => { openModal(y, m, d, null, `${String(i).padStart(2, '0')}:00`); };
                 
                 row.ondragenter = handleDragEnter; row.ondragover = handleDragOver; row.ondragleave = handleDragLeave;
                 row.ondrop = (e) => executeDrop(e, dk, i);
@@ -743,7 +747,7 @@
                 row.innerHTML = `<div class="timeline-time">${ht}</div>`; timelineContainer.appendChild(row);
             }
 
-            // FUNZIONE DURATA CORRETTA
+            // FUNZIONE SOVRAPPOSIZIONE E COLORI ALTERNATI
             dayEvents.filter(ev => parseTimeStr(ev.timeStart || ev.time)).forEach((ev, index) => {
                 const startPt = parseTimeStr(ev.timeStart || ev.time);
                 const endPt = parseTimeStr(ev.timeEnd);
@@ -758,8 +762,8 @@
                 const eb = document.createElement('div'); eb.className = 'timeline-event-block';
                 eb.draggable = true; eb.ondragstart = (e) => handleDragStart(e, dk, ev.id); eb.ondragend = handleDragEnd;
                 
-                // Effetto cascata
-                const overlapOffset = (index % 4) * 20; 
+                // Effetto cascata (spostamento per non sovrapporre i testi)
+                const overlapOffset = (index % 3) * 25; 
                 
                 eb.style.top = (startPt.h * 60 + startPt.m) + 'px'; 
                 eb.style.height = `${durationMins}px`;
@@ -767,8 +771,19 @@
                 eb.style.width = `calc(100% - ${90 + overlapOffset}px)`;
                 eb.style.zIndex = 10 + index;
                 
+                // Alternanza colori per massima chiarezza della sovrapposizione
+                let bgColor = 'var(--badge-bg)';
+                let textColor = 'var(--badge-text)';
+                if (index % 2 !== 0) {
+                    bgColor = 'var(--header-bg)';
+                    textColor = 'var(--accent-main)';
+                }
+
+                eb.style.backgroundColor = bgColor;
+                eb.style.color = textColor;
+
                 const dispTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
-                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
+                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')" style="color: ${textColor}">⋮</div>
                                 <div style="font-weight:800; font-size:10px; opacity:0.9; margin-bottom:2px;">${dispTime}</div>
                                 <div style="font-weight:700; font-size:13px; padding-right:15px; line-height:1.2;">${ev.title || 'Evento'}</div>`;
                 timelineContainer.appendChild(eb);
