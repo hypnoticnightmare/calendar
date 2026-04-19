@@ -5,23 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
+    <title>Aesthetic Calendar</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
-    
-    <title>Aesthetic Calendar</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
+    
     <style>
-        :root, html, body { forced-color-adjust: none !important; color-adjust: exact !important; }
+        /* --- RESET E VARIABILI BASE --- */
+        :root, html, body { forced-color-adjust: none !important; color-adjust: exact !important; box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
 
         :root { --page-bg: transparent; --text-color: #4A3A35; --badge-text: #FFFFFF; --btn-bg: #FFF; }
 
-        /* --- SFONDI NOTION --- */
         [data-theme="light"] { --page-bg: #FFFFFF; --text-color: #4A3A35; --btn-bg: #FFFFFF; }
         [data-theme="beige"] { --page-bg: #FFFBE6; --text-color: #5A504B; --btn-bg: #FFFBE6; }
         [data-theme="dark"] { --page-bg: #191919; --text-color: #F0F0F0; --btn-bg: #2C2C2C; }
         [data-theme="transparent"] { --page-bg: transparent; }
 
-        /* --- PALETTE COLORI --- */
+        /* --- PALETTE 3 COLORI --- */
         [data-color="strawberry"] { --accent-main: #C66F80; --badge-bg: #4A6644; --cell-bg: #FCEBF1; --header-bg: #FADCE5; }
         [data-color="matcha"] { --accent-main: #6B705C; --badge-bg: #9C6644; --cell-bg: #F4F1DE; --header-bg: #EAE2B7; }
         [data-color="blueberry"] { --accent-main: #3F3C79; --badge-bg: #5A6ACF; --cell-bg: #FFF6EC; --header-bg: #EAEBF5; }
@@ -34,161 +35,205 @@
         [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
         [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
-        body, html {
+        body {
             margin: 0; padding: clamp(5px, 2vw, 15px); background-color: var(--page-bg); 
             font-family: 'Nunito', sans-serif; color: var(--text-color); 
-            display: flex; flex-direction: column; align-items: center; transition: background-color 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; 
+            transition: background-color 0.3s ease; min-height: 100vh;
         }
 
-        /* --- CONTROLLI --- */
+        /* --- CONTROLLI SUPERIORI --- */
         .controls-container {
-            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; background-color: var(--btn-bg); 
-            border-radius: 20px; align-items: center; flex-wrap: wrap; justify-content: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid var(--accent-main);
-            width: 100%; max-width: 750px; /* Dimensione ridotta e contenuta */
+            display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; 
+            background-color: var(--btn-bg); border-radius: 20px; align-items: center; 
+            flex-wrap: wrap; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid var(--accent-main); width: 100%; max-width: 900px;
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
-        .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; }
+        .color-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; flex-shrink: 0;}
         .color-dot:hover { transform: scale(1.2); }
-        .action-btn { background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none; }
-        .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .action-btn {
+            background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); 
+            border-radius: 12px; padding: 6px 14px; font-family: 'Nunito', sans-serif; font-weight: 700; 
+            cursor: pointer; outline: none; transition: transform 0.1s;
+        }
+        .action-btn:active { transform: scale(0.95); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
-        select.action-btn { cursor: pointer; padding: 4px 8px; }
+        select.action-btn { cursor: pointer; padding: 6px 10px; }
 
-        /* --- CALENDARIO BASE --- */
-        .calendar-wrapper { width: 100%; max-width: 750px; /* Dimensione ridotta e contenuta */ display: flex; flex-direction: column; gap: 10px; }
-        .month-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main); }
-        .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; flex: 1; text-align: center;}
-        .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 12px; font-weight: bold; font-family: 'Nunito'; }
-
-        .calendar-frame { background-color: var(--accent-main); padding: 6px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .days-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
-        .day-name { background-color: var(--header-bg); color: var(--accent-main); text-align: center; font-weight: 800; font-size: 14px; padding: 8px 0; border-radius: 8px; text-transform: uppercase; }
+        /* --- STRUTTURA CALENDARIO --- */
+        .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; flex: 1;}
         
-        .calendar-grid { display: grid; gap: 4px; }
-        .calendar-grid.month-view, .calendar-grid.week-view { grid-template-columns: repeat(7, 1fr); }
-        .calendar-grid.year-view { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .month-header {
+            display: flex; justify-content: space-between; align-items: center; 
+            background-color: var(--header-bg); padding: 12px 20px; 
+            border-radius: 16px; border: 3px solid var(--accent-main);
+        }
+        .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; text-align: center; flex: 1;}
+        .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 16px; font-weight: bold; font-family: 'Nunito'; }
+
+        .calendar-frame {
+            background-color: var(--accent-main); padding: 8px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); width: 100%;
+        }
+
+        .days-row {
+            display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 6px;
+        }
+        .day-name {
+            background-color: var(--header-bg); color: var(--accent-main); text-align: center; 
+            font-weight: 800; font-size: 14px; padding: 10px 0; border-radius: 8px; text-transform: uppercase;
+        }
+
+        /* --- LE 4 VISTE (GRIGLIE) --- */
+        .calendar-grid { width: 100%; gap: 6px; }
+        
+        .calendar-grid.month-view, .calendar-grid.week-view { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        .calendar-grid.year-view { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
 
-        /* --- CELLE E DROP ZONE --- */
+        /* --- CELLE MESE E SETTIMANA --- */
         .cell {
-            background-color: var(--cell-bg); border-radius: 8px; display: flex; flex-direction: column; 
-            position: relative; cursor: pointer; overflow: hidden; min-width: 0; min-height: 0; transition: border 0.1s; border: 2px solid transparent;
+            background-color: var(--cell-bg); border-radius: 10px; display: flex; flex-direction: column; 
+            position: relative; cursor: pointer; overflow: hidden; border: 2px solid transparent; transition: filter 0.2s;
+            min-width: 0; 
         }
         .month-view .cell { aspect-ratio: 1 / 1; }
-        .week-view .cell { aspect-ratio: auto; min-height: 400px; }
+        .week-view .cell { min-height: 400px; }
 
         .cell:hover:not(.empty) { filter: brightness(0.95); }
-        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; border: 2px solid transparent; }
+        .cell.empty { background-color: rgba(255,255,255,0.3); cursor: default; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
-        /* Tondino blindato (!important garantisce che non scompaia) */
         .date-badge {
-            background-color: var(--badge-bg) !important; color: var(--badge-text) !important; border-radius: 50% !important; 
-            width: 28px !important; height: 28px !important; display: flex !important; align-items: center !important; 
-            justify-content: center !important; margin: 6px !important; align-self: flex-start !important; 
-            font-weight: 800 !important; font-size: 14px !important; border: 2px solid var(--accent-main) !important; 
-            flex-shrink: 0 !important; position: relative !important; z-index: 15 !important;
+            background-color: var(--badge-bg); color: var(--badge-text); border-radius: 50%; width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center; margin: 6px; align-self: flex-start; 
+            font-weight: 800; font-size: 14px; border: 2px solid var(--accent-main); flex-shrink: 0; position: relative; z-index: 15;
         }
 
-        /* --- DRAG & DROP FIX PER NOTION --- */
-        body.is-dragging .event-block,
-        body.is-dragging .timeline-event-block { opacity: 0.4 !important; pointer-events: none !important; }
-        
-        .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
-        .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.1) !important; border-bottom: 2px dashed var(--accent-main) !important; }
-        [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.1) !important; }
-
-        /* --- BLOCCHI EVENTI --- */
-        .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding-bottom: 6px; }
+        /* --- BLOCCHI EVENTI (VISTA SETTIMANA) --- */
+        .events-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; padding: 0 4px 6px 4px; }
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .event-block {
-            background-color: var(--badge-bg); color: var(--badge-text); margin: 0 6px; padding: 6px 20px 6px 8px;
-            border-radius: 8px; font-family: 'Mali', cursive; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border: 1px solid var(--accent-main); position: relative; cursor: grab; transition: transform 0.1s;
+            background-color: var(--badge-bg); color: var(--badge-text); padding: 6px 20px 6px 8px;
+            border-radius: 6px; font-family: 'Mali', cursive; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border: 1px solid var(--accent-main); position: relative; cursor: grab; word-break: break-word; margin: 0 2px;
         }
-        .event-block:active { cursor: grabbing; transform: scale(0.98); }
+        .event-block:active { cursor: grabbing; }
         .event-block .time { font-weight: 800; font-size: 11px; margin-bottom: 2px; opacity: 0.9; }
         .event-block .title { font-weight: 700; line-height: 1.2; }
-
+        
         .edit-dots {
             position: absolute; top: 4px; right: 4px; font-size: 14px; font-weight: bold; line-height: 1;
-            cursor: pointer; opacity: 0.6; padding: 0 4px; border-radius: 4px;
+            cursor: pointer; opacity: 0.7; padding: 2px 4px; border-radius: 4px; transition: background 0.2s;
         }
-        .edit-dots:hover { opacity: 1; background: rgba(0,0,0,0.2); }
+        .edit-dots:hover { background: rgba(0,0,0,0.2); opacity: 1; }
 
-        .aesthetic-indicator { position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg); font-size: 18px; text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none; }
-        @keyframes floatHeart { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; } 50% { transform: translateY(-4px) scale(1.15); opacity: 1; } }
+        .aesthetic-indicator {
+            position: absolute; bottom: 8px; right: 10px; color: var(--badge-bg); font-size: 20px; 
+            text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2s ease-in-out infinite; pointer-events: none;
+        }
+        @keyframes floatHeart { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 
-        /* --- TIMELINE GIORNALIERA --- */
+        /* --- VISTA GIORNALIERA (TIMELINE) --- */
         .day-timeline-wrapper {
-            background: var(--cell-bg); border-radius: 12px; border: 2px solid var(--accent-main);
-            height: 60vh; min-height: 400px; overflow-y: auto; position: relative; padding-bottom: 40px; cursor: default;
+            background: var(--cell-bg); border-radius: 10px; border: 2px solid var(--accent-main);
+            height: 65vh; min-height: 450px; overflow-y: auto; overflow-x: hidden; position: relative; padding-bottom: 50px;
         }
         .day-timeline-wrapper::-webkit-scrollbar { width: 8px; }
         .day-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
         .timeline-header {
-            position: sticky; top: 0; background: var(--header-bg); z-index: 20; padding: 10px 15px; 
+            position: sticky; top: 0; background: var(--header-bg); z-index: 20; padding: 12px 20px; 
             border-bottom: 2px solid var(--accent-main); display: flex; justify-content: space-between; align-items: center;
         }
-        .large-badge { width: auto; height: auto; border-radius: 20px; padding: 4px 16px; font-size: 16px; margin: 0; display: flex; align-items: center; }
+        
+        /* IL FIX PER LA SCRITTA SOVRAPPOSTA E SCHIACCIATA */
+        .large-badge { 
+            width: auto; height: auto; border-radius: 20px; padding: 6px 20px; font-size: 16px; 
+            display: flex; align-items: center; justify-content: center; background: var(--badge-bg); 
+            color: var(--badge-text); border: 2px solid var(--accent-main); font-weight: 800; margin: 0;
+            white-space: nowrap; /* Impedisce che la data vada a capo! */
+        }
         
         .timeline-allday {
-            padding: 15px 15px 15px 70px; border-bottom: 2px solid var(--accent-main); background: rgba(255,255,255,0.3); 
-            min-height: 20px; position: relative; display: flex; flex-direction: column; gap: 4px; border: 2px solid transparent;
+            padding: 15px 15px 15px 70px; border-bottom: 2px solid var(--accent-main); background: rgba(255,255,255,0.4); 
+            min-height: 40px; position: relative; display: flex; flex-direction: column; gap: 4px; border: 2px solid transparent;
         }
-        [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.1); }
-        .allday-label { position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: bold; color: var(--accent-main); opacity: 0.8; text-transform: uppercase; width: 50px; text-align: right; }
+        [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.2); }
+        .allday-label { position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: 800; color: var(--accent-main); text-transform: uppercase; width: 50px; text-align: right; }
 
-        .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.08); position: relative; transition: background 0.1s; border: 2px solid transparent; border-bottom-width: 1px; }
-        [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.08); }
+        .timeline-hour-row { display: flex; height: 60px; border-bottom: 1px dashed rgba(0,0,0,0.1); position: relative; border-left: 2px solid transparent; border-right: 2px solid transparent;}
+        [data-theme="dark"] .timeline-hour-row { border-bottom-color: rgba(255,255,255,0.1); }
         .timeline-time { width: 60px; padding-right: 10px; text-align: right; font-size: 12px; color: var(--accent-main); font-weight: 800; opacity: 0.7; transform: translateY(-8px); pointer-events: none;}
         
         .timeline-event-block {
             position: absolute; left: 70px; background: var(--badge-bg); color: var(--badge-text);
-            border-radius: 8px; padding: 8px 24px 8px 12px; font-family: 'Mali', cursive; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 1px solid var(--accent-main); z-index: 10; cursor: grab; width: calc(100% - 110px); 
+            border-radius: 8px; padding: 6px 24px 6px 12px; font-family: 'Mali', cursive; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 1px solid var(--accent-main); z-index: 10; cursor: grab; 
+            width: calc(100% - 90px); overflow: hidden;
+            /* La durata determinerà l'altezza (min-height per non farlo sparire) */
+            min-height: 25px;
         }
-        .timeline-event-block:active { cursor: grabbing; }
 
         /* --- VISTA ANNUALE --- */
-        .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
-        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; }
-        .mini-days-row { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px; }
-        .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; }
+        .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; margin-bottom: 4px;}
+        .mini-days-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 4px; }
+        .mini-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; }
         .mini-cell:hover { background: rgba(0,0,0,0.1); }
         [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
         .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
         .mini-cell.is-today { border: 2px solid var(--accent-main); }
 
-        /* --- TOOLTIP --- */
-        #custom-tooltip {
-            position: fixed; display: none; flex-direction: column; gap: 8px; background: rgba(255, 255, 255, 0.96); 
-            border: 3px solid var(--accent-main); color: var(--text-color); padding: 12px 16px; border-radius: 14px;
-            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); pointer-events: none; z-index: 10000; width: max-content; max-width: 280px; opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s; backdrop-filter: blur(4px);
-        }
-        [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
-        .tooltip-item { border-bottom: 1px dashed var(--accent-main); padding-bottom: 8px; }
-        .tooltip-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .tooltip-item .time { font-weight: 800; font-size: 12px; color: var(--accent-main); margin-bottom: 2px; }
-        .tooltip-item .title { white-space: pre-wrap; line-height: 1.2; font-weight: 700; }
+        /* --- DRAG & DROP FIX --- */
+        .is-dragging-body * { user-select: none; }
+        .event-block.dragging, .timeline-event-block.dragging { opacity: 0.5; }
+        .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
+        .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.05) !important; border: 2px dashed var(--accent-main) !important; }
+        [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.05) !important; }
 
-        /* --- MODAL (POPUP EVENTI) --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-        .modal-window { background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
-        .modal-window input, .modal-window textarea { width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none; }
+        /* --- TOOLTIP & MODAL --- */
+        #custom-tooltip {
+            position: fixed; display: none; flex-direction: column; gap: 8px; background: rgba(255, 255, 255, 0.98); 
+            border: 3px solid var(--accent-main); color: var(--text-color); padding: 12px; border-radius: 12px;
+            font-family: 'Mali', cursive; font-size: 13px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); pointer-events: none; 
+            z-index: 10000; width: 220px; word-wrap: break-word;
+        }
+        [data-theme="dark"] #custom-tooltip { background: rgba(30, 30, 30, 0.98); }
+        .tooltip-item { border-bottom: 1px dashed var(--accent-main); padding-bottom: 6px; }
+        .tooltip-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .tooltip-item .time { font-weight: 800; font-size: 11px; color: var(--accent-main); }
+        .tooltip-item .title { font-weight: 700; line-height: 1.2; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-window { background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 25px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 20px; text-transform: uppercase; font-weight: 800; text-align: center; }
+        
+        .modal-window input[type="text"], .modal-window textarea, .time-picker-input { 
+            width: 100%; background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--text-color); 
+            border-radius: 8px; padding: 10px 12px; font-family: 'Mali', cursive; font-size: 15px; outline: none; 
+        }
         .modal-window textarea { resize: vertical; min-height: 80px; }
-        .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 8px; }
-        .modal-actions .right-btns { display: flex; gap: 8px; }
+
+        /* STILE NUOVI TIME PICKER INIZIO/FINE */
+        .time-picker-container { display: flex; gap: 8px; width: 100%; align-items: center; }
+        .time-picker-box { flex: 1; display: flex; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); border-radius: 8px; padding: 0 10px; }
+        .time-picker-label { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--accent-main); margin-right: 6px; font-size: 13px; white-space: nowrap; }
+        .time-picker-input { flex: 1; border: none; background: transparent; padding: 10px 0; outline: none; font-family: 'Mali', cursive; font-size: 14px; color: var(--text-color); width: 100%; }
+        /* Icona orologio per Chrome/Safari */
+        .time-picker-input::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; transition: opacity 0.2s; filter: invert(0.5); }
+        .time-picker-input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+        
+        .modal-actions { display: flex; justify-content: space-between; margin-top: 5px; }
+        .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .hide-delete .btn-delete { display: none; }
-        .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
+
+        .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 12px; border-radius: 8px; margin-bottom: 8px; }
 
         /* --- FOOTER INVISIBILE IN NOTION --- */
         .site-footer {
@@ -209,11 +254,11 @@
         </div>
         <div class="picker-separator"></div>
         <div class="picker-group">
-            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 33%, #4A6644 66%, #FCEBF1 100%);" data-color-target="strawberry"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 33%, #9C6644 66%, #F4F1DE 100%);" data-color-target="matcha"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 33%, #5A6ACF 66%, #FFF6EC 100%);" data-color-target="blueberry"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 33%, #D4A373 66%, #F8F3FA 100%);" data-color-target="grape"></div>
-            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 33%, #D9A05B 66%, #FCF8F2 100%);" data-color-target="choco"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #C66F80 33%, #4A6644 66%, #FCEBF1 100%);" data-color-target="strawberry" title="Strawberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #6B705C 33%, #9C6644 66%, #F4F1DE 100%);" data-color-target="matcha" title="Matcha"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #3F3C79 33%, #5A6ACF 66%, #FFF6EC 100%);" data-color-target="blueberry" title="Blueberry"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #593C6B 33%, #D4A373 66%, #F8F3FA 100%);" data-color-target="grape" title="Grape"></div>
+            <div class="color-dot" style="background: linear-gradient(135deg, #5C4033 33%, #D9A05B 66%, #FCF8F2 100%);" data-color-target="choco" title="Choco"></div>
         </div>
         <div class="picker-separator"></div>
         <div class="picker-group">
@@ -258,22 +303,20 @@
             <div id="modal-form-view" style="display: none; flex-direction: column; gap: 12px;">
                 <input type="text" id="modal-title" placeholder="Nome dell'Evento..." autocomplete="off">
                 
-                <div style="display: flex; gap: 8px;">
-                    <select id="modal-hour" class="action-btn outline" style="flex: 1; padding: 10px; font-family: 'Mali', cursive; font-size: 16px;">
-                        <option value="">-- Ora --</option>
-                        <option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
-                    </select>
-                    <span style="font-weight: bold; align-self: center; color: var(--accent-main);">:</span>
-                    <select id="modal-minute" class="action-btn outline" style="flex: 1; padding: 10px; font-family: 'Mali', cursive; font-size: 16px;">
-                        <option value="">-- Min --</option>
-                        <option value="00">00</option>
-                        <option value="15">15</option>
-                        <option value="30">30</option>
-                        <option value="45">45</option>
-                    </select>
+                <div class="time-picker-container">
+                    <div class="time-picker-box">
+                        <label for="modal-time-start" class="time-picker-label">Inizio:</label>
+                        <input type="time" id="modal-time-start" class="time-picker-input">
+                    </div>
+                    <div class="time-picker-box">
+                        <label for="modal-time-end" class="time-picker-label">Fine:</label>
+                        <input type="time" id="modal-time-end" class="time-picker-input">
+                    </div>
+                    <button class="action-btn outline" onclick="clearTimes()" title="Rimuovi orario (Evento tutto il giorno)" style="padding: 0 10px; font-size: 14px;">❌</button>
                 </div>
 
                 <textarea id="modal-notes" placeholder="Note aggiuntive..."></textarea>
+                
                 <div class="modal-actions">
                     <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
                     <div class="right-btns">
@@ -290,36 +333,53 @@
     </div>
 
     <script>
-        // Logica per nascondere il footer se ospitato in un iframe (Notion)
+        // Nascondi footer se il sito è aperto dentro Notion (iframe)
         if (window.self !== window.top) {
             const footer = document.getElementById('site-footer');
             if(footer) footer.style.display = 'none';
         }
 
+        // Utility per resettare l'orario
+        function clearTimes() {
+            document.getElementById('modal-time-start').value = '';
+            document.getElementById('modal-time-end').value = '';
+        }
+
+        // Formatta visivamente l'orario
+        function formatTimeRange(start, end, oldTime) {
+            if (start && end) return `${start} - ${end}`;
+            if (start) return start;
+            if (oldTime) return oldTime;
+            return '';
+        }
+
+        // --- STORAGE ---
         const safeStorage = {
             get: (key) => { try { return localStorage.getItem(key); } catch(e) { return null; } },
             set: (key, val) => { try { localStorage.setItem(key, val); } catch(e) { } }
         };
 
-        function setTheme(t) { document.body.setAttribute('data-theme', t); safeStorage.set('cal-theme', t); }
-        function setColor(c) { document.body.setAttribute('data-color', c); safeStorage.set('cal-color', c); }
-        setTheme(safeStorage.get('cal-theme') || 'transparent');
-        setColor(safeStorage.get('cal-color') || 'blueberry');
+        let currentTheme = safeStorage.get('cal-theme') || 'transparent';
+        let currentColor = safeStorage.get('cal-color') || 'blueberry';
 
+        function setTheme(t) { currentTheme = t; document.body.setAttribute('data-theme', t); safeStorage.set('cal-theme', t); }
+        function setColor(c) { currentColor = c; document.body.setAttribute('data-color', c); safeStorage.set('cal-color', c); }
+        
+        setTheme(currentTheme); setColor(currentColor);
         document.querySelectorAll('[data-theme-target]').forEach(d => d.onclick = () => setTheme(d.dataset.themeTarget));
         document.querySelectorAll('[data-color-target]').forEach(d => d.onclick = () => setColor(d.dataset.colorTarget));
 
-        let rawEvents = JSON.parse(safeStorage.get('cal-events-multi')) || {};
+        // --- DATI ---
+        let rawEvents = JSON.parse(safeStorage.get('cal-events-v3')) || {};
         let calendarEvents = {};
         for(let key in rawEvents) {
             if(Array.isArray(rawEvents[key])) calendarEvents[key] = rawEvents[key];
-            else calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 9), ...rawEvents[key] } ];
+            else calendarEvents[key] = [ { id: Date.now() + Math.random().toString(36).substr(2, 5), ...rawEvents[key] } ];
         }
 
         let currentEditingDateKey = null;
         let currentEditingId = null; 
-        
-        let draggedEventInfo = null;
+        let draggedEventInfo = null; 
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -330,7 +390,7 @@
         const tooltip = document.getElementById('custom-tooltip');
         const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        function parseTime(ts) {
+        function parseTimeStr(ts) {
             if(!ts) return null;
             const m = ts.match(/(\d{1,2})[.:](\d{2})/);
             if(m) {
@@ -350,7 +410,7 @@
         }
 
         // --- GESTIONE MODAL ---
-        function openModal(y, m, d, eventId = null) {
+        function openModal(y, m, d, eventId = null, defaultTimeStart = '') {
             currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
             document.getElementById('event-modal').style.display = 'flex';
@@ -361,7 +421,7 @@
             } else {
                 const dayEvents = calendarEvents[currentEditingDateKey] || [];
                 if (dayEvents.length > 0) showEventList();
-                else showEventForm(null);
+                else showEventForm(null, defaultTimeStart);
             }
         }
 
@@ -372,18 +432,19 @@
             listContainer.innerHTML = '';
             const dayEvents = calendarEvents[currentEditingDateKey] || [];
             dayEvents.forEach(ev => {
+                const displayTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
                 const item = document.createElement('div'); item.className = 'list-event-item';
                 item.innerHTML = `
                     <div style="flex:1;">
                         <div style="font-weight:700; color:var(--accent-main); font-size:15px;">${ev.title || 'Evento'}</div>
-                        ${ev.time ? `<div style="font-size:12px; opacity:0.8;">🕒 ${ev.time}</div>` : ''}
+                        ${displayTime ? `<div style="font-size:12px; opacity:0.8;">🕒 ${displayTime}</div>` : ''}
                     </div>
-                    <button class="action-btn outline" style="padding: 4px 8px;" onclick="showEventForm('${ev.id}')">✎ Modifica</button>`;
+                    <button class="action-btn outline" style="padding: 4px 8px; font-size: 11px;" onclick="showEventForm('${ev.id}')">✎ Modifica</button>`;
                 listContainer.appendChild(item);
             });
         }
 
-        function showEventForm(eventId) {
+        function showEventForm(eventId, defaultTimeStart = '') {
             document.getElementById('modal-list-view').style.display = 'none';
             document.getElementById('modal-form-view').style.display = 'flex';
             currentEditingId = eventId;
@@ -394,21 +455,22 @@
                 const ev = calendarEvents[currentEditingDateKey].find(e => e.id === eventId);
                 document.getElementById('modal-title').value = ev.title || '';
                 
-                const pt = parseTime(ev.time);
-                if (pt) {
-                    document.getElementById('modal-hour').value = String(pt.h).padStart(2, '0');
-                    document.getElementById('modal-minute').value = String(pt.m).padStart(2, '0');
-                } else {
-                    document.getElementById('modal-hour').value = '';
-                    document.getElementById('modal-minute').value = '';
+                let startVal = ev.timeStart || '';
+                let endVal = ev.timeEnd || '';
+                // Fallback per vecchi eventi
+                if (!startVal && ev.time) {
+                    let pt = parseTimeStr(ev.time);
+                    if(pt) startVal = `${String(pt.h).padStart(2, '0')}:${String(pt.m).padStart(2, '0')}`;
                 }
 
+                document.getElementById('modal-time-start').value = startVal;
+                document.getElementById('modal-time-end').value = endVal;
                 document.getElementById('modal-notes').value = ev.notes || '';
             } else {
                 modalWin.classList.add('hide-delete');
                 document.getElementById('modal-title').value = '';
-                document.getElementById('modal-hour').value = '';
-                document.getElementById('modal-minute').value = '';
+                document.getElementById('modal-time-start').value = defaultTimeStart;
+                document.getElementById('modal-time-end').value = '';
                 document.getElementById('modal-notes').value = '';
             }
         }
@@ -422,23 +484,22 @@
         
         function saveEvent() {
             const t = document.getElementById('modal-title').value.trim();
-            const h = document.getElementById('modal-hour').value;
-            const m_val = document.getElementById('modal-minute').value;
-            const tm = (h && m_val) ? `${h}:${m_val}` : '';
+            const tmStart = document.getElementById('modal-time-start').value;
+            const tmEnd = document.getElementById('modal-time-end').value;
             const n = document.getElementById('modal-notes').value.trim();
             
             if(!calendarEvents[currentEditingDateKey]) calendarEvents[currentEditingDateKey] = [];
             
-            if(t || tm || n) {
+            if(t || tmStart || tmEnd || n) {
                 if (currentEditingId) {
                     let ev = calendarEvents[currentEditingDateKey].find(e => e.id === currentEditingId);
-                    if(ev) { ev.title = t; ev.time = tm; ev.notes = n; }
+                    if(ev) { ev.title = t; ev.timeStart = tmStart; ev.timeEnd = tmEnd; ev.time = ''; ev.notes = n; }
                 } else {
-                    calendarEvents[currentEditingDateKey].push({ id: Date.now().toString(36), title: t, time: tm, notes: n });
+                    calendarEvents[currentEditingDateKey].push({ id: Date.now().toString(36), title: t, timeStart: tmStart, timeEnd: tmEnd, time: '', notes: n });
                 }
             }
             if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
-            safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
+            safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents));
             closeModal(); renderCalendar();
         }
         
@@ -447,28 +508,28 @@
                 let dayEvents = calendarEvents[currentEditingDateKey];
                 calendarEvents[currentEditingDateKey] = dayEvents.filter(e => e.id !== currentEditingId);
                 if(calendarEvents[currentEditingDateKey].length === 0) delete calendarEvents[currentEditingDateKey];
-                safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents)); 
+                safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents)); 
                 closeModal(); renderCalendar(); 
             }
         }
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- SISTEMA DRAG E DROP ---
+        // --- SISTEMA DRAG E DROP ROBUSTO (NOTION SAFE) ---
         function handleDragStart(e, dateKey, eventId) {
             e.stopPropagation();
             draggedEventInfo = { dateKey, eventId };
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', 'drag_placeholder'); 
             setTimeout(() => {
-                e.target.classList.add('dragging-visual');
-                document.body.classList.add('is-dragging');
+                e.target.classList.add('dragging');
+                document.body.classList.add('is-dragging-body');
             }, 0);
         }
 
         function handleDragEnd(e) {
-            e.target.classList.remove('dragging-visual');
-            document.body.classList.remove('is-dragging');
+            e.target.classList.remove('dragging');
+            document.body.classList.remove('is-dragging-body');
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
             draggedEventInfo = null;
         }
@@ -483,7 +544,7 @@
 
         function executeDrop(e, targetDateKey, newTime = null) {
             e.preventDefault(); e.stopPropagation();
-            document.body.classList.remove('is-dragging');
+            document.body.classList.remove('is-dragging-body');
             e.currentTarget.classList.remove('drag-over');
             
             if (!draggedEventInfo) return;
@@ -501,13 +562,33 @@
             if(sourceArray.length === 0) delete calendarEvents[sourceDateKey];
 
             if (newTime !== null) {
-                evToMove.time = newTime === 'ALLDAY' ? '' : `${String(newTime).padStart(2, '0')}:00`;
+                if (newTime === 'ALLDAY') {
+                    evToMove.timeStart = ''; evToMove.timeEnd = ''; evToMove.time = '';
+                } else {
+                    // Calcola durata originale se esiste per mantenerla
+                    let oldStart = parseTimeStr(evToMove.timeStart || evToMove.time);
+                    let oldEnd = parseTimeStr(evToMove.timeEnd);
+                    let durationMins = 60; // Default 1h
+                    if (oldStart && oldEnd) {
+                        durationMins = (oldEnd.h * 60 + oldEnd.m) - (oldStart.h * 60 + oldStart.m);
+                        if (durationMins < 0) durationMins = 60;
+                    }
+                    
+                    const newStartH = newTime;
+                    evToMove.timeStart = `${String(newStartH).padStart(2, '0')}:00`;
+                    
+                    const endTotal = (newStartH * 60) + durationMins;
+                    const endH = Math.min(23, Math.floor(endTotal / 60)); // Limita a 23:59 max
+                    const endM = endTotal % 60;
+                    evToMove.timeEnd = `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+                    evToMove.time = '';
+                }
             }
 
             if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
             calendarEvents[targetDateKey].push(evToMove);
 
-            safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
+            safeStorage.set('cal-events-v3', JSON.stringify(calendarEvents));
             draggedEventInfo = null;
             renderCalendar();
         }
@@ -564,7 +645,10 @@
                         cell.classList.add('has-event');
                         const ind = document.createElement('div'); ind.className = 'aesthetic-indicator'; ind.innerText = '♥'; cell.appendChild(ind);
                         cell.onmouseenter = () => {
-                            let html = ''; dayEvents.forEach(ev => { html += `<div class="tooltip-item">${ev.time ? `<div class="time">${ev.time}</div>`:''}<div class="title">${ev.title || 'Evento'}</div></div>`; });
+                            let html = ''; dayEvents.forEach(ev => { 
+                                const displayTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
+                                html += `<div class="tooltip-item">${displayTime ? `<div class="time">${displayTime}</div>`:''}<div class="title">${ev.title || 'Evento'}</div></div>`; 
+                            });
                             tooltip.innerHTML = html; tooltip.style.display = 'flex';
                             const rect = cell.getBoundingClientRect(); tooltip.style.left = `${rect.left + (rect.width / 2)}px`; tooltip.style.top = `${rect.top - 5}px`;
                             requestAnimationFrame(() => { tooltip.style.opacity = '1'; tooltip.style.transform = 'translate(-50%, -100%) scale(1)'; });
@@ -575,7 +659,8 @@
                         dayEvents.forEach(ev => {
                             const block = document.createElement('div'); block.className = 'event-block';
                             block.draggable = true; block.ondragstart = (e) => handleDragStart(e, dk, ev.id); block.ondragend = handleDragEnd;
-                            block.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>${ev.time ? `<div class="time">${ev.time}</div>` : ''}<div class="title">${ev.title || 'Evento'}</div>`;
+                            const displayTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
+                            block.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>${displayTime ? `<div class="time">${displayTime}</div>` : ''}<div class="title">${ev.title || 'Evento'}</div>`;
                             evContainer.appendChild(block);
                         });
                         cell.appendChild(evContainer);
@@ -593,7 +678,16 @@
 
             const header = document.createElement('div'); header.className = 'timeline-header';
             const dNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            header.innerHTML = `<button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button><div style="display:flex; flex-direction:column; align-items:center;"><span style="font-size:12px; opacity:0.8;">${dNames[new Date(y, m, d).getDay()]}</span><span class="date-badge large-badge">${d} ${mesi[m]} ${y}</span></div><button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>`;
+            
+            // FIX Testo schiacciato + spacing
+            header.innerHTML = `
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
+                <div style="display:flex; flex-direction:column; align-items:center; gap: 4px;">
+                    <span style="font-size:12px; opacity:0.8;">${dNames[new Date(y, m, d).getDay()]}</span>
+                    <span class="large-badge">${d} ${mesi[m]} ${y}</span>
+                </div>
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
+            `;
             header.onclick = () => openModal(y, m, d); wrapper.appendChild(header);
 
             let dayEvents = calendarEvents[dk] || [];
@@ -603,7 +697,7 @@
             allday.ondragenter = handleDragEnter; allday.ondragover = handleDragOver; allday.ondragleave = handleDragLeave; allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY');
             allday.innerHTML = `<div class="allday-label">Eventi</div>`;
             
-            dayEvents.filter(ev => !parseTime(ev.time)).forEach(ev => {
+            dayEvents.filter(ev => !parseTimeStr(ev.timeStart || ev.time)).forEach(ev => {
                 const block = document.createElement('div'); block.className = 'event-block'; block.style.position = 'relative'; block.style.marginBottom = '5px';
                 block.draggable = true; block.ondragstart = (e) => handleDragStart(e, dk, ev.id); block.ondragend = handleDragEnd;
                 block.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div><div class="title">${ev.title || 'Senza Titolo'}</div>`;
@@ -616,13 +710,8 @@
 
             for (let i = 0; i < 24; i++) {
                 const row = document.createElement('div'); row.className = 'timeline-hour-row';
-                
-                row.onclick = () => {
-                    openModal(y, m, d);
-                    document.getElementById('modal-hour').value = String(i).padStart(2, '0');
-                    document.getElementById('modal-minute').value = '00';
-                    showEventForm(null);
-                };
+                // Pre-imposta l'ora cliccata
+                row.onclick = () => { openModal(y, m, d, null, `${String(i).padStart(2, '0')}:00`); };
                 
                 row.ondragenter = handleDragEnter; row.ondragover = handleDragOver; row.ondragleave = handleDragLeave;
                 row.ondrop = (e) => executeDrop(e, dk, i);
@@ -631,14 +720,31 @@
                 row.innerHTML = `<div class="timeline-time">${ht}</div>`; timelineContainer.appendChild(row);
             }
 
-            dayEvents.filter(ev => parseTime(ev.time)).forEach((ev, index) => {
-                const pt = parseTime(ev.time);
+            dayEvents.filter(ev => parseTimeStr(ev.timeStart || ev.time)).forEach((ev, index) => {
+                const startPt = parseTimeStr(ev.timeStart || ev.time);
+                const endPt = parseTimeStr(ev.timeEnd);
+                
+                let durationMins = 60; // Default height se non c'è fine
+                if (startPt && endPt) {
+                    durationMins = (endPt.h * 60 + endPt.m) - (startPt.h * 60 + startPt.m);
+                    if (durationMins < 15) durationMins = 15; // Altezza minima per poter cliccare
+                }
+
                 const eb = document.createElement('div'); eb.className = 'timeline-event-block';
                 eb.draggable = true; eb.ondragstart = (e) => handleDragStart(e, dk, ev.id); eb.ondragend = handleDragEnd;
                 
                 const overlapOffset = (index % 4) * 15; 
-                eb.style.top = (pt.h * 60 + pt.m) + 'px'; eb.style.left = `${70 + overlapOffset}px`; eb.style.zIndex = 10 + index;
-                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div><div style="font-weight:700; font-size:14px; padding-right:15px;">${ev.title || 'Evento'}</div>`;
+                eb.style.top = (startPt.h * 60 + startPt.m) + 'px'; 
+                eb.style.height = `${durationMins}px`;
+                eb.style.left = `${70 + overlapOffset}px`; 
+                eb.style.zIndex = 10 + index;
+                
+                const displayTime = formatTimeRange(ev.timeStart, ev.timeEnd, ev.time);
+                eb.innerHTML = `
+                    <div class="edit-dots" onclick="event.stopPropagation(); openModal(${y}, ${m}, ${d}, '${ev.id}')">⋮</div>
+                    <div style="font-weight:800; font-size:10px; opacity:0.9; margin-bottom:2px;">${displayTime}</div>
+                    <div style="font-weight:700; font-size:13px; padding-right:15px; line-height:1.2;">${ev.title || 'Evento'}</div>
+                `;
                 timelineContainer.appendChild(eb);
             });
             wrapper.appendChild(timelineContainer); return wrapper;
