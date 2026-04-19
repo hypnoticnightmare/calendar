@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="darkreader-lock">
     <meta name="color-scheme" content="light">
-    <title>Aesthetic Calendar - Full Icons & Drag Drop Edition</title>
+    <title>Aesthetic Calendar - Ultimate Master Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root, html, body { forced-color-adjust: none !important; color-adjust: exact !important; }
 
-        :root {
-            --page-bg: transparent; --text-color: #4A3A35; --badge-text: #FFFFFF; --btn-bg: #FFF;
-        }
+        :root { --page-bg: transparent; --text-color: #4A3A35; --badge-text: #FFFFFF; --btn-bg: #FFF; }
 
         /* --- SFONDI NOTION --- */
         [data-theme="light"] { --page-bg: #FFFFFF; --text-color: #4A3A35; --btn-bg: #FFFFFF; }
@@ -27,7 +25,6 @@
         [data-color="grape"] { --accent-main: #593C6B; --badge-bg: #D4A373; --cell-bg: #F8F3FA; --header-bg: #EBE0F0; }
         [data-color="choco"] { --accent-main: #5C4033; --badge-bg: #D9A05B; --cell-bg: #FCF8F2; --header-bg: #F2E3D5; }
 
-        /* --- Adattamento Modalità Scura --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A6ACF; --badge-bg: #3F3C79; --cell-bg: #1B1B3A; --header-bg: #26264A; }
@@ -44,27 +41,21 @@
         .controls-container {
             display: flex; gap: 15px; margin-bottom: 20px; padding: 8px 20px; background-color: var(--btn-bg); 
             border-radius: 20px; align-items: center; flex-wrap: wrap; justify-content: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid var(--accent-main); width: 100%; max-width: 900px; box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid var(--accent-main);
+            width: 100%; max-width: 900px; box-sizing: border-box;
         }
         .picker-group { display: flex; gap: 8px; align-items: center; }
         .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
         .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--accent-main); transition: transform 0.2s; flex-shrink: 0;}
         .color-dot:hover { transform: scale(1.2); }
-        
-        .action-btn {
-            background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); 
-            border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none; transition: all 0.2s ease;
-        }
+        .action-btn { background-color: var(--badge-bg); color: var(--badge-text); border: 2px solid var(--accent-main); border-radius: 12px; padding: 4px 12px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; outline: none; transition: all 0.2s ease;}
         .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
         select.action-btn { cursor: pointer; padding: 4px 8px; }
 
-        /* --- CALENDARIO BASE --- */
+        /* --- CALENDARIO STRUTTURA BASE --- */
         .calendar-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
-        .month-header {
-            display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); 
-            padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main);
-        }
+        .month-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--header-bg); padding: 10px 20px; border-radius: 16px; border: 3px solid var(--accent-main); }
         .month-header h2 { margin: 0; font-size: 24px; color: var(--accent-main); text-transform: uppercase; font-weight: 800; flex: 1; text-align: center;}
         .nav-btn { background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--accent-main); border-radius: 8px; cursor: pointer; padding: 4px 12px; font-weight: bold; font-family: 'Nunito'; }
 
@@ -77,7 +68,7 @@
         .calendar-grid.year-view { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         .calendar-grid.day-view { display: block; width: 100%; }
 
-        /* --- CELLE E DROP ZONE --- */
+        /* --- CELLE (MESE/SETTIMANA) --- */
         .cell {
             background-color: var(--cell-bg); border-radius: 8px; display: flex; flex-direction: column; 
             position: relative; cursor: pointer; overflow: hidden; min-width: 0; min-height: 0; transition: border 0.1s; border: 2px solid transparent;
@@ -89,38 +80,25 @@
         .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; border: 2px solid transparent; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
-        /* --- BADGE CON ICONE PNG --- */
+        /* --- BADGE CON IMMAGINI PNG --- */
         .date-badge {
-            position: relative;
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
+            position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             margin: 6px; align-self: flex-start; z-index: 15; flex-shrink: 0;
         }
-
         .date-icon {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: contain; pointer-events: none; z-index: 1;
         }
-
         .date-number {
-            position: relative; z-index: 2;
-            font-weight: 800; font-size: 15px; color: #FFFFFF;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.6); /* Ombra per garantire leggibilità su qualsiasi PNG */
+            position: relative; z-index: 2; font-weight: 800; font-size: 15px; color: #FFFFFF;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.7); /* Per leggere il numero sopra qualsiasi icona */
         }
+        /* Fallback: se l'immagine PNG manca, diventa un tondino estetico */
+        .fallback-badge { background-color: var(--badge-bg); border-radius: 50%; border: 2px solid var(--accent-main); }
+        .fallback-badge .date-number { color: var(--badge-text); text-shadow: none; }
 
-        /* Fallback: Se il PNG non c'è, diventa un tondino colorato */
-        .fallback-badge {
-            background-color: var(--badge-bg); border-radius: 50%;
-            border: 2px solid var(--accent-main);
-        }
-        .fallback-badge .date-number {
-            color: var(--badge-text); text-shadow: none;
-        }
-
-        /* --- SISTEMA DRAG & DROP MAGICO (NOTION SAFE) --- */
-        body.is-dragging .event-block,
-        body.is-dragging .timeline-event-block { opacity: 0.4 !important; pointer-events: none !important; }
-        
+        /* --- DRAG & DROP MAGICO --- */
+        body.is-dragging .event-block, body.is-dragging .timeline-event-block { opacity: 0.4 !important; pointer-events: none !important; }
         .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
         .timeline-hour-row.drag-over { background-color: rgba(0,0,0,0.1) !important; border-bottom: 2px dashed var(--accent-main) !important; }
         [data-theme="dark"] .timeline-hour-row.drag-over { background-color: rgba(255,255,255,0.1) !important; }
@@ -148,7 +126,7 @@
         .aesthetic-indicator { position: absolute; bottom: 6px; right: 8px; color: var(--badge-bg); font-size: 18px; text-shadow: 0 0 8px var(--badge-bg); animation: floatHeart 2.5s ease-in-out infinite; pointer-events: none; }
         @keyframes floatHeart { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; } 50% { transform: translateY(-4px) scale(1.15); opacity: 1; } }
 
-        /* --- TIMELINE GIORNALIERA --- */
+        /* --- VISTA GIORNALIERA (TIMELINE) --- */
         .day-timeline-wrapper {
             background: var(--cell-bg); border-radius: 12px; border: 2px solid var(--accent-main);
             height: 60vh; min-height: 400px; overflow-y: auto; position: relative; padding-bottom: 40px; cursor: default;
@@ -307,7 +285,7 @@
         document.querySelectorAll('[data-theme-target]').forEach(d => d.onclick = () => setTheme(d.dataset.themeTarget));
         document.querySelectorAll('[data-color-target]').forEach(d => d.onclick = () => setColor(d.dataset.colorTarget));
 
-        // --- SISTEMA DATI EVENTI MULTIPLI ---
+        // --- SISTEMA DATI ---
         let rawEvents = JSON.parse(safeStorage.get('cal-events-multi')) || {};
         let calendarEvents = {};
         for(let key in rawEvents) {
@@ -317,9 +295,7 @@
 
         let currentEditingDateKey = null;
         let currentEditingId = null; 
-        
-        // Memoria per il Drag & Drop (sicura contro i blocchi Iframe)
-        let draggedEventInfo = null;
+        let draggedEventInfo = null; 
 
         let baseDate = new Date();
         let currentView = safeStorage.get('cal-view') || 'month';
@@ -349,7 +325,7 @@
             return null;
         }
 
-        // --- GESTIONE MODAL E LISTA ---
+        // --- GESTIONE MODAL ---
         function openModal(y, m, d, eventId = null) {
             currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
@@ -440,20 +416,20 @@
 
         document.getElementById('event-modal').onclick = function(e) { if (e.target === this) closeModal(); };
 
-        // --- SISTEMA DRAG E DROP ROBUSTO (NOTION SAFE) ---
+        // --- SISTEMA DRAG E DROP ROBUSTO ---
         function handleDragStart(e, dateKey, eventId) {
             e.stopPropagation();
             draggedEventInfo = { dateKey, eventId };
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', 'drag_placeholder'); // Richiesto da alcuni browser
+            e.dataTransfer.setData('text/plain', 'drag_placeholder'); 
             setTimeout(() => {
-                e.target.style.opacity = '0.4';
+                e.target.classList.add('dragging-visual');
                 document.body.classList.add('is-dragging');
             }, 0);
         }
 
         function handleDragEnd(e) {
-            e.target.style.opacity = '1';
+            e.target.classList.remove('dragging-visual');
             document.body.classList.remove('is-dragging');
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
             draggedEventInfo = null;
@@ -486,16 +462,13 @@
             let evToMove = sourceArray.splice(evIndex, 1)[0];
             if(sourceArray.length === 0) delete calendarEvents[sourceDateKey];
 
-            if (newTime !== null) {
-                evToMove.time = newTime === 'ALLDAY' ? '' : `${String(newTime).padStart(2, '0')}:00`;
-            }
+            if (newTime !== null) evToMove.time = newTime === 'ALLDAY' ? '' : `${String(newTime).padStart(2, '0')}:00`;
 
             if(!calendarEvents[targetDateKey]) calendarEvents[targetDateKey] = [];
             calendarEvents[targetDateKey].push(evToMove);
 
             safeStorage.set('cal-events-multi', JSON.stringify(calendarEvents));
-            draggedEventInfo = null;
-            renderCalendar();
+            draggedEventInfo = null; renderCalendar();
         }
 
         // --- NAVIGAZIONE ---
@@ -537,13 +510,13 @@
             if (!empty) {
                 const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 
-                // Aggancio Drag Drop (Giorno Intero)
+                // Aggancio Drag Drop
                 cell.ondragenter = handleDragEnter; cell.ondragover = handleDragOver; cell.ondragleave = handleDragLeave;
                 cell.ondrop = (e) => executeDrop(e, dk, null);
                 
                 cell.onclick = (e) => { if(e.target === cell || e.target.classList.contains('events-container')) openModal(y,m,d); };
                 
-                // BADGE CON IMMAGINE PNG
+                // BADGE CON PNG
                 const badge = document.createElement('div'); badge.className = 'date-badge';
                 badge.innerHTML = `
                     <img class="date-icon" src="${currentColor}_icon.png" alt="" onerror="this.style.display='none'; this.parentElement.classList.add('fallback-badge');">
@@ -660,6 +633,7 @@
                 }
             }
         }
+        
         renderCalendar();
     </script>
 </body>
