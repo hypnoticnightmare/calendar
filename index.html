@@ -8,16 +8,15 @@
     <title>Aesthetic Calendar</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
-    
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Mali:wght@500;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- RESET E VARIABILI BASE --- */
+        /* --- RESET --- */
         :root, html, body { 
             forced-color-adjust: none !important; 
             color-adjust: exact !important; 
             box-sizing: border-box; 
         }
-        
         *, *:before, *:after { 
             box-sizing: inherit; 
         }
@@ -29,27 +28,28 @@
             --btn-bg: #FFF; 
         }
 
-        /* --- SFONDI NOTION --- */
+        /* --- TEMI NOTION --- */
         [data-theme="light"] { --page-bg: #FFFFFF; --text-color: #4A3A35; --btn-bg: #FFFFFF; }
         [data-theme="beige"] { --page-bg: #FFFBE6; --text-color: #5A504B; --btn-bg: #FFFBE6; }
         [data-theme="dark"] { --page-bg: #191919; --text-color: #F0F0F0; --btn-bg: #2C2C2C; }
         [data-theme="transparent"] { --page-bg: transparent; }
 
-        /* --- PALETTE 3 COLORI --- */
+        /* --- PALETTE COLORI --- */
         [data-color="strawberry"] { --accent-main: #C66F80; --badge-bg: #4A6644; --cell-bg: #FCEBF1; --header-bg: #FADCE5; }
         [data-color="matcha"] { --accent-main: #6B705C; --badge-bg: #9C6644; --cell-bg: #F4F1DE; --header-bg: #EAE2B7; }
         [data-color="blueberry"] { --accent-main: #3F3C79; --badge-bg: #5A6ACF; --cell-bg: #FFF6EC; --header-bg: #EAEBF5; }
         [data-color="grape"] { --accent-main: #593C6B; --badge-bg: #D4A373; --cell-bg: #F8F3FA; --header-bg: #EBE0F0; }
         [data-color="choco"] { --accent-main: #5C4033; --badge-bg: #D9A05B; --cell-bg: #FCF8F2; --header-bg: #F2E3D5; }
 
-        /* MODALITÀ SCURA */
+        /* --- PALETTE COLORI (DARK MODE) --- */
         [data-theme="dark"][data-color="strawberry"] { --accent-main: #D68594; --badge-bg: #6A8A63; --cell-bg: #2B1C20; --header-bg: #3D282D; }
         [data-theme="dark"][data-color="matcha"] { --accent-main: #8A9276; --badge-bg: #B88565; --cell-bg: #1E2219; --header-bg: #2B3024; }
         [data-theme="dark"][data-color="blueberry"] { --accent-main: #5A6ACF; --badge-bg: #3F3C79; --cell-bg: #1B1B3A; --header-bg: #26264A; }
         [data-theme="dark"][data-color="grape"] { --accent-main: #805B96; --badge-bg: #E3BB91; --cell-bg: #221B26; --header-bg: #302636; }
         [data-theme="dark"][data-color="choco"] { --accent-main: #7A5849; --badge-bg: #E6B57A; --cell-bg: #241D1A; --header-bg: #332A26; }
 
-        body {
+        /* --- LAYOUT GENERALE --- */
+        body { 
             margin: 0; 
             padding: clamp(5px, 2vw, 15px); 
             background-color: var(--page-bg); 
@@ -59,11 +59,10 @@
             flex-direction: column; 
             align-items: center; 
             transition: background-color 0.3s ease; 
-            min-height: 100vh;
+            min-height: 100vh; 
         }
-
-        /* --- CONTROLLI SUPERIORI --- */
-        .controls-container {
+        
+        .controls-container { 
             display: flex; 
             gap: 15px; 
             margin-bottom: 20px; 
@@ -80,14 +79,8 @@
         }
 
         .picker-group { display: flex; gap: 8px; align-items: center; }
+        .picker-separator { width: 2px; height: 20px; background-color: var(--accent-main); opacity: 0.3; }
         
-        .picker-separator { 
-            width: 2px; 
-            height: 20px; 
-            background-color: var(--accent-main); 
-            opacity: 0.3; 
-        }
-
         .color-dot { 
             width: 22px; 
             height: 22px; 
@@ -95,11 +88,10 @@
             cursor: pointer; 
             border: 2px solid var(--accent-main); 
             transition: transform 0.2s; 
-            flex-shrink: 0;
+            flex-shrink: 0; 
         }
-
         .color-dot:hover { transform: scale(1.2); }
-
+        
         .action-btn { 
             background-color: var(--badge-bg); 
             color: var(--badge-text); 
@@ -112,12 +104,12 @@
             outline: none; 
             transition: transform 0.1s; 
         }
-
+        .action-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .action-btn:active { transform: scale(0.95); }
         .action-btn.outline { background-color: var(--btn-bg); color: var(--text-color); }
         select.action-btn { cursor: pointer; padding: 4px 8px; }
 
-        /* --- STRUTTURA CALENDARIO BASE --- */
+        /* --- STRUTTURA CALENDARIO --- */
         .calendar-wrapper { 
             width: 100%; 
             max-width: 750px; 
@@ -144,7 +136,7 @@
             text-transform: uppercase; 
             font-weight: 800; 
             flex: 1; 
-            text-align: center;
+            text-align: center; 
         }
 
         .nav-btn { 
@@ -168,7 +160,7 @@
 
         .days-row { 
             display: grid; 
-            grid-template-columns: repeat(7, minmax(0, 1fr)); 
+            grid-template-columns: repeat(7, 1fr); 
             gap: 4px; 
             margin-bottom: 4px; 
         }
@@ -184,27 +176,14 @@
             text-transform: uppercase; 
         }
         
+        /* --- GRIGLIE VISTE --- */
         .calendar-grid { width: 100%; gap: 4px; }
-        
-        .calendar-grid.month-view, 
-        .calendar-grid.week-view { 
-            display: grid; 
-            grid-template-columns: repeat(7, minmax(0, 1fr)); 
-        }
-        
-        .calendar-grid.year-view { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-            gap: 10px; 
-        }
-        
-        .calendar-grid.day-view { 
-            display: block; 
-            width: 100%; 
-        }
+        .calendar-grid.month-view, .calendar-grid.week-view { display: grid; grid-template-columns: repeat(7, 1fr); }
+        .calendar-grid.year-view { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+        .calendar-grid.day-view { display: block; width: 100%; }
 
         /* --- CELLE MESE E SETTIMANA --- */
-        .cell {
+        .cell { 
             background-color: var(--cell-bg); 
             border-radius: 8px; 
             display: flex; 
@@ -217,19 +196,18 @@
             transition: border 0.1s; 
             border: 2px solid transparent; 
         }
-
         .month-view .cell { aspect-ratio: 1 / 1; }
         .week-view .cell { aspect-ratio: auto; min-height: 400px; }
         .cell:hover:not(.empty) { filter: brightness(0.95); }
-        .cell.empty { background-color: rgba(255,255,255,0.3); cursor: default; border: 2px solid transparent; }
+        .cell.empty { background-color: rgba(255,255,255,0.4); cursor: default; border: 2px solid transparent; }
         [data-theme="dark"] .cell.empty { background-color: rgba(0,0,0,0.2); }
 
-        .date-badge {
+        .date-badge { 
             background-color: var(--badge-bg); 
             color: var(--badge-text); 
             border-radius: 50%; 
             width: 28px; 
-            height: 28px;
+            height: 28px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -243,7 +221,7 @@
             position: relative; 
         }
 
-        /* --- BARRA TRASVERSALE EVENTI MULTI-GIORNO --- */
+        /* --- EVENTI MULTI-GIORNO (BARRA IN BASSO) --- */
         .multi-day-bar { 
             position: absolute; 
             left: -2px; 
@@ -255,12 +233,12 @@
             pointer-events: none; 
             font-size: 10px; 
             font-weight: 800; 
-            line-height: 18px;
+            line-height: 18px; 
             padding: 0 6px; 
             white-space: nowrap; 
             overflow: hidden; 
-            text-overflow: ellipsis;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            text-overflow: ellipsis; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
         }
         .multi-day-bar.start { left: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
         .multi-day-bar.end { right: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
@@ -277,7 +255,6 @@
             position: relative; 
             z-index: 10; 
         }
-        
         .events-container::-webkit-scrollbar { width: 4px; }
         .events-container::-webkit-scrollbar-thumb { background: var(--badge-bg); border-radius: 10px; }
         
@@ -296,7 +273,6 @@
             transition: transform 0.1s; 
             word-break: break-word; 
         }
-        
         .event-block:active { cursor: grabbing; transform: scale(0.98); }
         .event-block .title { font-weight: 700; line-height: 1.2; }
 
@@ -314,6 +290,7 @@
         }
         .edit-dots:hover { opacity: 1; background: rgba(0,0,0,0.2); }
 
+        /* --- CUORICINO --- */
         .aesthetic-indicator { 
             position: absolute; 
             right: 10px !important; 
@@ -324,7 +301,6 @@
             pointer-events: none; 
             z-index: 15; 
         }
-        
         @keyframes floatHeart { 
             0%, 100% { transform: translateY(0) scale(1); } 
             50% { transform: translateY(-3px) scale(1.1); } 
@@ -380,25 +356,14 @@
             gap: 4px; 
         }
         [data-theme="dark"] .timeline-allday { background: rgba(0,0,0,0.1); }
-        
-        .allday-label { 
-            position: absolute; 
-            left: 10px; 
-            top: 15px; 
-            font-size: 11px; 
-            font-weight: bold; 
-            color: var(--accent-main); 
-            opacity: 0.8; 
-            text-transform: uppercase; 
-            width: 50px; 
-            text-align: right; 
-        }
+        .allday-label { position: absolute; left: 10px; top: 15px; font-size: 11px; font-weight: bold; color: var(--accent-main); opacity: 0.8; text-transform: uppercase; width: 50px; text-align: right; }
 
         .timeline-hour-row { 
             display: flex; 
             height: 60px; 
             border-bottom: 1px dashed rgba(0,0,0,0.08); 
             position: relative; 
+            transition: background 0.1s; 
             border-left: 2px solid transparent; 
             border-right: 2px solid transparent;
         }
@@ -438,56 +403,17 @@
         }
 
         /* --- VISTA ANNUALE --- */
-        .mini-month { 
-            background: var(--cell-bg); 
-            border: 2px solid var(--accent-main); 
-            border-radius: 12px; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 4px; 
-        }
-        .mini-month-title { 
-            text-align: center; 
-            color: var(--accent-main); 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            font-size: 14px; 
-        }
-        .mini-days-row { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            text-align: center; 
-            font-weight: 800; 
-            font-size: 10px; 
-            color: var(--badge-bg); 
-            margin-bottom: 2px; 
-        }
-        .mini-grid { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 2px; 
-            position: relative; 
-        }
-        .mini-cell { 
-            aspect-ratio: 1; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 10px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            color: var(--text-color); 
-            transition: background 0.2s; 
-            position: relative; 
-            z-index: 10; 
-        }
+        .mini-month { background: var(--cell-bg); border: 2px solid var(--accent-main); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .mini-month-title { text-align: center; color: var(--accent-main); font-weight: 800; text-transform: uppercase; font-size: 14px; }
+        .mini-days-row { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; font-size: 10px; color: var(--badge-bg); margin-bottom: 2px; }
+        .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; position: relative; }
+        .mini-cell { aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: pointer; color: var(--text-color); transition: background 0.2s; position: relative; z-index: 10;}
         .mini-cell:hover { background: rgba(0,0,0,0.1); }
+        [data-theme="dark"] .mini-cell:hover { background: rgba(255,255,255,0.1); }
         .mini-cell.has-event { background: var(--badge-bg); color: var(--badge-text); }
         .mini-cell.is-today { border: 2px solid var(--accent-main); }
 
-        /* --- DRAG & DROP FIX --- */
+        /* --- FIX DRAG & DROP --- */
         .is-dragging-body * { user-select: none; }
         .event-block.dragging, .timeline-event-block.dragging { opacity: 0.5; }
         .drag-over { background-color: var(--header-bg) !important; border: 2px dashed var(--accent-main) !important; }
@@ -495,25 +421,12 @@
 
         /* --- TOOLTIP --- */
         #custom-tooltip { 
-            position: fixed; 
-            display: none; 
-            flex-direction: column; 
-            gap: 8px; 
-            background: rgba(255, 255, 255, 0.96); 
-            border: 3px solid var(--accent-main); 
-            color: var(--text-color); 
-            padding: 12px 16px; 
-            border-radius: 14px; 
-            font-family: 'Mali', cursive; 
-            font-size: 14px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
-            pointer-events: none; 
-            z-index: 10000; 
-            width: max-content; 
-            max-width: 280px; 
-            opacity: 0; 
-            transform: translate(-50%, -90%) scale(0.95); 
-            transition: all 0.2s; 
+            position: fixed; display: none; flex-direction: column; gap: 8px; 
+            background: rgba(255, 255, 255, 0.96); border: 3px solid var(--accent-main); 
+            color: var(--text-color); padding: 12px 16px; border-radius: 14px; 
+            font-family: 'Mali', cursive; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            pointer-events: none; z-index: 10000; width: max-content; max-width: 280px; 
+            opacity: 0; transform: translate(-50%, -90%) scale(0.95); transition: all 0.2s; 
             backdrop-filter: blur(4px); 
         }
         [data-theme="dark"] #custom-tooltip { background: rgba(40, 40, 40, 0.96); }
@@ -523,96 +436,23 @@
         .tooltip-item .title { white-space: pre-wrap; line-height: 1.2; font-weight: 700; }
         
         /* --- MODAL (POPUP EVENTI) --- */
-        .modal-overlay { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0, 0, 0, 0.5); 
-            z-index: 9999; 
-            justify-content: center; 
-            align-items: center; 
-            backdrop-filter: blur(2px); 
-        }
-        .modal-window { 
-            background: var(--cell-bg); 
-            border: 4px solid var(--accent-main); 
-            border-radius: 16px; 
-            padding: 20px; 
-            width: 90%; 
-            max-width: 450px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .modal-window { background: var(--cell-bg); border: 4px solid var(--accent-main); border-radius: 16px; padding: 20px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .modal-window h3 { margin: 0; color: var(--accent-main); font-size: 22px; text-transform: uppercase; font-weight: 800; text-align: center; }
-        .modal-window input[type="text"], 
-        .modal-window input[type="date"], 
-        .modal-window textarea { 
-            width: 100%; 
-            box-sizing: border-box; 
-            background: var(--btn-bg); 
-            border: 2px solid var(--accent-main); 
-            color: var(--text-color); 
-            border-radius: 8px; 
-            padding: 10px; 
-            font-family: 'Mali', cursive; 
-            font-size: 16px; 
-            outline: none; 
-        }
+        .modal-window input[type="text"], .modal-window input[type="date"], .modal-window textarea { width: 100%; box-sizing: border-box; background: var(--btn-bg); border: 2px solid var(--accent-main); color: var(--text-color); border-radius: 8px; padding: 10px; font-family: 'Mali', cursive; font-size: 16px; outline: none; }
         .modal-window textarea { resize: vertical; min-height: 80px; }
         .modal-actions { display: flex; justify-content: space-between; margin-top: 10px; }
         .right-btns { display: flex; gap: 8px; }
         .btn-delete { background-color: #E53935; color: white; border-color: #B71C1C; }
         .hide-delete .btn-delete { display: none; }
-        .list-event-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--btn-bg); 
-            border: 2px solid var(--accent-main); 
-            padding: 10px; 
-            border-radius: 8px; 
-            margin-bottom: 8px; 
-        }
+        .list-event-item { display: flex; justify-content: space-between; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
-        /* --- STILE TENDINE ORARIO --- */
         .time-select-container { display: flex; gap: 10px; width: 100%; flex-wrap: wrap; }
-        .time-select-group { 
-            display: flex; 
-            gap: 4px; 
-            flex: 1; 
-            min-width: 140px; 
-            align-items: center; 
-            background: var(--btn-bg); 
-            border: 2px solid var(--accent-main); 
-            border-radius: 8px; 
-            padding: 4px 8px; 
-        }
+        .time-select-group { display: flex; gap: 4px; flex: 1; min-width: 140px; align-items: center; background: var(--btn-bg); border: 2px solid var(--accent-main); border-radius: 8px; padding: 4px 8px; }
         .time-select-label { font-size: 12px; font-weight: bold; color: var(--accent-main); }
-        .time-select-group select { 
-            flex: 1; 
-            border: none; 
-            background: transparent; 
-            outline: none; 
-            font-family: 'Mali', cursive; 
-            font-size: 14px; 
-            color: var(--text-color); 
-            cursor: pointer; 
-        }
+        .time-select-group select { flex: 1; border: none; background: transparent; outline: none; font-family: 'Mali', cursive; font-size: 14px; color: var(--text-color); cursor: pointer; }
 
-        /* --- FOOTER INVISIBILE IN NOTION --- */
-        .site-footer { 
-            margin-top: 30px; 
-            padding: 20px; 
-            font-family: 'Mali', cursive; 
-            font-size: 14px; 
-            color: var(--text-color); 
-            opacity: 0.6; 
-            text-align: center; 
-            font-weight: 600; 
-            width: 100%; 
-        }
+        .site-footer { margin-top: 30px; padding: 20px; font-family: 'Mali', cursive; font-size: 14px; color: var(--text-color); opacity: 0.6; text-align: center; font-weight: 600; width: 100%; }
     </style>
 </head>
 <body data-theme="transparent" data-color="blueberry">
@@ -682,41 +522,13 @@
                 <div class="time-select-container">
                     <div class="time-select-group">
                         <span class="time-select-label">Da:</span>
-                        <select id="modal-start-hour">
-                            <option value="">Ora</option>
-                            <option value="00">00</option><option value="01">01</option><option value="02">02</option>
-                            <option value="03">03</option><option value="04">04</option><option value="05">05</option>
-                            <option value="06">06</option><option value="07">07</option><option value="08">08</option>
-                            <option value="09">09</option><option value="10">10</option><option value="11">11</option>
-                            <option value="12">12</option><option value="13">13</option><option value="14">14</option>
-                            <option value="15">15</option><option value="16">16</option><option value="17">17</option>
-                            <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-                            <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-                        </select>:
-                        <select id="modal-start-minute">
-                            <option value="">Min</option>
-                            <option value="00">00</option><option value="15">15</option>
-                            <option value="30">30</option><option value="45">45</option>
-                        </select>
+                        <select id="modal-start-hour"></select>:
+                        <select id="modal-start-minute"></select>
                     </div>
                     <div class="time-select-group">
                         <span class="time-select-label">A:</span>
-                        <select id="modal-end-hour">
-                            <option value="">Ora</option>
-                            <option value="00">00</option><option value="01">01</option><option value="02">02</option>
-                            <option value="03">03</option><option value="04">04</option><option value="05">05</option>
-                            <option value="06">06</option><option value="07">07</option><option value="08">08</option>
-                            <option value="09">09</option><option value="10">10</option><option value="11">11</option>
-                            <option value="12">12</option><option value="13">13</option><option value="14">14</option>
-                            <option value="15">15</option><option value="16">16</option><option value="17">17</option>
-                            <option value="18">18</option><option value="19">19</option><option value="20">20</option>
-                            <option value="21">21</option><option value="22">22</option><option value="23">23</option>
-                        </select>:
-                        <select id="modal-end-minute">
-                            <option value="">Min</option>
-                            <option value="00">00</option><option value="15">15</option>
-                            <option value="30">30</option><option value="45">45</option>
-                        </select>
+                        <select id="modal-end-hour"></select>:
+                        <select id="modal-end-minute"></select>
                     </div>
                 </div>
                 
@@ -725,7 +537,7 @@
                     <input type="date" id="modal-end-date" style="flex:1; border:none; background:transparent; font-family:'Mali',cursive;">
                 </div>
                 
-                <textarea id="modal-notes" placeholder="Note..."></textarea>
+                <textarea id="modal-notes" placeholder="Note aggiuntive..."></textarea>
                 
                 <div class="modal-actions">
                     <button class="action-btn btn-delete" onclick="deleteEvent()">Elimina</button>
@@ -741,25 +553,33 @@
     <div id="site-footer" class="site-footer">Made with ♥ by Il Tuo Nome</div>
 
     <script>
-        // --- NASCONDI FOOTER SE IN NOTION ---
+        // --- 1. NASCONDI FOOTER SU NOTION ---
         if (window.self !== window.top) {
-            let footer = document.getElementById('site-footer');
-            if(footer) footer.style.display = 'none';
+            const f = document.getElementById('site-footer');
+            if(f) f.style.display = 'none';
         }
 
-        // --- SISTEMA DI STORAGE SICURO ---
+        // --- 2. POPOLAMENTO MENU A TENDINA (DYNAMIC) ---
+        const hrs = Array.from({length:24}, (_,i)=>String(i).padStart(2,'0'));
+        const mins = ['00','15','30','45'];
+        
+        function popSelect(id, arr, def) { 
+            const sel = document.getElementById(id);
+            if (sel) {
+                sel.innerHTML = `<option value="">${def}</option>` + arr.map(v=>`<option value="${v}">${v}</option>`).join(''); 
+            }
+        }
+        popSelect('modal-start-hour', hrs, 'Ora'); 
+        popSelect('modal-end-hour', hrs, 'Ora');
+        popSelect('modal-start-minute', mins, 'Min'); 
+        popSelect('modal-end-minute', mins, 'Min');
+
+        // --- 3. STORAGE E VARIABILI GLOBALI ---
         const safeStorage = { 
-            get: function(k) { 
-                try { return localStorage.getItem(k); } 
-                catch(e) { return null; } 
-            }, 
-            set: function(k, v) { 
-                try { localStorage.setItem(k, v); } 
-                catch(e) { console.warn('LocalStorage limit reached or disabled'); } 
-            } 
+            get: (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } }, 
+            set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) { } } 
         };
 
-        // --- VARIABILI GLOBALI ---
         const grid = document.getElementById('calendar-grid');
         const title = document.getElementById('calendar-title');
         const tooltip = document.getElementById('custom-tooltip');
@@ -770,429 +590,221 @@
         let currentColor = safeStorage.get('cal-color') || 'blueberry';
         let currentTheme = safeStorage.get('cal-theme') || 'transparent';
         
-        let currentEditingDateKey = null;
-        let currentEditingId = null;
-        let draggedEventInfo = null;
-
-        // --- CARICAMENTO DATI EVENTI ---
-        let rawEvents = {};
+        // Protezione Dati Corrotti
+        let rawEvents = {}; 
         try { 
-            let savedEvents = safeStorage.get('cal-events-v11'); 
-            if(savedEvents) rawEvents = JSON.parse(savedEvents); 
+            let s = safeStorage.get('cal-events-v15'); 
+            if(s) rawEvents = JSON.parse(s); 
         } catch(e) { 
-            console.error("Errore nel parsing degli eventi:", e);
+            console.error("Dati localStorage corrotti, inizializzazione pulita."); 
         }
-
+        
         let calendarEvents = {};
         for(let k in rawEvents) {
-            if(Array.isArray(rawEvents[k])) {
-                calendarEvents[k] = rawEvents[k];
+            if (Array.isArray(rawEvents[k])) {
+                calendarEvents[k] = rawEvents[k].filter(ev => ev != null).map(ev => ({ ...ev, startDate: ev.startDate || k, endDate: ev.endDate || k }));
             } else {
                 calendarEvents[k] = [];
             }
         }
 
-        // --- GESTIONE TEMI E COLORI ---
+        let currentEditingDateKey = null; 
+        let currentEditingId = null; 
+        let draggedEventInfo = null;
+
+        // --- 4. TEMI E COLORI ---
         function setTheme(t) { 
             document.body.setAttribute('data-theme', t); 
             safeStorage.set('cal-theme', t); 
         }
         
-        function setColor(c, skipRender = false) { 
+        function setColor(c, skip = false) { 
             document.body.setAttribute('data-color', c); 
             safeStorage.set('cal-color', c); 
-            if(!skipRender) renderCalendar(); 
+            if(!skip) renderCalendar(); 
         }
-
+        
         setTheme(currentTheme); 
         setColor(currentColor, true);
 
         document.querySelectorAll('[data-theme-target]').forEach(d => {
             d.onclick = () => setTheme(d.dataset.themeTarget);
         });
-        
         document.querySelectorAll('[data-color-target]').forEach(d => {
             d.onclick = () => setColor(d.dataset.colorTarget);
         });
 
-        // --- GESTIONE CONTROLLI E NAVIGAZIONE ---
+        // --- 5. EVENT LISTENERS CONTROLLI ---
         document.getElementById('view-select').value = currentView;
-        document.getElementById('view-select').addEventListener('change', function(e) { 
+        document.getElementById('view-select').addEventListener('change', e => { 
             currentView = e.target.value; 
             safeStorage.set('cal-view', currentView); 
             renderCalendar(); 
         });
         
-        document.getElementById('btn-today').addEventListener('click', function() { 
+        document.getElementById('btn-today').addEventListener('click', () => { 
             baseDate = new Date(); 
             renderCalendar(); 
         });
         
-        document.getElementById('btn-prev').addEventListener('click', function() { navigate(-1); });
-        document.getElementById('btn-next').addEventListener('click', function() { navigate(1); });
+        document.getElementById('btn-prev').addEventListener('click', () => navigate(-1));
+        document.getElementById('btn-next').addEventListener('click', () => navigate(1));
 
-        function navigate(dir) {
+        // --- 6. FUNZIONI UTILITY DATE/ORARI ---
+        function parseTimeStr(ts) { 
+            if(!ts) return null; 
+            const m = ts.match(/(\d{1,2})[.:](\d{2})/); 
+            if(m) { 
+                let h = parseInt(m[1]);
+                let min = parseInt(m[2]); 
+                if(ts.toLowerCase().includes('pm') && h < 12) h += 12; 
+                if(ts.toLowerCase().includes('am') && h === 12) h = 0; 
+                return {h, m:min}; 
+            } 
+            return null; 
+        }
+
+        function formatTimeRange(s, e) { 
+            if (s && e) return `${s} - ${e}`; 
+            if (s) return s; 
+            return ''; 
+        }
+        
+        function parseDateKey(str) { 
+            let p = str.split('-'); 
+            return new Date(p[0], p[1]-1, p[2]); 
+        }
+        
+        function getDateKeysInRange(sStr, eStr) { 
+            let keys = [];
+            let curr = parseDateKey(sStr);
+            let endDt = parseDateKey(eStr); 
+            while(curr <= endDt) { 
+                keys.push(`${curr.getFullYear()}-${String(curr.getMonth()+1).padStart(2,'0')}-${String(curr.getDate()).padStart(2,'0')}`); 
+                curr.setDate(curr.getDate()+1); 
+            } 
+            return keys; 
+        }
+
+        function getMonday(d) { 
+            let dt = new Date(d); 
+            let day = dt.getDay();
+            let diff = dt.getDate() - day + (day === 0 ? -6 : 1); 
+            return new Date(dt.setDate(diff)); 
+        }
+
+        function navigate(dir) { 
             if (currentView === 'year') {
                 baseDate.setFullYear(baseDate.getFullYear() + dir);
             } else if (currentView === 'month') {
                 baseDate.setMonth(baseDate.getMonth() + dir);
             } else if (currentView === 'week') {
-                baseDate.setDate(baseDate.getDate() + (dir * 7));
+                baseDate.setDate(baseDate.getDate() + dir * 7);
             } else if (currentView === 'day') {
                 baseDate.setDate(baseDate.getDate() + dir);
             }
-            renderCalendar();
+            renderCalendar(); 
         }
 
-        function getMonday(d) {
-            let dt = new Date(d); 
-            let day = dt.getDay();
-            let diff = dt.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(dt.setDate(diff));
-        }
-
-        // --- FUNZIONI DI UTILITÀ PER DATE E ORARI ---
-        function parseTimeStr(ts) {
-            if(!ts) return null; 
-            const m = ts.match(/(\d{1,2})[.:](\d{2})/);
-            if(m) { 
-                let h = parseInt(m[1]); 
-                let min = parseInt(m[2]); 
-                if(ts.toLowerCase().includes('pm') && h < 12) h += 12; 
-                if(ts.toLowerCase().includes('am') && h === 12) h = 0; 
-                return { h, m: min }; 
-            }
-            return null;
-        }
-
-        function formatTimeRange(start, end) { 
-            if (start && end) return `${start} - ${end}`; 
-            if (start) return start; 
-            return ''; 
-        }
-
-        function parseDateKey(str) { 
-            let parts = str.split('-'); 
-            return new Date(parts[0], parts[1]-1, parts[2]); 
-        }
-
-        function getDateKeysInRange(startStr, endStr) {
-            let keys = [];
-            let curr = parseDateKey(startStr);
-            let endDt = parseDateKey(endStr);
-            while(curr <= endDt) { 
-                let y = curr.getFullYear();
-                let m = String(curr.getMonth() + 1).padStart(2, '0');
-                let d = String(curr.getDate()).padStart(2, '0');
-                keys.push(`${y}-${m}-${d}`); 
-                curr.setDate(curr.getDate() + 1); 
-            }
-            return keys;
-        }
-
-        // --- MOTORE PRINCIPALE DI RENDERING ---
-        function renderCalendar() {
-            try {
-                grid.innerHTML = ''; 
-                const y = baseDate.getFullYear();
-                const m = baseDate.getMonth();
-                const dHead = document.getElementById('dynamic-header');
-                const mdRow = document.getElementById('main-days-row');
-
-                if (currentView === 'year') { 
-                    dHead.style.display = 'flex'; 
-                    mdRow.style.display = 'none'; 
-                    grid.className = "calendar-grid year-view"; 
-                    title.innerText = y; 
-                    for(let i=0; i<12; i++) {
-                        grid.appendChild(createMiniMonth(y, i)); 
-                    }
-                }
-                else if (currentView === 'day') { 
-                    dHead.style.display = 'none'; 
-                    mdRow.style.display = 'none'; 
-                    grid.className = "calendar-grid day-view"; 
-                    grid.appendChild(createDayTimeline(y, m, baseDate.getDate())); 
-                }
-                else {
-                    dHead.style.display = 'flex'; 
-                    mdRow.style.display = 'grid'; 
-                    grid.className = `calendar-grid ${currentView}-view`;
-                    
-                    if(currentView === 'month') {
-                        title.innerText = `${mesi[m]} ${y}`; 
-                        const firstDay = new Date(y, m, 1).getDay();
-                        const pad = firstDay === 0 ? 6 : firstDay - 1;
-                        const daysInMonth = new Date(y, m+1, 0).getDate();
-                        
-                        for (let i=0; i<pad; i++) grid.appendChild(createCell(y,m,0,true)); 
-                        for (let d=1; d<=daysInMonth; d++) grid.appendChild(createCell(y,m,d,false));
-                        
-                        const endPad = (pad + daysInMonth) % 7 === 0 ? 0 : 7 - ((pad + daysInMonth) % 7);
-                        for (let i=0; i<endPad; i++) grid.appendChild(createCell(y,m,0,true));
-                    } else if (currentView === 'week') {
-                        let mon = getMonday(baseDate); 
-                        let sun = new Date(mon.getTime() + 518400000); // + 6 days
-                        let titleStr = '';
-                        if (mon.getMonth() === sun.getMonth()) {
-                            titleStr = `${mon.getDate()} - ${sun.getDate()} ${mesi[mon.getMonth()]} ${y}`;
-                        } else {
-                            titleStr = `${mon.getDate()} ${mesi[mon.getMonth()].substring(0,3)} - ${sun.getDate()} ${mesi[sun.getMonth()].substring(0,3)} ${y}`;
-                        }
-                        title.innerText = titleStr;
-                        
-                        for (let i=0; i<7; i++) { 
-                            let curr = new Date(mon.getTime() + i*86400000); 
-                            grid.appendChild(createCell(curr.getFullYear(), curr.getMonth(), curr.getDate(), false)); 
-                        }
-                    }
-                }
-            } catch(e) { 
-                console.error("Rendering Error:", e); 
+        // --- 7. GESTIONE MODAL ---
+        function openModal(y, m, d, evId = null, defTime = '') {
+            currentEditingDateKey = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            document.getElementById('modal-date-title').innerText = `${d} ${mesi[m]} ${y}`;
+            document.getElementById('event-modal').style.display = 'flex'; 
+            tooltip.style.display = 'none';
+            
+            let dayEvs = calendarEvents[currentEditingDateKey] || [];
+            
+            if (evId) {
+                showEventForm(evId);
+            } else if (dayEvs.length > 0) {
+                showEventList();
+            } else {
+                showEventForm(null, defTime);
             }
         }
 
-        // --- CREAZIONE VISTA ANNO ---
-        function createMiniMonth(y, m) {
-            const w = document.createElement('div'); 
-            w.className = 'mini-month';
-            w.innerHTML = `<div class="mini-month-title">${mesi[m]}</div><div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
+        function showEventList() {
+            document.getElementById('modal-list-view').style.display = 'flex'; 
+            document.getElementById('modal-form-view').style.display = 'none';
+            const list = document.getElementById('modal-events-list'); 
+            list.innerHTML = '';
             
-            const mg = document.createElement('div'); 
-            mg.className = 'mini-grid';
-            
-            const firstDay = new Date(y, m, 1).getDay();
-            const pad = firstDay === 0 ? 6 : firstDay - 1;
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-            
-            for (let i=0; i<pad; i++) {
-                mg.appendChild(document.createElement('div'));
-            }
-            
-            for (let d=1; d<=daysInMonth; d++) {
-                const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const c = document.createElement('div'); 
-                c.className = 'mini-cell'; 
-                c.innerText = d;
-                
-                let evs = calendarEvents[dk] || []; 
-                if (evs.length > 0) c.classList.add('has-event');
-                
-                let multiDayEvs = evs.filter(ev => ev.startDate !== ev.endDate);
-                multiDayEvs.forEach((ev, idx) => { 
-                    let bar = document.createElement('div'); 
-                    bar.className = 'multi-day-bar'; 
-                    if(dk === ev.startDate) bar.classList.add('start'); 
-                    if(dk === ev.endDate) bar.classList.add('end'); 
-                    bar.style.bottom = `${3 + (idx * 6)}px`;
-                    bar.style.backgroundColor = idx % 2 === 0 ? 'var(--accent-main)' : 'var(--badge-bg)';
-                    c.appendChild(bar); 
-                });
-                
-                let today = new Date();
-                if(today.toDateString() === new Date(y,m,d).toDateString()) c.classList.add('is-today');
-                
-                c.onclick = () => { 
-                    baseDate = new Date(y,m,d); 
-                    currentView = 'day'; 
-                    document.getElementById('view-select').value = 'day'; 
-                    renderCalendar(); 
-                };
-                mg.appendChild(c);
-            } 
-            w.appendChild(mg); 
-            return w;
-        }
-
-        // --- CREAZIONE CELLE MESE E SETTIMANA ---
-        function createCell(y, m, d, empty) {
-            const cell = document.createElement('div'); 
-            cell.className = `cell ${empty ? 'empty' : ''}`;
-            
-            if (!empty) {
-                const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                
-                cell.onclick = (e) => { 
-                    if(e.target === cell || e.target.classList.contains('events-container')) {
-                        openModal(y,m,d); 
-                    }
-                };
-                
-                cell.ondragenter = handleDragEnter; 
-                cell.ondragover = handleDragOver; 
-                cell.ondragleave = handleDragLeave; 
-                cell.ondrop = (e) => executeDrop(e, dk, null);
-                
-                let badge = document.createElement('div');
-                badge.className = 'date-badge';
-                badge.innerText = d;
-                cell.appendChild(badge);
-                
-                let evs = calendarEvents[dk] || [];
-                let multiDayEvs = evs.filter(ev => ev.startDate !== ev.endDate);
-                
-                // BARRE MULTI-GIORNO
-                multiDayEvs.forEach((ev, idx) => {
-                    let bar = document.createElement('div'); 
-                    bar.className = 'multi-day-bar';
-                    if (dk === ev.startDate) bar.classList.add('start');
-                    if (dk === ev.endDate) bar.classList.add('end');
-                    bar.style.bottom = `${6 + (idx * 20)}px`;
-                    bar.style.backgroundColor = idx % 2 === 0 ? 'var(--accent-main)' : 'var(--badge-bg)';
-                    bar.innerText = ev.title || 'Evento';
-                    cell.appendChild(bar);
-                });
-
-                if(evs.length > 0) {
-                    if(currentView === 'month') {
-                        cell.classList.add('has-event');
-                        const ind = document.createElement('div'); 
-                        ind.className = 'aesthetic-indicator'; 
-                        ind.innerText = '♥';
-                        ind.style.bottom = `${8 + (multiDayEvs.length * 20)}px`;
-                        cell.appendChild(ind);
-                        
-                        cell.onmouseenter = () => showTooltip(cell, evs); 
-                        cell.onmouseleave = hideTooltip;
-                    } else if(currentView === 'week') {
-                        const cont = document.createElement('div'); 
-                        cont.className = 'events-container';
-                        cont.style.paddingBottom = `${10 + (multiDayEvs.length * 20)}px`;
-                        
-                        evs.forEach(ev => {
-                            let b = document.createElement('div'); 
-                            b.className = 'event-block'; 
-                            b.draggable = true; 
-                            b.ondragstart = (e) => handleDragStart(e, dk, ev.id); 
-                            b.ondragend = handleDragEnd;
-                            b.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')">⋮</div>${ev.timeStart ? `<div class="time">${formatTimeRange(ev.timeStart, ev.timeEnd)}</div>` : ''}<div class="title">${ev.title||'Evento'}</div>`;
-                            cont.appendChild(b);
-                        }); 
-                        cell.appendChild(cont);
-                    }
-                }
-            } 
-            return cell;
-        }
-
-        // --- CREAZIONE TIMELINE GIORNALIERA ---
-        function createDayTimeline(y, m, d) {
-            const w = document.createElement('div'); 
-            w.className = 'day-timeline-wrapper';
-            const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            
-            w.ondragenter = handleDragEnter; 
-            w.ondragover = handleDragOver; 
-            w.ondragleave = handleDragLeave; 
-            w.ondrop = (e) => executeDrop(e, dk, null);
-
-            const h = document.createElement('div'); 
-            h.className = 'timeline-header';
-            const dayNames = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
-            
-            h.innerHTML = `
-                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                    <span style="font-size:13px;opacity:0.8;font-weight:700;text-transform:uppercase;">${dayNames[new Date(y,m,d).getDay()]}</span>
-                    <span class="large-badge">${d} ${mesi[m]} ${y}</span>
-                </div>
-                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
-            `;
-            h.onclick = () => openModal(y,m,d); 
-            w.appendChild(h);
-
-            let evs = calendarEvents[dk] || [];
-            
-            const allday = document.createElement('div'); 
-            allday.className = 'timeline-allday'; 
-            allday.onclick = (e) => { if(e.target===allday) openModal(y, m, d); };
-            allday.ondragenter = handleDragEnter; 
-            allday.ondragover = handleDragOver; 
-            allday.ondragleave = handleDragLeave; 
-            allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY');
-            allday.innerHTML = `<div class="allday-label">Eventi</div>`;
-            
-            evs.filter(ev => !ev.timeStart).forEach(ev => {
-                let b = document.createElement('div'); 
-                b.className = 'event-block'; 
-                b.style.position = 'relative'; 
-                b.style.marginBottom = '5px'; 
-                b.draggable = true; 
-                b.ondragstart = (e) => handleDragStart(e, dk, ev.id); 
-                b.ondragend = handleDragEnd;
-                b.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')">⋮</div><div class="title">${ev.title||'Senza Titolo'}</div>`; 
-                allday.appendChild(b);
-            }); 
-            w.appendChild(allday);
-
-            const tc = document.createElement('div'); 
-            tc.style.position = 'relative';
-            
-            for(let i=0; i<24; i++) { 
-                let r = document.createElement('div'); 
-                r.className = 'timeline-hour-row'; 
-                r.onclick = () => openModal(y,m,d,null,`${String(i).padStart(2,'0')}:00`); 
-                r.ondragenter = handleDragEnter; 
-                r.ondragover = handleDragOver; 
-                r.ondragleave = handleDragLeave; 
-                r.ondrop = (e) => executeDrop(e, dk, i);
-                r.innerHTML = `<div class="timeline-time">${i===0?'12 AM':i<12?i+' AM':i===12?'12 PM':(i-12)+' PM'}</div>`; 
-                tc.appendChild(r); 
-            }
-
-            evs.filter(ev => ev.timeStart).forEach((ev, idx) => {
-                const s = parseTimeStr(ev.timeStart);
-                const e = parseTimeStr(ev.timeEnd); 
-                let dur = 60;
-                
-                if(s && e) { 
-                    dur = (e.h*60+e.m) - (s.h*60+s.m); 
-                    if(dur<0) dur+=1440; 
-                    if(dur<20) dur=20; 
-                }
-                
-                let eb = document.createElement('div'); 
-                eb.className = 'timeline-event-block'; 
-                eb.draggable = true; 
-                eb.ondragstart = (evt) => handleDragStart(evt, dk, ev.id); 
-                eb.ondragend = handleDragEnd;
-                
-                let bgC = idx % 2 !== 0 ? 'var(--accent-main)' : 'var(--badge-bg)';
-                let txC = idx % 2 !== 0 ? '#FFFFFF' : 'var(--badge-text)'; 
-                let overlapOffset = (idx % 4) * 120;
-
-                eb.style.cssText = `top:${s.h*60+s.m}px; height:${dur}px; left:${70+overlapOffset}px; width:calc(100% - ${90+overlapOffset}px); background:${bgC}; color:${txC}; z-index:${10+idx}; opacity:0.95;`;
-                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')" style="color:${txC}">⋮</div><div style="font-weight:800;font-size:11px;opacity:0.9;margin-bottom:2px;">${formatTimeRange(ev.timeStart, ev.timeEnd)}</div><div style="font-weight:700;font-size:13px;line-height:1.2;">${ev.title||'Evento'}</div>`; 
-                
-                tc.appendChild(eb);
-            }); 
-            
-            w.appendChild(tc); 
-            return w;
-        }
-
-        // --- TOOLTIP LOGIC ---
-        function showTooltip(cell, evs) {
-            let html = ''; 
-            evs.forEach(ev => {
-                let timeStr = formatTimeRange(ev.timeStart, ev.timeEnd);
-                html += `<div class="tooltip-item">${timeStr ? `<div class="time">${timeStr}</div>` : ''}<div class="title">${ev.title||'Evento'}</div></div>`;
+            let dayEvs = calendarEvents[currentEditingDateKey] || [];
+            dayEvs.forEach(ev => {
+                let div = document.createElement('div'); 
+                div.className = 'list-event-item';
+                div.innerHTML = `
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:var(--accent-main); font-size:15px;">${ev.title || 'Evento'}</div>
+                        ${ev.timeStart ? `<div style="font-size:12px; opacity:0.8;">🕒 ${formatTimeRange(ev.timeStart, ev.timeEnd)}</div>` : ''}
+                    </div>
+                    <button class="action-btn outline" style="padding: 4px 8px;" onclick="showEventForm('${ev.id}')">✎</button>
+                `;
+                list.appendChild(div);
             });
-            tooltip.innerHTML = html; 
-            tooltip.style.display = 'flex'; 
-            const r = cell.getBoundingClientRect(); 
-            tooltip.style.left = `${r.left + r.width/2}px`; 
-            tooltip.style.top = `${r.top - 5}px`;
-            setTimeout(() => { tooltip.style.opacity = '1'; tooltip.style.transform = 'translate(-50%, -100%) scale(1)'; }, 10);
         }
 
-        function hideTooltip() { 
-            tooltip.style.opacity = '0'; 
-            setTimeout(() => { if(tooltip.style.opacity === '0') tooltip.style.display = 'none'; }, 200); 
+        function showEventForm(evId, defTime = '') {
+            document.getElementById('modal-list-view').style.display = 'none'; 
+            document.getElementById('modal-form-view').style.display = 'flex';
+            currentEditingId = evId; 
+            const win = document.getElementById('modal-window');
+            
+            if (evId) {
+                win.classList.remove('hide-delete'); 
+                const ev = calendarEvents[currentEditingDateKey].find(e => e.id === evId);
+                document.getElementById('modal-title').value = ev.title || '';
+                
+                if (ev.timeStart) { 
+                    let [h, m] = ev.timeStart.split(':'); 
+                    document.getElementById('modal-start-hour').value = h; 
+                    document.getElementById('modal-start-minute').value = m; 
+                } else { 
+                    document.getElementById('modal-start-hour').value = ''; 
+                    document.getElementById('modal-start-minute').value = ''; 
+                }
+                
+                if (ev.timeEnd) { 
+                    let [h, m] = ev.timeEnd.split(':'); 
+                    document.getElementById('modal-end-hour').value = h; 
+                    document.getElementById('modal-end-minute').value = m; 
+                } else { 
+                    document.getElementById('modal-end-hour').value = ''; 
+                    document.getElementById('modal-end-minute').value = ''; 
+                }
+                
+                document.getElementById('modal-end-date').value = ev.endDate || currentEditingDateKey; 
+                document.getElementById('modal-notes').value = ev.notes || '';
+            } else {
+                win.classList.add('hide-delete'); 
+                document.getElementById('modal-title').value = '';
+                
+                if (defTime) { 
+                    let [h, m] = defTime.split(':'); 
+                    document.getElementById('modal-start-hour').value = h; 
+                    document.getElementById('modal-start-minute').value = m; 
+                } else { 
+                    document.getElementById('modal-start-hour').value = ''; 
+                    document.getElementById('modal-start-minute').value = ''; 
+                }
+                
+                document.getElementById('modal-end-hour').value = ''; 
+                document.getElementById('modal-end-minute').value = '';
+                document.getElementById('modal-end-date').value = currentEditingDateKey; 
+                document.getElementById('modal-notes').value = '';
+            }
         }
 
-        // --- MODAL LOGIC (SALVATAGGIO E CANCELLAZIONE) ---
-        function closeModal() { document.getElementById('event-modal').style.display = 'none'; }
+        function backToListOrClose() { 
+            let evs = calendarEvents[currentEditingDateKey] || []; 
+            if (evs.length > 0) showEventList(); 
+            else closeModal(); 
+        }
+        
+        function closeModal() { 
+            document.getElementById('event-modal').style.display = 'none'; 
+        }
         
         function saveEvent() {
             const t = document.getElementById('modal-title').value.trim();
@@ -1208,19 +820,17 @@
             const id = currentEditingId || Date.now().toString(36);
             
             if(!t && !hs && !he && !n) return;
-
-            let sDate = parseDateKey(start);
-            let eDate = parseDateKey(end);
-            if (eDate < sDate) { end = start; eDate = sDate; }
-
-            // Rimuovi evento esistente da tutte le date
-            for(let k in calendarEvents) {
-                calendarEvents[k] = calendarEvents[k].filter(e => e.id !== id);
-                if(calendarEvents[k].length === 0) delete calendarEvents[k];
+            
+            if (parseDateKey(end) < parseDateKey(start)) end = start;
+            
+            for(let k in calendarEvents) { 
+                calendarEvents[k] = (calendarEvents[k]||[]).filter(e => e.id !== id); 
+                if(calendarEvents[k].length === 0) delete calendarEvents[k]; 
             }
-
-            // Aggiungi nei nuovi giorni
-            let curr = new Date(sDate.getTime());
+            
+            let curr = parseDateKey(start);
+            let eDate = parseDateKey(end);
+            
             while(curr <= eDate) {
                 let dk = `${curr.getFullYear()}-${String(curr.getMonth()+1).padStart(2,'0')}-${String(curr.getDate()).padStart(2,'0')}`;
                 if(!calendarEvents[dk]) calendarEvents[dk] = []; 
@@ -1236,32 +846,37 @@
                 curr.setDate(curr.getDate()+1);
             }
             
-            safeStorage.set('cal-events-v11', JSON.stringify(calendarEvents)); 
+            safeStorage.set('cal-events-v15', JSON.stringify(calendarEvents)); 
             closeModal(); 
             renderCalendar();
         }
         
         function deleteEvent() { 
-            if(currentEditingId && confirm("Eliminare questo evento?")) { 
-                for(let k in calendarEvents) {
-                    calendarEvents[k] = calendarEvents[k].filter(e => e.id !== currentEditingId); 
-                    if(calendarEvents[k].length === 0) delete calendarEvents[k];
+            if(currentEditingId && confirm("Eliminare?")) { 
+                for(let k in calendarEvents) { 
+                    calendarEvents[k] = (calendarEvents[k]||[]).filter(e => e.id !== currentEditingId); 
+                    if(calendarEvents[k].length === 0) delete calendarEvents[k]; 
                 }
-                safeStorage.set('cal-events-v11', JSON.stringify(calendarEvents)); 
+                safeStorage.set('cal-events-v15', JSON.stringify(calendarEvents)); 
                 closeModal(); 
                 renderCalendar(); 
             } 
         }
 
-        document.getElementById('event-modal').onclick = function(e) { if(e.target===this) closeModal(); };
+        document.getElementById('event-modal').onclick = function(e) { 
+            if(e.target === this) closeModal(); 
+        };
 
-        // --- DRAG AND DROP ---
+        // --- 8. LOGICA DRAG AND DROP ---
         function handleDragStart(e, dk, id) { 
             e.stopPropagation(); 
             draggedEventInfo = { dk, id }; 
             e.dataTransfer.effectAllowed = 'move'; 
             e.dataTransfer.setData('text/plain', 'drag'); 
-            setTimeout(() => { e.target.classList.add('dragging'); document.body.classList.add('is-dragging-body'); }, 0); 
+            setTimeout(() => { 
+                e.target.classList.add('dragging'); 
+                document.body.classList.add('is-dragging-body'); 
+            }, 0); 
         }
         
         function handleDragEnd(e) { 
@@ -1272,11 +887,21 @@
         }
         
         function handleDragEnter(e) { e.preventDefault(); e.stopPropagation(); }
-        function handleDragOver(e) { e.preventDefault(); e.stopPropagation(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
-        function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        
+        function handleDragOver(e) { 
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            e.dataTransfer.dropEffect = 'move'; 
+            e.currentTarget.classList.add('drag-over'); 
+        }
+        
+        function handleDragLeave(e) { 
+            e.currentTarget.classList.remove('drag-over'); 
+        }
 
         function executeDrop(e, targetDateKey, newTime = null) {
-            e.preventDefault(); e.stopPropagation(); 
+            e.preventDefault(); 
+            e.stopPropagation(); 
             document.body.classList.remove('is-dragging-body'); 
             e.currentTarget.classList.remove('drag-over');
             
@@ -1285,30 +910,31 @@
             if (sourceDk === targetDateKey && newTime === null) return;
             
             let evToMove = null;
-            for(let k in calendarEvents) {
-                let idx = calendarEvents[k].findIndex(ev => ev.id === eventId);
-                if(idx !== -1 && !evToMove) evToMove = {...calendarEvents[k][idx]};
-                if(idx !== -1) {
-                    calendarEvents[k].splice(idx, 1);
-                    if(calendarEvents[k].length === 0) delete calendarEvents[k];
-                }
+            for(let k in calendarEvents) { 
+                let idx = calendarEvents[k].findIndex(ev => ev.id === eventId); 
+                if(idx !== -1 && !evToMove) evToMove = {...calendarEvents[k][idx]}; 
+                if(idx !== -1) { 
+                    calendarEvents[k].splice(idx, 1); 
+                    if(calendarEvents[k].length === 0) delete calendarEvents[k]; 
+                } 
             }
             if(!evToMove) return;
-
+            
             let oldStartDt = parseDateKey(evToMove.startDate || sourceDk);
             let newStartDt = parseDateKey(targetDateKey);
             let diffDays = Math.round((newStartDt.getTime() - oldStartDt.getTime()) / 86400000);
-
+            
             let oldEndDt = parseDateKey(evToMove.endDate || evToMove.startDate || sourceDk); 
             oldEndDt.setDate(oldEndDt.getDate() + diffDays);
             let newEndDateKey = `${oldEndDt.getFullYear()}-${String(oldEndDt.getMonth()+1).padStart(2,'0')}-${String(oldEndDt.getDate()).padStart(2,'0')}`;
-
+            
             evToMove.startDate = targetDateKey; 
             evToMove.endDate = newEndDateKey;
-
+            
             if (newTime !== null) {
                 if (newTime === 'ALLDAY') { 
-                    evToMove.timeStart = ''; evToMove.timeEnd = ''; 
+                    evToMove.timeStart = ''; 
+                    evToMove.timeEnd = ''; 
                 } else {
                     let oS = parseTimeStr(evToMove.timeStart);
                     let oE = parseTimeStr(evToMove.timeEnd);
@@ -1323,19 +949,286 @@
                 }
             }
             
-            let curr = parseDateKey(targetDateKey);
-            let endD = parseDateKey(newEndDateKey);
-            while(curr <= endD) {
-                let dk = `${curr.getFullYear()}-${String(curr.getMonth()+1).padStart(2,'0')}-${String(curr.getDate()).padStart(2,'0')}`;
-                if(!calendarEvents[dk]) calendarEvents[dk] = []; 
-                calendarEvents[dk].push({...evToMove});
-                curr.setDate(curr.getDate()+1);
-            }
+            getDateKeysInRange(targetDateKey, newEndDateKey).forEach(k => { 
+                if(!calendarEvents[k]) calendarEvents[k] = []; 
+                calendarEvents[k].push({...evToMove}); 
+            });
             
-            safeStorage.set('cal-events-v11', JSON.stringify(calendarEvents)); 
+            safeStorage.set('cal-events-v15', JSON.stringify(calendarEvents)); 
             draggedEventInfo = null; 
             renderCalendar();
         }
+
+        // --- 9. RENDERIZZAZIONE VISTE ---
+        function createMiniMonth(y, m) {
+            const w = document.createElement('div'); 
+            w.className = 'mini-month'; 
+            w.innerHTML = `<div class="mini-month-title">${mesi[m]}</div><div class="mini-days-row"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>`;
+            const mg = document.createElement('div'); 
+            mg.className = 'mini-grid'; 
+            
+            const pad = new Date(y, m, 1).getDay() === 0 ? 6 : new Date(y, m, 1).getDay() - 1;
+            const days = new Date(y, m+1, 0).getDate();
+            
+            for (let i=0; i<pad; i++) mg.appendChild(document.createElement('div'));
+            
+            for (let d=1; d<=days; d++) {
+                const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const c = document.createElement('div'); 
+                c.className = 'mini-cell'; 
+                c.innerText = d;
+                
+                let evs = calendarEvents[dk] || []; 
+                if (evs.length > 0) c.classList.add('has-event');
+                
+                evs.filter(ev => ev.startDate !== ev.endDate).forEach((ev, idx) => { 
+                    let bar = document.createElement('div'); 
+                    bar.className = 'multi-day-bar'; 
+                    if(dk === ev.startDate) bar.classList.add('start'); 
+                    if(dk === ev.endDate) bar.classList.add('end'); 
+                    bar.style.bottom = `${3 + (idx * 6)}px`; 
+                    bar.style.backgroundColor = idx % 2 === 0 ? 'var(--accent-main)' : 'var(--badge-bg)'; 
+                    c.appendChild(bar); 
+                });
+                
+                if(new Date().toDateString() === new Date(y,m,d).toDateString()) c.classList.add('is-today');
+                c.onclick = () => { 
+                    baseDate = new Date(y,m,d); 
+                    currentView = 'day'; 
+                    document.getElementById('view-select').value = 'day'; 
+                    renderCalendar(); 
+                }; 
+                mg.appendChild(c);
+            } 
+            w.appendChild(mg); 
+            return w;
+        }
+
+        function createCell(y, m, d, empty) {
+            const c = document.createElement('div'); 
+            c.className = `cell ${empty ? 'empty' : ''}`;
+            
+            if (!empty) {
+                const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                c.onclick = (e) => { if(e.target === c || e.target.classList.contains('events-container')) openModal(y,m,d); };
+                c.ondragenter = handleDragEnter; 
+                c.ondragover = handleDragOver; 
+                c.ondragleave = handleDragLeave; 
+                c.ondrop = (e) => executeDrop(e, dk, null);
+                
+                c.appendChild(Object.assign(document.createElement('div'), {className: 'date-badge', innerText: d}));
+                
+                let evs = calendarEvents[dk] || []; 
+                let multiDayEvs = evs.filter(ev => ev.startDate !== ev.endDate);
+                
+                multiDayEvs.forEach((ev, idx) => {
+                    let bar = document.createElement('div'); 
+                    bar.className = 'multi-day-bar'; 
+                    if(dk === ev.startDate) bar.classList.add('start'); 
+                    if(dk === ev.endDate) bar.classList.add('end');
+                    bar.style.bottom = `${6 + (idx * 20)}px`; 
+                    bar.style.backgroundColor = idx % 2 === 0 ? 'var(--accent-main)' : 'var(--badge-bg)'; 
+                    bar.innerText = ev.title || 'Evento'; 
+                    c.appendChild(bar);
+                });
+                
+                if(evs.length > 0) {
+                    if(currentView === 'month') {
+                        c.classList.add('has-event'); 
+                        const ind = document.createElement('div'); 
+                        ind.className = 'aesthetic-indicator'; 
+                        ind.innerText = '♥'; 
+                        ind.style.bottom = `${8 + (multiDayEvs.length * 20)}px`; 
+                        c.appendChild(ind);
+                        
+                        c.onmouseenter = () => { 
+                            let h = ''; 
+                            evs.forEach(ev => { 
+                                let dt = formatTimeRange(ev.timeStart, ev.timeEnd); 
+                                h += `<div class="tooltip-item">${dt ? `<div class="time">${dt}</div>`:''}<div class="title">${ev.title||'Evento'}</div></div>`; 
+                            }); 
+                            tooltip.innerHTML = h; 
+                            tooltip.style.display = 'flex'; 
+                            const r = c.getBoundingClientRect(); 
+                            tooltip.style.left = `${r.left + r.width/2}px`; 
+                            tooltip.style.top = `${r.top - 5}px`; 
+                            setTimeout(() => { tooltip.style.opacity = '1'; tooltip.style.transform = 'translate(-50%, -100%) scale(1)'; }, 10); 
+                        };
+                        c.onmouseleave = () => { 
+                            tooltip.style.opacity = '0'; 
+                            setTimeout(() => { if(tooltip.style.opacity === '0') tooltip.style.display = 'none'; }, 200); 
+                        };
+                    } else if(currentView === 'week') {
+                        const cont = document.createElement('div'); 
+                        cont.className = 'events-container'; 
+                        cont.style.paddingBottom = `${10 + (multiDayEvs.length * 20)}px`;
+                        evs.forEach(ev => { 
+                            let b = document.createElement('div'); 
+                            b.className = 'event-block'; 
+                            b.draggable = true; 
+                            b.ondragstart = (e) => handleDragStart(e, dk, ev.id); 
+                            b.ondragend = handleDragEnd; 
+                            b.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')">⋮</div>${ev.timeStart ? `<div class="time">${formatTimeRange(ev.timeStart, ev.timeEnd)}</div>` : ''}<div class="title">${ev.title||'Evento'}</div>`; 
+                            cont.appendChild(b); 
+                        }); 
+                        c.appendChild(cont);
+                    }
+                }
+            } 
+            return c;
+        }
+
+        function createDayTimeline(y,m,d) {
+            const w = document.createElement('div'); 
+            w.className = 'day-timeline-wrapper';
+            const dk = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            
+            w.ondragenter = handleDragEnter; 
+            w.ondragover = handleDragOver; 
+            w.ondragleave = handleDragLeave; 
+            w.ondrop = (e) => executeDrop(e, dk, null);
+            
+            const h = document.createElement('div'); 
+            h.className = 'timeline-header';
+            
+            h.innerHTML = `
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(-1)">◀</button>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <span style="font-size:13px;opacity:0.8;font-weight:700;text-transform:uppercase;">${["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"][new Date(y,m,d).getDay()]}</span>
+                    <span class="large-badge">${d} ${mesi[m]} ${y}</span>
+                </div>
+                <button class="nav-btn" onclick="event.stopPropagation(); navigate(1)">▶</button>
+            `;
+            h.onclick = () => openModal(y,m,d); 
+            w.appendChild(h);
+            
+            let evs = calendarEvents[dk] || [];
+            
+            const allday = document.createElement('div'); 
+            allday.className = 'timeline-allday'; 
+            allday.onclick = (e) => { if(e.target===allday) openModal(y, m, d); }; 
+            allday.ondragenter = handleDragEnter; 
+            allday.ondragover = handleDragOver; 
+            allday.ondragleave = handleDragLeave; 
+            allday.ondrop = (e) => executeDrop(e, dk, 'ALLDAY'); 
+            allday.innerHTML = `<div class="allday-label">Eventi</div>`;
+            
+            evs.filter(ev => !ev.timeStart).forEach(ev => { 
+                let b = document.createElement('div'); 
+                b.className = 'event-block'; 
+                b.style.position = 'relative'; 
+                b.style.marginBottom = '5px'; 
+                b.draggable = true; 
+                b.ondragstart = (e) => handleDragStart(e, dk, ev.id); 
+                b.ondragend = handleDragEnd; 
+                b.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')">⋮</div><div class="title">${ev.title||'Senza Titolo'}</div>`; 
+                allday.appendChild(b); 
+            }); 
+            w.appendChild(allday);
+            
+            const tc = document.createElement('div'); 
+            tc.style.position = 'relative';
+            for(let i=0; i<24; i++) { 
+                let r = document.createElement('div'); 
+                r.className = 'timeline-hour-row'; 
+                r.onclick = () => openModal(y,m,d,null,`${String(i).padStart(2,'0')}:00`); 
+                r.ondragenter = handleDragEnter; 
+                r.ondragover = handleDragOver; 
+                r.ondragleave = handleDragLeave; 
+                r.ondrop = (e) => executeDrop(e, dk, i); 
+                r.innerHTML = `<div class="timeline-time">${i===0?'12 AM':i<12?i+' AM':i===12?'12 PM':(i-12)+' PM'}</div>`; 
+                tc.appendChild(r); 
+            }
+            
+            evs.filter(ev => ev.timeStart).forEach((ev, idx) => {
+                const s = parseTimeStr(ev.timeStart);
+                const e = parseTimeStr(ev.timeEnd); 
+                let dur = 60;
+                if(s && e) { 
+                    dur = (e.h*60+e.m) - (s.h*60+s.m); 
+                    if(dur<0) dur+=1440; 
+                    if(dur<20) dur=20; 
+                }
+                let eb = document.createElement('div'); 
+                eb.className = 'timeline-event-block'; 
+                eb.draggable = true; 
+                eb.ondragstart = (evt) => handleDragStart(evt, dk, ev.id); 
+                eb.ondragend = handleDragEnd;
+                
+                let bgC = idx % 2 !== 0 ? 'var(--accent-main)' : 'var(--badge-bg)';
+                let txC = idx % 2 !== 0 ? '#FFFFFF' : 'var(--badge-text)';
+                let off = (idx % 4) * 120;
+                
+                eb.style.cssText = `top:${s.h*60+s.m}px; height:${dur}px; left:${70+off}px; width:calc(100% - ${90+off}px); background:${bgC}; color:${txC}; z-index:${10+idx}; opacity:0.95;`;
+                eb.innerHTML = `<div class="edit-dots" onclick="event.stopPropagation(); openModal(${y},${m},${d},'${ev.id}')" style="color:${txC}">⋮</div><div style="font-weight:800;font-size:11px;opacity:0.9;margin-bottom:2px;">${formatTimeRange(ev.timeStart, ev.timeEnd)}</div><div style="font-weight:700;font-size:13px;line-height:1.2;">${ev.title||'Evento'}</div>`; 
+                tc.appendChild(eb);
+            }); 
+            w.appendChild(tc); 
+            return w;
+        }
+
+        // --- CORE RENDER LOOP ---
+        function renderCalendar() {
+            try {
+                grid.innerHTML = ''; 
+                const y = baseDate.getFullYear();
+                const m = baseDate.getMonth();
+                const dHead = document.getElementById('dynamic-header');
+                const mdRow = document.getElementById('main-days-row');
+                
+                if (currentView === 'year') { 
+                    dHead.style.display = 'flex'; 
+                    mdRow.style.display = 'none'; 
+                    grid.className = "calendar-grid year-view"; 
+                    title.innerText = y; 
+                    for(let i=0; i<12; i++) grid.appendChild(createMiniMonth(y, i)); 
+                }
+                else if (currentView === 'day') { 
+                    dHead.style.display = 'none'; 
+                    mdRow.style.display = 'none'; 
+                    grid.className = "calendar-grid day-view"; 
+                    grid.appendChild(createDayTimeline(y, m, baseDate.getDate())); 
+                }
+                else {
+                    dHead.style.display = 'flex'; 
+                    mdRow.style.display = 'grid'; 
+                    grid.className = `calendar-grid ${currentView}-view`;
+                    
+                    if(currentView === 'month') {
+                        title.innerText = `${mesi[m]} ${y}`; 
+                        const pad = new Date(y, m, 1).getDay() === 0 ? 6 : new Date(y, m, 1).getDay() - 1;
+                        const days = new Date(y, m+1, 0).getDate();
+                        
+                        for (let i=0; i<pad; i++) grid.appendChild(createCell(y,m,0,true)); 
+                        for (let d=1; d<=days; d++) grid.appendChild(createCell(y,m,d,false));
+                        
+                        const endPad = (pad + days) % 7 === 0 ? 0 : 7 - ((pad + days) % 7);
+                        for (let i=0; i<endPad; i++) grid.appendChild(createCell(y,m,0,true));
+                    } else if(currentView === 'week') {
+                        let mon = getMonday(baseDate); 
+                        let sun = new Date(mon.getTime() + 518400000);
+                        
+                        if (mon.getMonth() === sun.getMonth()) {
+                            title.innerText = `${mon.getDate()} - ${sun.getDate()} ${mesi[mon.getMonth()]} ${y}`;
+                        } else {
+                            title.innerText = `${mon.getDate()} ${mesi[mon.getMonth()].substring(0,3)} - ${sun.getDate()} ${mesi[sun.getMonth()].substring(0,3)} ${y}`;
+                        }
+                        
+                        for (let i=0; i<7; i++) { 
+                            let curr = new Date(mon.getTime() + i*86400000); 
+                            grid.appendChild(createCell(curr.getFullYear(), curr.getMonth(), curr.getDate(), false)); 
+                        }
+                    }
+                }
+            } catch(e) { 
+                console.error("Rendering Error", e); 
+                grid.innerHTML = "<div style='color:red; text-align:center; padding: 20px;'>Si è verificato un errore nel caricamento. Assicurati che i dati non siano corrotti.</div>"; 
+            }
+        }
+        
+        // --- START ---
+        renderCalendar();
+        
     </script>
 </body>
 </html>
